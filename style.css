@@ -239,3 +239,29 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; width: 100vw;
 body.docent .btn:not(.ghost):not(.danger), body.reveal .btn:not(.ghost) { background: #e000cc; color: #fff; }
 body.docent .btn:not(.ghost):not(.danger):hover, body.reveal .btn:not(.ghost):hover { background: #bf00ae; }
 body.docent .btn:disabled { opacity: .5; }
+
+.archief-kop { margin-top: 28px; }
+.games.archief .game { opacity: .8; }
+
+/* Flashcards */
+.decks { list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 12px; }
+.deck { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.deck .dt { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.deck .dn { color: var(--muted); font-size: 14px; }
+.bar { height: 8px; background: var(--bar); border-radius: 99px; overflow: hidden; margin: 10px 0; }
+.bar i { display: block; height: 100%; background: var(--bar-fill); border-radius: 99px; transition: width .3s; }
+.drow { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+a.btn { display: inline-flex; align-items: center; text-decoration: none; }
+.fc-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.fc { display: flex; flex-direction: column; justify-content: center; gap: 12px; width: 100%; min-height: 260px; padding: 22px 20px; margin: 8px 0 14px; text-align: left; font: inherit; color: var(--ink); background: var(--card); border: 2px solid var(--line-strong); border-radius: 16px; cursor: pointer; }
+.fc.flipped { background: var(--accent-soft); border-color: var(--accent); cursor: default; }
+.fc-tag { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; }
+.fc-text { font-size: 21px; line-height: 1.4; font-weight: 600; }
+.fc-extra { font-size: 16px; line-height: 1.45; }
+.fc-bron { font-size: 13px; color: var(--muted); }
+.fc-hint { font-size: 14px; color: var(--muted); }
+.fc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fc-actions .btn { margin-top: 0; min-height: 52px; font-size: 17px; }
+.fc-actions.off { opacity: .5; }
+.kb { display: none; margin-top: 14px; }
+@media (hover: hover) and (pointer: fine) { .kb { display: block; } }

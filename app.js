@@ -13,8 +13,9 @@ const RONDES = [
   { t: 'Finale: alle stof door elkaar', s: 'Met formatie en coalitie. 20 seconden per vraag en dubbele punten.' }
 ];
 const GAMES = [
-  { id: 'woii', icon: '🕰️', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.' },
-  { id: 'politiek', icon: '🏛️', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.' }
+  { id: 'flash', href: 'flash', icon: '🃏', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek · zonder code', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.' },
+  { id: 'woii', icon: '🕰️', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
+  { id: 'politiek', icon: '🏛️', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
 ];
 let vak = store.get('oefen_vak') === 'politiek' ? 'politiek' : 'woii';
 let inMenu = false;
@@ -55,14 +56,19 @@ function logout() {
 function viewMenu() {
   inMenu = true;
   setVak('woii', false);
-  const tiles = GAMES.map(g => `<button class="game" data-g="${g.id}" type="button">
+  const tile = g => `<button class="game" data-g="${g.id}" type="button">
     <span class="gi" aria-hidden="true">${g.icon}</span>
-    <span class="gt"><b>${esc(g.titel)}</b><span class="gv">${esc(g.vak)}${store.get(tokKey(g.id)) ? ' · verder spelen' : ''}</span><span class="gx">${esc(g.tekst)}</span></span></button>`).join('');
+    <span class="gt"><b>${esc(g.titel)}</b><span class="gv">${esc(g.vak)}${!g.href && store.get(tokKey(g.id)) ? ' · verder spelen' : ''}</span><span class="gx">${esc(g.tekst)}</span></span></button>`;
+  const actief = GAMES.filter(g => !g.archief).map(tile).join('');
+  const arch = GAMES.filter(g => g.archief).map(tile).join('');
   render(header() + `<main><h1>Kies je spel</h1>
     <p>Kies het spel dat je wilt spelen. Heb je al gespeeld, dan ga je daar verder waar je was.</p>
-    <div class="games">${tiles}
-    <div class="game soon" aria-hidden="true"><span class="gi">✨</span><span class="gt"><b>Binnenkort meer</b><span class="gx">Er komen later meer oefenspellen bij.</span></span></div></div></main>`);
+    <div class="games">${actief}
+    <div class="game soon" aria-hidden="true"><span class="gi">✨</span><span class="gt"><b>Binnenkort meer</b><span class="gx">Er komen later meer oefenspellen bij.</span></span></div></div>
+    ${arch ? `<h2 class="archief-kop">Archief</h2><p class="small-note">Deze spellen zijn afgerond. Je kunt ze nog openen met je eigen code.</p><div class="games archief">${arch}</div>` : ''}</main>`);
   app.querySelectorAll('.game[data-g]').forEach(b => b.onclick = () => {
+    const gg = GAMES.find(x => x.id === b.dataset.g);
+    if (gg && gg.href) { location.href = gg.href; return; }
     inMenu = false;
     vak = setVak(b.dataset.g, false);
     const t = store.get(tokKey(vak));
