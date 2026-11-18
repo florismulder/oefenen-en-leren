@@ -86,9 +86,10 @@ function kaartHtml(k, hn, kn) {
 function lesBody(n) {
   const l = R.lessen[n - 1];
   let kaartNr = 0;
+  const hOffset = R.lessen.slice(0, n - 1).reduce((a, x) => a + x.hoofdstukken.length, 0);
   const chap = l.hoofdstukken.map((h, hi) => `
     <section class="chap">
-      <h2><span class="cn">Hoofdstuk ${hi + 1}</span>${esc(h.titel)}</h2>
+      <h2><span class="cn">Hoofdstuk ${hOffset + hi + 1}</span>${esc(h.titel)}</h2>
       <p class="chap-intro">${esc(h.intro)}</p>
       ${h.kaarten.map(k => { kaartNr++; return kaartHtml(k, hi, kaartNr); }).join('')}
     </section>`).join('');
