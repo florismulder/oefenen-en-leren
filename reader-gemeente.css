@@ -26,10 +26,12 @@
 .printonly { display: none; }
 @media print {
   .printonly { display: block; break-before: page; }
-  .nietprint, .opt .let { display: none; }
+  .nietprint { display: none; }
   .opts { gap: 2pt; }
   .opt { border: none; padding: 1pt 0; min-height: 0; background: none !important; font-size: 9.5pt; }
-  .opt::before { content: "○ "; }
+  .opt .let { width: auto; height: auto; border-radius: 0; background: none !important; color: #000 !important; font-size: 9.5pt; display: inline; }
+  .opt .let::after { content: "."; }
+  .opt { gap: 5pt; }
   .fb { display: none; }
   .gv { margin: 6pt 0 0; break-inside: avoid; }
   .gvq { font-size: 9.5pt; }
