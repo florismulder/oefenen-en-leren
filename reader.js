@@ -1,5 +1,6 @@
 const app = document.getElementById('app');
 const R = window.READER;
+const fmt = v => String(v).replace('.', ',');
 const KEY_REDEN = 'reader_kw_reden_';
 let lesNr = 1;
 
@@ -41,7 +42,7 @@ function lijnSvg(upTo) {
   pts.forEach((p, i) => {
     const cls = p.les === upTo ? 'pt-nu' : 'pt-oud';
     g += `<circle class="${cls}" cx="${xOf(i)}" cy="${yOf(p.v)}" r="7"/>`;
-    g += `<text class="vl ${cls}" x="${xOf(i)}" y="${yOf(p.v) - 14}" text-anchor="middle">${p.v}</text>`;
+    g += `<text class="vl ${cls}" x="${xOf(i)}" y="${yOf(p.v) - 14}" text-anchor="middle">${fmt(p.v)}</text>`;
     const lx = xOf(i), ly = H - bottom + 20;
     if (n > 8) g += `<text class="xl" transform="translate(${lx} ${ly}) rotate(-38)" text-anchor="end">${esc(p.s)}</text>`;
     else g += `<text class="xl" x="${lx}" y="${ly}" text-anchor="middle">${esc(p.s)}</text>`;
@@ -54,7 +55,7 @@ function lijnLijst(upTo) {
   R.lessen.forEach(l => {
     if (l.id > upTo) return;
     l.lijn.forEach(p => {
-      rows += `<li class="${l.id === upTo ? 'nu' : 'oud'}"><span class="ln">${esc(p.s)}</span><span class="lb"><i style="width:${p.v * 10}%"></i></span><b>${p.v}</b></li>`;
+      rows += `<li class="${l.id === upTo ? 'nu' : 'oud'}"><span class="ln">${esc(p.s)}</span><span class="lb"><i style="width:${p.v * 10}%"></i></span><b>${fmt(p.v)}</b></li>`;
     });
   });
   return `<ol class="lijn-lijst" aria-label="Spanning per gebeurtenis, van 1 vrede tot 10 kernoorlog">${rows}</ol>`;
@@ -64,7 +65,7 @@ function lijnLijst(upTo) {
 function kaartHtml(k, hn, kn) {
   const pijl = k.geenLijn
     ? '<span class="pill neutraal">geen nieuw punt op de lijn</span>'
-    : `<span class="pill">${esc(k.pijl)} · van ${k.van} naar ${k.naar}</span>`;
+    : `<span class="pill">${esc(k.pijl)} · van ${fmt(k.van)} naar ${fmt(k.naar)}</span>`;
   const beelden = (k.beelden || []).map(b => `<figure><img src="/reader-img/${esc(b[0])}.jpg" alt="${esc(b[1])}" loading="lazy"><figcaption>${esc(b[1])}</figcaption></figure>`).join('');
   const inv = k.invullen ? `<div class="invullen">[${esc(k.invullen)}]</div>` : '';
   const sec = (kop, tekst) => `<div class="sec"><h4>${kop}</h4><p>${esc(tekst)}</p></div>`;

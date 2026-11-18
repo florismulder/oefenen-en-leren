@@ -113,9 +113,9 @@ window.READER = {
       ],
       lijn: [
         { k: 'Koreaoorlog 1950', s: 'Korea', v: 9 },
-        { k: 'Hongarije 1956', s: 'Hongarije', v: 8 },
-        { k: 'Berlijnse Muur 1961', s: 'Muur', v: 9 },
-        { k: 'Cubacrisis 1962', s: 'Cuba', v: 10 }
+        { k: 'Hongarije 1956', s: 'Hongarije', v: 7 },
+        { k: 'Berlijnse Muur 1961', s: 'Muur', v: 8 },
+        { k: 'Cubacrisis 1962', s: 'Cuba', v: 9.8 }
       ],
       hoofdstukken: [
         {
@@ -130,7 +130,7 @@ window.READER = {
             persoon: 'Harry Truman is president van Amerika en stuurt soldaten naar Korea.',
             vragen: ['Waarom heet de Koreaoorlog een proxyoorlog?', 'Wat is het domino-idee? Leg het uit in één zin.']
           }, {
-            titel: 'Opstand in Hongarije', pijl: '▼ klein', van: 9, naar: 8,
+            titel: 'Opstand in Hongarije', pijl: '▼▼ middel', van: 9, naar: 7, noot: 'de spanning zakt: mensen raken gewend aan de Koude Oorlog',
             beelden: [['l2-hongarije', 'Opstand in Boedapest, 1956'], ['l2-tanks', 'Sovjettanks in Boedapest']],
             wat: 'In 1955 komt het Warschaupact: het bondgenootschap van de Sovjet-Unie met zeven andere landen. Op 23 oktober 1956 eisen studenten in Boedapest vrijheid. Op 4 november komen Sovjettanks de stad in.',
             waarom: 'De Hongaren willen vrijheid. Premier Imre Nagy wil uit het Warschaupact stappen. Moskou laat dat niet toe.',
@@ -143,7 +143,7 @@ window.READER = {
           titel: 'Berlijn en Cuba',
           intro: 'Eerst sluit Oost-Duitsland de grens in Berlijn. Een jaar later staat de wereld op het randje van een kernoorlog.',
           kaarten: [{
-            titel: 'De Berlijnse Muur', pijl: '▲▲ middel', van: 8, naar: 9,
+            titel: 'De Berlijnse Muur', pijl: '▲ klein', van: 7, naar: 8,
             beelden: [['l2-draad', 'Prikkeldraad in Berlijn, augustus 1961'], ['l2-vlucht', 'Een soldaat springt over het prikkeldraad naar West-Berlijn, augustus 1961']],
             wat: 'Op 13 augustus 1961 sluit Oost-Duitsland de grens in Berlijn. Eerst met prikkeldraad. Later met een muur van beton. Op 27 oktober 1961 staan bij Checkpoint Charlie tien Amerikaanse en tien Sovjettanks tegenover elkaar.',
             waarom: 'Miljoenen mensen verlieten Oost-Duitsland via West-Berlijn. Te veel jonge mensen en goed opgeleide mensen gingen weg.',
@@ -151,7 +151,7 @@ window.READER = {
             persoon: 'Walter Ulbricht is leider van Oost-Duitsland en laat de Muur bouwen.',
             vragen: ['Waarom bouwde Oost-Duitsland de Muur?', 'Wat gebeurde er op 27 oktober 1961 bij Checkpoint Charlie?']
           }, {
-            titel: 'De Cubacrisis', pijl: '▲▲▲ groot', van: 9, naar: 10,
+            titel: 'De Cubacrisis', pijl: '▲▲ middel', van: 8, naar: 9.8, noot: 'het wordt geen kernoorlog',
             beelden: [['l2-cuba', 'Spionagefoto van een Sovjet-raketbasis op Cuba, oktober 1962'], ['l2-krant', 'Krant: Amerika legt blokkade rond Cuba']],
             wat: 'Op 16 oktober 1962 ziet president Kennedy foto\'s van Sovjetraketten op Cuba. Op 22 oktober sluit Amerika Cuba af met schepen. Op 27 oktober wordt een Amerikaans vliegtuig neergeschoten. Op 28 oktober zegt de Sovjetleider Chroesjtsjov dat de raketten weggaan.',
             waarom: 'Cuba ligt bij Amerika en is communistisch. De Sovjet-Unie zet er raketten, omdat Amerika raketten in Turkije heeft staan.',
@@ -166,7 +166,7 @@ window.READER = {
       id: 3, kort: 'Dooi en nieuwe vorst', titel: 'Les 3 · Dooi en nieuwe vorst', jaren: '1963 tot 1983', datum: '2 december 2026',
       inleidingKop: 'Eerst omlaag, dan weer omhoog',
       inleiding: [
-        'Na Cuba schrikken beide grootmachten. In 1962 stond de spanning op een 10. Wat doen Amerika en de Sovjet-Unie nu?',
+        'Na Cuba schrikken beide grootmachten. In 1962 stond de spanning op een 9,8. Het werd geen kernoorlog. Wat doen Amerika en de Sovjet-Unie nu?',
         'Eerst komt een dooi. Ze praten en maken afspraken. Dat heet détente. Dat is Frans voor ontspanning. Maar de dooi duurt niet lang. Vietnam, Praag en Afghanistan brengen nieuwe ruzie. In 1983 is de angst groot.',
         'In deze les lees je vier gebeurtenissen. Bij elke gebeurtenis zie je hoe de spanningslijn verandert.'
       ],
@@ -181,7 +181,7 @@ window.READER = {
           titel: 'De dooi',
           intro: 'Na de schrik van Cuba praten de leiders. Ze maken afspraken. De spanning daalt.',
           kaarten: [{
-            titel: 'De dooi', pijl: '▼▼▼ groot', van: 10, naar: 6,
+            titel: 'De dooi', pijl: '▼▼▼ groot', van: 9.8, naar: 6,
             beelden: [['l3-telefoon', 'Een rode telefoon, vaak gebruikt als beeld voor de directe lijn']],
             wat: 'Op 5 augustus 1963 tekenen Amerika, de Sovjet-Unie en Engeland een verdrag. Kernproeven in de lucht, in de ruimte en onder water zijn verboden. Op 30 augustus 1963 komt er een directe lijn tussen Washington en Moskou.',
             waarom: 'Na Cuba wilde niemand nog zo\'n schrik. Berichten waren toen te langzaam. Een fout kon oorlog betekenen.',
