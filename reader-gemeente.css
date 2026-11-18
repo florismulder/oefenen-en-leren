@@ -1,7 +1,7 @@
 /* Reader Gemeentepolitiek: aanvulling op reader.css */
-.gp { margin: 12px 0 0; max-width: 70ch; }
+.gp { margin: 12px 0 0; max-width: none; }
 .gp b { color: var(--accent-ink); }
-.gl { margin: 6px 0 0; padding-left: 20px; max-width: 70ch; }
+.gl { margin: 6px 0 0; padding-left: 20px; max-width: none; }
 .gl li { margin: 4px 0; }
 .gtab { width: 100%; border-collapse: collapse; margin: 12px 0 0; background: var(--card); }
 .gtab th { text-align: left; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); border-bottom: 2px solid var(--line-strong); padding: 6px 8px; }

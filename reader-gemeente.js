@@ -94,7 +94,7 @@ function view() {
   const open = new Set([...app.querySelectorAll('details.rcard[open]')].map(d => d.id));
   app.innerHTML = head() + `<main class="reader">
     <div class="tools top">
-      <a class="btn ghost small" href="/">← Naar de start van Oefenen en leren</a>
+      <a class="btn ghost small terug-start" href="/">← Naar de start van Oefenen en leren</a>
       <button class="btn ghost small" id="open" type="button">Alles openklappen</button>
       <button class="btn ghost small" id="dicht" type="button">Alles dichtklappen</button>
       <button class="btn small" id="print" type="button">Print de reader</button>

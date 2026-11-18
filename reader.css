@@ -12,7 +12,7 @@
 .intro, .lijn-card, .mijn { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 16px; }
 .intro h2, .lijn-card h2, .mijn h2 { margin: 0 0 10px; font-size: 22px; }
 .intro h3 { font-size: 16px; margin: 18px 0 6px; }
-.intro p { max-width: 70ch; }
+.intro p { max-width: none; }
 .intro ul { margin: 0 0 10px; padding-left: 20px; }
 .intro li { margin: 4px 0; }
 .lijn-scroll { overflow-x: auto; margin: 0 -6px; padding: 0 6px; }
@@ -31,7 +31,7 @@
 .chap { margin: 26px 0 8px; }
 .chap h2 { margin: 0 0 4px; font-size: 24px; display: flex; flex-direction: column; gap: 2px; }
 .chap h2 .cn { font-size: 13px; text-transform: uppercase; letter-spacing: .7px; color: var(--accent-ink); font-weight: 700; }
-.chap-intro { margin: 0 0 12px; font-size: 17px; max-width: 70ch; }
+.chap-intro { margin: 0 0 12px; font-size: 17px; max-width: none; }
 .rcard { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius); margin-bottom: 10px; }
 .rcard > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 14px 16px; flex-wrap: wrap; }
 .rcard > summary::-webkit-details-marker { display: none; }
