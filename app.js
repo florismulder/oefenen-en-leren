@@ -13,6 +13,7 @@ const RONDES = [
   { t: 'Finale: alle stof door elkaar', s: 'Met formatie en coalitie. 20 seconden per vraag en dubbele punten.' }
 ];
 const GAMES = [
+  { id: 'reader', href: 'reader', icon: '📖', titel: 'Reader Koude Oorlog', vak: 'Geschiedenis · zonder code', tekst: 'Lees de stof van les 1 tot en met 4, met foto\'s en de spanningslijn.' },
   { id: 'flash', href: 'flash', icon: '🃏', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek · zonder code', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.', archief: true },
   { id: 'woii', icon: '🕰️', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
   { id: 'politiek', icon: '🏛️', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
@@ -64,7 +65,7 @@ function viewMenu() {
   render(header() + `<main><h1>Kies je spel</h1>
     <p>Kies het spel dat je wilt spelen. Heb je al gespeeld, dan ga je daar verder waar je was.</p>
     <div class="games">${actief}
-    <div class="game soon" aria-hidden="true"><span class="gi">🧊</span><span class="gt"><b>Koude Oorlog</b><span class="gv">Geschiedenis</span><span class="gx">Binnenkort beschikbaar.</span></span></div>
+    <div class="game soon" aria-hidden="true"><span class="gi">🧊</span><span class="gt"><b>Koude Oorlog oefentoets</b><span class="gv">Geschiedenis</span><span class="gx">Binnenkort beschikbaar.</span></span></div>
     <div class="game soon" aria-hidden="true"><span class="gi">✨</span><span class="gt"><b>Binnenkort meer</b><span class="gx">Er komt later meer te oefenen bij.</span></span></div></div>
     ${arch ? `<details class="archief-box"><summary class="archief-kop">Archief</summary><p class="small-note">Deze spellen zijn afgerond. Je kunt ze nog openen. Spellen met een code open je met je eigen code.</p><div class="games archief">${arch}</div></details>` : ''}</main>`);
   app.querySelectorAll('.game[data-g]').forEach(b => b.onclick = () => {
