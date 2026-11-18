@@ -116,7 +116,7 @@
   "rewrites": [
     {
       "source": "/koude-oorlog/reader",
-      "destination": "/reader.html"
+      "destination": "/reader"
     }
   ]
 }
