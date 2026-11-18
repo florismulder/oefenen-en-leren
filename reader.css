@@ -161,3 +161,5 @@
   .vragen { margin: 4pt 0 0; }
   .rcard .rbody > .vragen { grid-column: 1 / -1; grid-row: auto; }
 }
+
+.tools .btn.terug-start { border: 2px solid #FF00E7; color: #1a1a1a; }
