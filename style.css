@@ -63,7 +63,7 @@ header.top {
 .brand { font-weight: 700; font-size: 24px; letter-spacing: -0.2px; color: var(--head-ink); }
 .sub { color: var(--head-sub); font-size: 14px; }
 .hemi { position: absolute; right: 12px; bottom: 8px; width: 108px; height: 51px; }
-body[data-vak="politiek"] header.top .brand, body[data-vak="politiek"] header.top .sub { padding-right: 100px; }
+body[data-vak="politiek"] header.top .brand, body[data-vak="politiek"] header.top .sub { padding-right: 0; }
 h1 { font-size: 24px; margin: 0 0 8px; letter-spacing: -0.2px; }
 h2 { font-size: 18px; margin: 24px 0 8px; }
 p { margin: 0 0 12px; }
@@ -268,7 +268,8 @@ a.btn { display: inline-flex; align-items: center; text-decoration: none; }
 .archief-box { margin-top: 28px; }
 .archief-box > summary.archief-kop { margin-top: 0; cursor: pointer; font-size: 1.25rem; font-weight: 700; padding: 6px 0; }
 header.top::after {
-  content: ""; position: absolute; top: 12px; right: 14px; width: 120px; height: 32px;
+  content: ""; position: absolute; top: 50%; right: 18px; width: 140px; height: 38px;
+  transform: translateY(-50%);
   background: url(logo-ma.jpg) no-repeat right center / contain;
 }
-body[data-vak="politiek"] header.top .hemi { bottom: 6px; }
+body[data-vak="politiek"] header.top .hemi { right: 168px; bottom: 6px; }
