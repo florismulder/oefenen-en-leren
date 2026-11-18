@@ -35,3 +35,19 @@
   .gvq { font-size: 9.5pt; }
   .gp, .gl li, .gtab td, .gtab th { font-size: 9.5pt; }
 }
+
+/* Print: geen lege linkerkolom, kaarten mogen over de pagina lopen, vragen in twee kolommen */
+@media print {
+  .rcard { break-inside: auto; }
+  .rcard .rbody { display: block; }
+  .rcard .rbody > * { grid-column: auto; }
+  .rcard > summary { break-after: avoid; }
+  .rcard .rbody > .gp, .rcard .rbody > .gl { max-width: none; }
+  .gp, .gl li { line-height: 1.35; }
+  .vragen { break-inside: auto; }
+  .vragen ol { column-count: 2; column-gap: 18pt; margin: 2pt 0 0; }
+  .vragen .gv { break-inside: avoid; margin: 0 0 5pt; }
+  .vragen h4 { break-after: avoid; }
+  .gtab { break-inside: auto; }
+  .gtab tr { break-inside: avoid; }
+}
