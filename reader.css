@@ -72,14 +72,6 @@
   .intro, .lijn-card, .mijn { padding: 16px; }
   .fotos img { height: 190px; }
 }
-@media print {
-  header.top, .lestabs, .tools, .les-nav, .terug { display: none; }
-  .reader { padding: 0; }
-  .rcard { break-inside: avoid; border-left-width: 3px; }
-  .rcard > summary::after { content: ""; }
-  .fotos img { height: 140px; }
-  .rtab input.reden { border: none; border-bottom: 1px solid #999; }
-}
 
 /* Spanningslijn: lijst op mobiel */
 .lijn-lijst { display: none; list-style: none; margin: 0; padding: 0; }
@@ -94,12 +86,10 @@
   .lijn-scroll { display: none; }
   .lijn-lijst { display: block; }
 }
-@media print { .lijn-lijst { display: none; } .lijn-scroll { display: block; } }
 
 .terug-boven { margin: 0 0 14px; }
 .terug-boven .btn { margin-top: 0; min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; }
 @media (max-width: 640px) { .terug-boven .btn { width: 100%; justify-content: center; box-sizing: border-box; } }
-@media print { .terug-boven { display: none; } }
 
 /* Knoppen bovenaan */
 .tools.top { margin: 0 0 14px; }
@@ -108,4 +98,42 @@
   .tools.top .btn { flex: 1 1 calc(50% - 8px); justify-content: center; box-sizing: border-box; text-align: center; }
   .tools.top .btn:first-child { flex-basis: 100%; }
 }
-@media print { .les-blok { break-before: page; } .les-blok:first-child { break-before: auto; } }
+
+/* Printen */
+@page { size: A4; margin: 14mm; }
+@media print {
+  body { background: #fff; }
+  header.top, .reader .lestabs, .tools, .les-nav, .terug, .terug-boven { display: none !important; }
+  .wrap { max-width: none; padding: 0; margin: 0; }
+  .reader { padding: 0; }
+  .les-kop { margin: 0 0 8pt; }
+  .les-kop h1 { font-size: 22pt; }
+  .intro, .lijn-card, .mijn { break-inside: avoid; box-shadow: none; padding: 10pt 12pt; margin-bottom: 10pt; }
+  .intro h2, .lijn-card h2 { font-size: 15pt; }
+  .intro p, .intro li { font-size: 10pt; line-height: 1.4; }
+  .lijn-scroll { display: none !important; }
+  .lijn-lijst { display: block !important; column-count: 2; column-gap: 24pt; }
+  .lijn-lijst li { break-inside: avoid; font-size: 9.5pt; padding: 2pt 0; }
+  .chap { margin-top: 10pt; }
+  .chap h2 { font-size: 15pt; break-after: avoid; }
+  .chap-intro { break-after: avoid; font-size: 10pt; }
+  .rcard { break-inside: auto; border-left-width: 3pt; margin-bottom: 8pt; box-shadow: none; }
+  .rcard > summary::after, .rcard[open] > summary::after { content: "" !important; }
+  .rcard > summary { padding: 8pt 10pt; }
+  .rcard .tt { font-size: 12.5pt; }
+  .rcard .rbody { padding: 0 10pt 8pt; }
+  .fotos { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 6pt; margin: 6pt 0 4pt; }
+  .fotos.n1 { grid-template-columns: minmax(0, 55%) !important; }
+  .fotos img, .fotos.n1 img { height: 110pt !important; max-height: none; width: 100%; object-fit: cover !important; object-position: center 25%; }
+  .fotos figcaption { font-size: 8.5pt; padding: 3pt 6pt; }
+  .secs { grid-template-columns: 1fr 1fr !important; gap: 4pt 14pt; }
+  .sec h4 { font-size: 8.5pt; }
+  .sec p { font-size: 9.5pt; line-height: 1.35; }
+  .vragen { margin-top: 6pt; padding: 6pt 10pt; }
+  .vragen li { font-size: 9.5pt; }
+  .fotos, .sec, .vragen, .rcard > summary { break-inside: avoid; }
+  .rcard > summary, .rcard .noot, .rcard .onderschrift { break-after: avoid; }
+  .rcard .rbody { break-before: avoid; }
+  .les-blok { break-before: page; }
+  .les-blok:first-child { break-before: auto; }
+}
