@@ -281,3 +281,12 @@ body[data-vak="politiek"] header.top .hemi { right: 168px; bottom: 6px; }
   .sub { font-size: 13px; }
 }
 @media (max-width: 640px) { body[data-vak="politiek"] header.top .hemi { display: none; } }
+
+.vakken { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.vak-tegel { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; min-height: 190px; padding: 18px 12px; font: inherit; color: inherit; background: var(--card); border: 1px solid var(--line-strong); border-left: 4px solid var(--accent); border-radius: 8px; cursor: pointer; }
+.vak-tegel:hover { background: var(--soft); }
+.vak-tegel .vi { font-size: 48px; line-height: 1; }
+.vak-tegel b { font-size: 22px; }
+.vak-tegel span:last-child { font-size: 14px; color: var(--muted); }
+.vak-tegel[data-v="politiek"] { border-left-color: #1f4a96; }
+@media (max-width: 480px) { .vakken { grid-template-columns: 1fr; } .vak-tegel { min-height: 130px; } }

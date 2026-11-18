@@ -56,20 +56,30 @@ function logout() {
 }
 
 /* ---------- Menu ---------- */
-function viewMenu() {
+const VAKKEN = {
+  geschiedenis: { naam: 'Geschiedenis', icon: '🕰️', tekst: 'Koude Oorlog en Tweede Wereldoorlog', soon: [{ icon: '🧊', titel: 'Koude Oorlog oefentoets', tekst: 'Binnenkort beschikbaar.' }] },
+  politiek: { naam: 'Politiek', icon: '🏛️', tekst: 'Gemeente, Kamer en Kabinet', soon: [] }
+};
+let menuVak = null;
+function viewMenu(kies) {
   inMenu = true;
   setVak('woii', false);
+  if (kies !== undefined) menuVak = kies;
+  if (!menuVak) return viewVakken();
+  const v = VAKKEN[menuVak];
   const tile = g => `<button class="game" data-g="${g.id}" type="button">
     <span class="gi" aria-hidden="true">${g.icon}</span>
-    <span class="gt"><b>${esc(g.titel)}</b><span class="gv">${esc(g.vak)}${!g.href && store.get(tokKey(g.id)) ? ' · verder spelen' : ''}</span><span class="gx">${esc(g.tekst)}</span></span></button>`;
-  const actief = GAMES.filter(g => !g.archief).map(tile).join('');
-  const arch = GAMES.filter(g => g.archief).map(tile).join('');
-  render(header() + `<main><h1>Kies je spel</h1>
-    <p>Kies het spel dat je wilt spelen. Heb je al gespeeld, dan ga je daar verder waar je was.</p>
-    <div class="games">${actief}
-    <div class="game soon" aria-hidden="true"><span class="gi">🧊</span><span class="gt"><b>Koude Oorlog oefentoets</b><span class="gv">Geschiedenis</span><span class="gx">Binnenkort beschikbaar.</span></span></div>
-    <div class="game soon" aria-hidden="true"><span class="gi">✨</span><span class="gt"><b>Binnenkort meer</b><span class="gx">Er komt later meer te oefenen bij.</span></span></div></div>
+    <span class="gt"><b>${esc(g.titel)}</b>${!g.href && store.get(tokKey(g.id)) ? '<span class="gv">verder spelen</span>' : ''}<span class="gx">${esc(g.tekst)}</span></span></button>`;
+  const eigen = GAMES.filter(g => g.vak === v.naam);
+  const actief = eigen.filter(g => !g.archief).map(tile).join('');
+  const arch = eigen.filter(g => g.archief).map(tile).join('');
+  const soon = v.soon.map(x => `<div class="game soon" aria-hidden="true"><span class="gi">${x.icon}</span><span class="gt"><b>${esc(x.titel)}</b><span class="gx">${esc(x.tekst)}</span></span></div>`).join('');
+  render(header() + `<main><p class="small-note"><button class="btn ghost small" id="ander" type="button">← Ander vak</button></p>
+    <h1>${esc(v.naam)}</h1>
+    <p>Kies waarmee je wilt leren of oefenen.</p>
+    <div class="games">${actief}${soon}</div>
     ${arch ? `<details class="archief-box"><summary class="archief-kop">Archief</summary><p class="small-note">Deze spellen zijn afgerond. Je kunt ze nog openen. Spellen met een code open je met je eigen code.</p><div class="games archief">${arch}</div></details>` : ''}</main>`);
+  $('#ander').onclick = () => viewMenu(null);
   app.querySelectorAll('.game[data-g]').forEach(b => b.onclick = () => {
     const gg = GAMES.find(x => x.id === b.dataset.g);
     if (gg && gg.href) { location.href = gg.href; return; }
@@ -78,6 +88,13 @@ function viewMenu() {
     const t = store.get(tokKey(vak));
     if (t) { token = t; loadHome(); } else { token = null; viewLogin(); }
   });
+}
+function viewVakken() {
+  render(header() + `<main><h1>Kies je vak</h1>
+    <p>Kies eerst het vak waar je mee wilt leren of oefenen.</p>
+    <div class="vakken">${Object.keys(VAKKEN).map(k => `<button class="vak-tegel" data-v="${k}" type="button">
+      <span class="vi" aria-hidden="true">${VAKKEN[k].icon}</span><b>${esc(VAKKEN[k].naam)}</b><span>${esc(VAKKEN[k].tekst)}</span></button>`).join('')}</div></main>`);
+  app.querySelectorAll('.vak-tegel').forEach(b => b.onclick = () => viewMenu(b.dataset.v));
 }
 
 /* ---------- Inloggen ---------- */
@@ -93,7 +110,7 @@ function viewLogin(msg) {
     <p class="msg" id="msg" role="alert">${esc(msg || '')}</p>
     <button class="btn ghost small" id="menu" type="button">Kies een ander spel</button>
   </main>`);
-  $('#menu').onclick = viewMenu;
+  $('#menu').onclick = () => viewMenu();
   $('#f').onsubmit = async e => {
     e.preventDefault();
     const code = $('#code').value.trim();
