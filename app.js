@@ -13,7 +13,7 @@ const RONDES = [
   { t: 'Finale: alle stof door elkaar', s: 'Met formatie en coalitie. 20 seconden per vraag en dubbele punten.' }
 ];
 const GAMES = [
-  { id: 'flash', href: 'flash', icon: '🃏', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek · zonder code', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.' },
+  { id: 'flash', href: 'flash', icon: '🃏', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek · zonder code', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.', archief: true },
   { id: 'woii', icon: '🕰️', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
   { id: 'politiek', icon: '🏛️', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
 ];
@@ -65,7 +65,7 @@ function viewMenu() {
     <p>Kies het spel dat je wilt spelen. Heb je al gespeeld, dan ga je daar verder waar je was.</p>
     <div class="games">${actief}
     <div class="game soon" aria-hidden="true"><span class="gi">✨</span><span class="gt"><b>Binnenkort meer</b><span class="gx">Er komen later meer oefenspellen bij.</span></span></div></div>
-    ${arch ? `<h2 class="archief-kop">Archief</h2><p class="small-note">Deze spellen zijn afgerond. Je kunt ze nog openen met je eigen code.</p><div class="games archief">${arch}</div>` : ''}</main>`);
+    ${arch ? `<details class="archief-box"><summary class="archief-kop">Archief</summary><p class="small-note">Deze spellen zijn afgerond. Je kunt ze nog openen. Spellen met een code open je met je eigen code.</p><div class="games archief">${arch}</div></details>` : ''}</main>`);
   app.querySelectorAll('.game[data-g]').forEach(b => b.onclick = () => {
     const gg = GAMES.find(x => x.id === b.dataset.g);
     if (gg && gg.href) { location.href = gg.href; return; }
