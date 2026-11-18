@@ -267,3 +267,8 @@ a.btn { display: inline-flex; align-items: center; text-decoration: none; }
 @media (hover: hover) and (pointer: fine) { .kb { display: block; } }
 .archief-box { margin-top: 28px; }
 .archief-box > summary.archief-kop { margin-top: 0; cursor: pointer; font-size: 1.25rem; font-weight: 700; padding: 6px 0; }
+header.top::after {
+  content: ""; position: absolute; top: 12px; right: 14px; width: 120px; height: 32px;
+  background: url(logo-ma.jpg) no-repeat right center / contain;
+}
+body[data-vak="politiek"] header.top .hemi { bottom: 6px; }
