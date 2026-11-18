@@ -120,10 +120,22 @@ function printHele() {
   const body = document.getElementById('lesbody');
   bewaard = body.innerHTML;
   body.innerHTML = R.lessen.map(x => `<div class="les-blok">${lesBody(x.id)}</div>`).join('');
+  titelBewaard = document.title;
+  document.title = 'Reader Koude Oorlog';
+  klaarVoorPrint().then(() => window.print());
+}
+let titelBewaard = null;
+function klaarVoorPrint() {
   app.querySelectorAll('details.rcard').forEach(d => d.open = true);
-  setTimeout(() => window.print(), 50);
+  const imgs = [...app.querySelectorAll('img')];
+  imgs.forEach(i => { i.loading = 'eager'; });
+  return Promise.race([
+    Promise.all(imgs.map(i => i.complete ? 1 : new Promise(r => { i.onload = i.onerror = r; }))),
+    new Promise(r => setTimeout(r, 4000))
+  ]);
 }
 window.addEventListener('afterprint', () => {
+  if (titelBewaard !== null) { document.title = titelBewaard; titelBewaard = null; }
   if (bewaard !== null) { document.getElementById('lesbody').innerHTML = bewaard; bewaard = null; }
 });
 
@@ -151,11 +163,11 @@ function view(n) {
   const all = () => app.querySelectorAll('details.rcard');
   document.getElementById('open').onclick = () => all().forEach(d => d.open = true);
   document.getElementById('dicht').onclick = () => all().forEach(d => d.open = false);
-  document.getElementById('print').onclick = () => window.print();
+  document.getElementById('print').onclick = () => klaarVoorPrint().then(() => window.print());
   document.getElementById('printall').onclick = printHele;
   document.title = l.titel + ' | Reader Koude Oorlog';
 }
 
 window.addEventListener('hashchange', () => view(lesFromHash()));
-window.addEventListener('beforeprint', () => app.querySelectorAll('details.rcard').forEach(d => d.open = true));
+window.addEventListener('beforeprint', () => { app.querySelectorAll('details.rcard').forEach(d => d.open = true); app.querySelectorAll('img').forEach(i => { i.loading = 'eager'; }); });
 view(lesFromHash());

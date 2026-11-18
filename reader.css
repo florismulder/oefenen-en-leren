@@ -115,8 +115,9 @@
   .lijn-lijst { display: block !important; column-count: 2; column-gap: 24pt; }
   .lijn-lijst li { break-inside: avoid; font-size: 9.5pt; padding: 2pt 0; }
   .chap { margin-top: 10pt; }
-  .chap h2 { font-size: 15pt; break-after: avoid; }
-  .chap-intro { break-after: avoid; font-size: 10pt; }
+  .chap h2 { font-size: 15pt; break-after: avoid; break-inside: avoid; }
+  .chap h2 .cn { break-after: avoid; }
+  .chap-intro { break-after: avoid; break-inside: avoid; font-size: 10pt; }
   .rcard { break-inside: auto; border-left-width: 3pt; margin-bottom: 8pt; box-shadow: none; }
   .rcard > summary::after, .rcard[open] > summary::after { content: "" !important; }
   .rcard > summary { padding: 8pt 10pt; }
