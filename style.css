@@ -273,3 +273,11 @@ header.top::after {
   background: url(logo-ma.jpg) no-repeat right center / contain;
 }
 body[data-vak="politiek"] header.top .hemi { right: 168px; bottom: 6px; }
+
+@media (max-width: 640px) {
+  header.top { padding-right: 112px; }
+  header.top::after { width: 88px; right: 12px; }
+  .brand { font-size: 20px; }
+  .sub { font-size: 13px; }
+}
+@media (max-width: 640px) { body[data-vak="politiek"] header.top .hemi { display: none; } }

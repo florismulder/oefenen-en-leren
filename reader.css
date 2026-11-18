@@ -80,3 +80,18 @@
   .fotos img { height: 140px; }
   .rtab input.reden { border: none; border-bottom: 1px solid #999; }
 }
+
+/* Spanningslijn: lijst op mobiel */
+.lijn-lijst { display: none; list-style: none; margin: 0; padding: 0; }
+.lijn-lijst li { display: grid; grid-template-columns: minmax(96px, 38%) 1fr 24px; align-items: center; gap: 8px; padding: 5px 0; font-size: 15px; }
+.lijn-lijst .lb { height: 14px; background: #f1ecf6; border-radius: 7px; overflow: hidden; }
+.lijn-lijst .lb i { display: block; height: 100%; border-radius: 7px; background: #bdb4c8; }
+.lijn-lijst li.nu .lb i { background: var(--accent); }
+.lijn-lijst li.nu .ln, .lijn-lijst li.nu b { font-weight: 700; }
+.lijn-lijst li.oud { color: #645c6d; }
+.lijn-lijst b { text-align: right; }
+@media (max-width: 640px) {
+  .lijn-scroll { display: none; }
+  .lijn-lijst { display: block; }
+}
+@media print { .lijn-lijst { display: none; } .lijn-scroll { display: block; } }

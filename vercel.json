@@ -102,6 +102,21 @@
           "value": "default-src 'self'; connect-src https://fqdemhhcpetnrbtlgpxa.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com https://*.office.com https://*.microsoft365.com https://*.cloud.microsoft"
         }
       ]
+    },
+    {
+      "source": "/koude-oorlog/reader",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; connect-src https://fqdemhhcpetnrbtlgpxa.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com https://*.office.com https://*.microsoft365.com https://*.cloud.microsoft"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/koude-oorlog/reader",
+      "destination": "/reader.html"
     }
   ]
 }

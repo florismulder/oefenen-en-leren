@@ -49,12 +49,23 @@ function lijnSvg(upTo) {
   return `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="Spanningslijn van 1945 tot ${upTo === 4 ? '1991' : 'het einde van deze les'}">${g}</svg>`;
 }
 
+function lijnLijst(upTo) {
+  let rows = '';
+  R.lessen.forEach(l => {
+    if (l.id > upTo) return;
+    l.lijn.forEach(p => {
+      rows += `<li class="${l.id === upTo ? 'nu' : 'oud'}"><span class="ln">${esc(p.s)}</span><span class="lb"><i style="width:${p.v * 10}%"></i></span><b>${p.v}</b></li>`;
+    });
+  });
+  return `<ol class="lijn-lijst" aria-label="Spanning per gebeurtenis, van 1 vrede tot 10 kernoorlog">${rows}</ol>`;
+}
+
 /* ---------- Kaarten ---------- */
 function kaartHtml(k, hn, kn) {
   const pijl = k.geenLijn
     ? '<span class="pill neutraal">geen nieuw punt op de lijn</span>'
     : `<span class="pill">${esc(k.pijl)} · van ${k.van} naar ${k.naar}</span>`;
-  const beelden = (k.beelden || []).map(b => `<figure><img src="reader-img/${esc(b[0])}.jpg" alt="${esc(b[1])}" loading="lazy"><figcaption>${esc(b[1])}</figcaption></figure>`).join('');
+  const beelden = (k.beelden || []).map(b => `<figure><img src="/reader-img/${esc(b[0])}.jpg" alt="${esc(b[1])}" loading="lazy"><figcaption>${esc(b[1])}</figcaption></figure>`).join('');
   const inv = k.invullen ? `<div class="invullen">[${esc(k.invullen)}]</div>` : '';
   const sec = (kop, tekst) => `<div class="sec"><h4>${kop}</h4><p>${esc(tekst)}</p></div>`;
   return `<details class="rcard">
@@ -106,7 +117,7 @@ function view(n) {
     </section>
     <section class="lijn-card">
       <h2>De spanningslijn${n > 1 ? ' tot en met les ' + n : ''}</h2>
-      <div class="lijn-scroll">${lijnSvg(n)}</div>
+      <div class="lijn-scroll">${lijnSvg(n)}</div>${lijnLijst(n)}
       ${n > 1 ? '<p class="small-note">Grijs is de lijn uit de lessen ervoor. Magenta is deze les.</p>' : ''}
     </section>
     <div class="tools"><button class="btn ghost small" id="open" type="button">Alles openklappen</button><button class="btn ghost small" id="dicht" type="button">Alles dichtklappen</button><button class="btn ghost small" id="print" type="button">Print deze les</button></div>
