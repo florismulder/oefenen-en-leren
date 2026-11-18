@@ -1,0 +1,12 @@
+.og-keuzes { display: grid; gap: 8px; margin: 14px 0; }
+.og-keuze { font: inherit; text-align: left; background: var(--card); border: 1px solid var(--line-strong); border-radius: 6px; padding: 12px 14px; min-height: 44px; cursor: pointer; color: inherit; }
+.og-keuze:hover { border-color: var(--accent); }
+.og-keuze b { display: block; }
+.og-bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 6px 0 14px; }
+.og-bar span { display: block; height: 100%; background: var(--accent); }
+.og-meta { color: var(--muted); font-size: 14px; margin: 0 0 6px; }
+.og-vraag { font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+.og-acties { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.og-knop { font: inherit; font-weight: 700; background: var(--accent); color: #fff; border: 0; border-radius: 6px; padding: 11px 18px; min-height: 44px; cursor: pointer; }
+.og-knop.licht { background: var(--card); color: inherit; border: 1px solid var(--line-strong); }
+.og-score { font-size: 40px; font-weight: 700; margin: 4px 0; }

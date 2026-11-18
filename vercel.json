@@ -138,6 +138,33 @@
           "value": "default-src 'self'; connect-src https://fqdemhhcpetnrbtlgpxa.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com https://*.office.com https://*.microsoft365.com https://*.cloud.microsoft"
         }
       ]
+    },
+    {
+      "source": "/gemeente/oefenen",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; connect-src https://fqdemhhcpetnrbtlgpxa.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com https://*.office.com https://*.microsoft365.com https://*.cloud.microsoft"
+        }
+      ]
+    },
+    {
+      "source": "/oefenen-gemeente",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; connect-src https://fqdemhhcpetnrbtlgpxa.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com https://*.office.com https://*.microsoft365.com https://*.cloud.microsoft"
+        }
+      ]
+    },
+    {
+      "source": "/oefenen-gemeente.html",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; connect-src https://fqdemhhcpetnrbtlgpxa.supabase.co; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'self' https://teams.microsoft.com https://*.teams.microsoft.com https://*.office.com https://*.microsoft365.com https://*.cloud.microsoft"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -148,6 +175,10 @@
     {
       "source": "/gemeente/reader",
       "destination": "/reader-gemeente"
+    },
+    {
+      "source": "/gemeente/oefenen",
+      "destination": "/oefenen-gemeente"
     }
   ]
 }
