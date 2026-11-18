@@ -5,7 +5,7 @@ const KEY_REDEN = 'reader_kw_reden_';
 let lesNr = 1;
 
 function head() {
-  return '<header class="top"><div class="brand">Reader Koude Oorlog</div><div class="sub">Oefenen en leren · Mediacollege Amsterdam</div></header>';
+  return '<header class="top"><div class="brand">Reader Koude Oorlog</div><div class="sub">Oefenen en leren · Mediacollege Amsterdam</div></header><p class="terug-boven"><a class="btn ghost" href="/">← Naar de start van Oefenen en leren</a></p>';
 }
 function lesFromHash() {
   const m = /les(\d)/.exec(location.hash || '');
