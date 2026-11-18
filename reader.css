@@ -100,3 +100,12 @@
 .terug-boven .btn { margin-top: 0; min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; }
 @media (max-width: 640px) { .terug-boven .btn { width: 100%; justify-content: center; box-sizing: border-box; } }
 @media print { .terug-boven { display: none; } }
+
+/* Knoppen bovenaan */
+.tools.top { margin: 0 0 14px; }
+.tools .btn { text-decoration: none; display: inline-flex; align-items: center; min-height: 40px; }
+@media (max-width: 640px) {
+  .tools.top .btn { flex: 1 1 calc(50% - 8px); justify-content: center; box-sizing: border-box; text-align: center; }
+  .tools.top .btn:first-child { flex-basis: 100%; }
+}
+@media print { .les-blok { break-before: page; } .les-blok:first-child { break-before: auto; } }

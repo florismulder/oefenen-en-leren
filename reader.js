@@ -4,7 +4,7 @@ const fmt = v => String(v).replace('.', ',');
 let lesNr = 1;
 
 function head() {
-  return '<header class="top"><div class="brand">Reader Koude Oorlog</div><div class="sub">Oefenen en leren · Mediacollege Amsterdam</div></header><p class="terug-boven"><a class="btn ghost" href="/">← Naar de start van Oefenen en leren</a></p>';
+  return '<header class="top"><div class="brand">Reader Koude Oorlog</div><div class="sub">Oefenen en leren · Mediacollege Amsterdam</div></header>';
 }
 function lesFromHash() {
   const m = /les(\d)/.exec(location.hash || '');
@@ -83,11 +83,9 @@ function kaartHtml(k, hn, kn) {
 }
 
 /* ---------- Pagina ---------- */
-function view(n) {
-  lesNr = n;
+function lesBody(n) {
   const l = R.lessen[n - 1];
   let kaartNr = 0;
-  const tabs = R.lessen.map(x => `<a class="ltab${x.id === n ? ' on' : ''}" href="#les${x.id}" data-n="${x.id}"><b>Les ${x.id}</b><span>${esc(x.kort)}</span></a>`).join('');
   const chap = l.hoofdstukken.map((h, hi) => `
     <section class="chap">
       <h2><span class="cn">Hoofdstuk ${hi + 1}</span>${esc(h.titel)}</h2>
@@ -95,9 +93,7 @@ function view(n) {
       ${h.kaarten.map(k => { kaartNr++; return kaartHtml(k, hi, kaartNr); }).join('')}
     </section>`).join('');
   const toetsTip = n === 4 ? '<li>Leer voor de toets met de reader en de oefentoets in de app.</li>' : '';
-  app.innerHTML = head() + `<main class="reader">
-    <nav class="lestabs" aria-label="Kies een les">${tabs}</nav>
-    <div class="les-kop"><p class="datum">${esc(l.datum)} · ${esc(l.jaren)}</p><h1>${esc(l.titel)}</h1></div>
+  return `<div class="les-kop"><p class="datum">${esc(l.datum)} · ${esc(l.jaren)}</p><h1>${esc(l.titel)}</h1></div>
     <section class="intro">
       <h2>${esc(l.inleidingKop)}</h2>
       ${l.inleiding.map(p => `<p>${esc(p)}</p>`).join('')}
@@ -116,8 +112,35 @@ function view(n) {
       <div class="lijn-scroll">${lijnSvg(n)}</div>${lijnLijst(n)}
       ${n > 1 ? '<p class="small-note">Grijs is de lijn uit de lessen ervoor. Magenta is deze les.</p>' : ''}
     </section>
-    <div class="tools"><button class="btn ghost small" id="open" type="button">Alles openklappen</button><button class="btn ghost small" id="dicht" type="button">Alles dichtklappen</button><button class="btn ghost small" id="print" type="button">Print deze les</button></div>
-    ${chap}
+    ${chap}`;
+}
+
+let bewaard = null;
+function printHele() {
+  const body = document.getElementById('lesbody');
+  bewaard = body.innerHTML;
+  body.innerHTML = R.lessen.map(x => `<div class="les-blok">${lesBody(x.id)}</div>`).join('');
+  app.querySelectorAll('details.rcard').forEach(d => d.open = true);
+  setTimeout(() => window.print(), 50);
+}
+window.addEventListener('afterprint', () => {
+  if (bewaard !== null) { document.getElementById('lesbody').innerHTML = bewaard; bewaard = null; }
+});
+
+function view(n) {
+  lesNr = n;
+  const l = R.lessen[n - 1];
+  const tabs = R.lessen.map(x => `<a class="ltab${x.id === n ? ' on' : ''}" href="#les${x.id}" data-n="${x.id}"><b>Les ${x.id}</b><span>${esc(x.kort)}</span></a>`).join('');
+  app.innerHTML = head() + `<main class="reader">
+    <div class="tools top">
+      <a class="btn ghost small" href="/">← Naar de start van Oefenen en leren</a>
+      <button class="btn ghost small" id="open" type="button">Alles openklappen</button>
+      <button class="btn ghost small" id="dicht" type="button">Alles dichtklappen</button>
+      <button class="btn ghost small" id="print" type="button">Print deze les</button>
+      <button class="btn small" id="printall" type="button">Print hele reader</button>
+    </div>
+    <nav class="lestabs" aria-label="Kies een les">${tabs}</nav>
+    <div id="lesbody">${lesBody(n)}</div>
     <div class="les-nav">
       ${n > 1 ? `<a class="btn ghost" href="#les${n - 1}">← Les ${n - 1}</a>` : '<span></span>'}
       ${n < R.lessen.length ? `<a class="btn" href="#les${n + 1}">Les ${n + 1} →</a>` : '<a class="btn" href="/">Naar het menu</a>'}
@@ -129,6 +152,7 @@ function view(n) {
   document.getElementById('open').onclick = () => all().forEach(d => d.open = true);
   document.getElementById('dicht').onclick = () => all().forEach(d => d.open = false);
   document.getElementById('print').onclick = () => window.print();
+  document.getElementById('printall').onclick = printHele;
   document.title = l.titel + ' | Reader Koude Oorlog';
 }
 
