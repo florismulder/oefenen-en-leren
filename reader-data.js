@@ -267,8 +267,7 @@ window.READER = {
             vragen: ['Waarom kon de Muur in 1989 vallen?', 'Wat was het Pan-Europese Picknick?']
           }, {
             titel: 'Duitsland weer één', pijl: '▼ klein', van: 3, naar: 2,
-            beelden: [],
-            invullen: 'INVULLEN: beeld, zoekomschrijving: foto van de eenwordingsviering bij de Brandenburger Tor op 3 oktober 1990',
+            beelden: [['l4-eenheid', 'Feest voor het Reichstag-gebouw in Berlijn, 3 oktober 1990']],
             wat: 'Op 18 maart 1990 mogen Oost-Duitsers voor het eerst vrij stemmen. Op 3 oktober 1990 worden Oost- en West-Duitsland weer één land.',
             waarom: 'De Muur was weg. De mensen in beide delen wilden één land. De vier grootmachten van 1945 stemden in.',
             gevolg: 'Het nieuwe Duitsland blijft lid van de NAVO. Berlijn is weer één stad.',
