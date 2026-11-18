@@ -40,7 +40,7 @@ async function load() {
     if (!data) {
       render(head() + `<main class="card"><h1>Even geduld</h1><p>${esc(errText((r && r.error) || 'serverfout'))}</p>
         <button class="btn" id="again" type="button">Probeer opnieuw</button>
-        <a class="btn ghost" href="/">Terug naar het menu</a></main>`);
+        <a class="btn ghost" href="/?vak=politiek">Terug naar Politiek</a></main>`);
       $('#again').onclick = load;
       return;
     }
@@ -71,7 +71,7 @@ function viewDecks() {
     <p>${esc(data.tekst)}</p>
     <p class="small-note">Klik op de kaart om hem om te draaien. Kies daarna Wist ik of Nog oefenen. Je voortgang blijft op dit apparaat bewaard.</p>
     <ul class="decks">${tile('alles', 'Alles door elkaar', all)}${items}</ul>
-    <div class="drow"><a class="btn ghost small" href="/">Terug naar het menu</a>
+    <div class="drow"><a class="btn ghost small" href="/?vak=politiek">Terug naar Politiek</a>
     <button class="btn danger small" id="reset" type="button">Voortgang wissen</button></div>
   </main>`);
   app.querySelectorAll('[data-start]').forEach(b => b.onclick = () => startDeck(b.dataset.start, false));

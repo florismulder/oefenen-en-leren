@@ -27,7 +27,7 @@ function start() {
   render(`<p>Kies wat je wilt oefenen. Je krijgt steeds ${RONDE} vragen. Na elk antwoord zie je de uitleg. Je hoeft niet in te loggen. Je voortgang blijft in deze browser. Jij bent verantwoordelijk voor je eigen leren.</p>
   <p>Let op: de toetsvragen staan in andere woorden dan deze vragen. Leer dus de stof en niet de vragen.</p>
   <div class="og-keuzes">${knop(0, 'Alle hoofdstukken')}${knop(1, HFD[1])}${knop(2, HFD[2])}${knop(3, HFD[3])}</div>
-  <p class="og-meta"><a href="/gemeente/reader">Naar de reader</a> · <a href="/">Naar de start</a> · <button class="og-knop licht" id="reset">Voortgang wissen</button></p>`);
+  <p class="og-meta"><a href="/gemeente/reader">Naar de reader</a> · <a href="/?vak=politiek">Terug naar Politiek</a> · <button class="og-knop licht" id="reset">Voortgang wissen</button></p>`);
   app.querySelectorAll('.og-keuze').forEach(b => b.addEventListener('click', () => nieuweRonde(+b.dataset.h)));
   app.querySelector('#reset').addEventListener('click', () => { goed = {}; bewaar(); start(); });
 }

@@ -146,7 +146,7 @@ function view(n) {
   const tabs = R.lessen.map(x => `<a class="ltab${x.id === n ? ' on' : ''}" href="#les${x.id}" data-n="${x.id}"><b>Les ${x.id}</b><span>${esc(x.kort)}</span></a>`).join('');
   app.innerHTML = head() + `<main class="reader">
     <div class="tools top">
-      <a class="btn ghost small terug-start" href="/">← Naar de start van Oefenen en leren</a>
+      <a class="btn ghost small terug-start" href="/?vak=geschiedenis">← Naar Geschiedenis</a>
       <button class="btn ghost small" id="open" type="button">Alles openklappen</button>
       <button class="btn ghost small" id="dicht" type="button">Alles dichtklappen</button>
       <button class="btn ghost small" id="print" type="button">Print deze les</button>
@@ -156,9 +156,9 @@ function view(n) {
     <div id="lesbody">${lesBody(n)}</div>
     <div class="les-nav">
       ${n > 1 ? `<a class="btn ghost" href="#les${n - 1}">← Les ${n - 1}</a>` : '<span></span>'}
-      ${n < R.lessen.length ? `<a class="btn" href="#les${n + 1}">Les ${n + 1} →</a>` : '<a class="btn" href="/">Naar het menu</a>'}
+      ${n < R.lessen.length ? `<a class="btn" href="#les${n + 1}">Les ${n + 1} →</a>` : '<a class="btn" href="/?vak=geschiedenis">Naar Geschiedenis</a>'}
     </div>
-    <p class="small-note terug"><a href="/">← Terug naar Oefenen en leren</a></p>
+    <p class="small-note terug"><a href="/?vak=geschiedenis">← Terug naar Geschiedenis</a></p>
   </main>`;
   window.scrollTo(0, 0);
   const all = () => app.querySelectorAll('details.rcard');

@@ -448,5 +448,6 @@ async function drawLeaderboard(quiet) {
     } catch (e) {}
     store.del('woii_token');
   }
-  viewMenu();
+  const vk = new URLSearchParams(location.search).get('vak');
+  viewMenu(VAKKEN[vk] ? vk : undefined);
 })();
