@@ -163,3 +163,21 @@
 }
 
 .tools .btn.terug-start { border: 2px solid #FF00E7; color: #1a1a1a; }
+
+/* Print: nog compacter zodat pagina's vol raken */
+@page { margin: 11mm 12mm; }
+@media print {
+  .fotos img, .fotos.n1 img { height: 58pt !important; }
+  .fotos.n3 img { height: 46pt !important; }
+  .rcard .rbody > .fotos { gap: 3pt; }
+  .fotos figcaption { font-size: 7.5pt; padding: 2pt 4pt; line-height: 1.25; }
+  .sec h4 { font-size: 7.5pt; margin: 0; }
+  .sec p { font-size: 8.5pt; line-height: 1.28; margin: 0 0 1pt; }
+  .rcard .tt { font-size: 11.5pt; }
+  .rcard > summary { padding: 5pt 9pt; }
+  .vragen h4 { font-size: 8pt; margin: 0 0 2pt; }
+  .vragen li { font-size: 8.5pt; }
+  .chap h2 { font-size: 14pt; }
+  .chap h2 .cn { font-size: 8pt; }
+  .les-kop h1 { font-size: 20pt; }
+}
