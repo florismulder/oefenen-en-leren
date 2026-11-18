@@ -39,7 +39,7 @@ function render(html) {
 }
 function header() {
   if (inMenu) {
-    return '<header class="top"><div class="brand">Oefenspellen</div><div class="sub">Mediacollege Amsterdam</div></header>';
+    return '<header class="top"><div class="brand">Oefenen en leren</div><div class="sub">Mediacollege Amsterdam</div></header>';
   }
   if (vak === 'politiek') {
     return '<header class="top">' + hemicycle() + '<div class="brand">Kamer en Kabinet</div><div class="sub">Oefenrondes bij de reader</div></header>';
@@ -64,7 +64,8 @@ function viewMenu() {
   render(header() + `<main><h1>Kies je spel</h1>
     <p>Kies het spel dat je wilt spelen. Heb je al gespeeld, dan ga je daar verder waar je was.</p>
     <div class="games">${actief}
-    <div class="game soon" aria-hidden="true"><span class="gi">✨</span><span class="gt"><b>Binnenkort meer</b><span class="gx">Er komen later meer oefenspellen bij.</span></span></div></div>
+    <div class="game soon" aria-hidden="true"><span class="gi">🧊</span><span class="gt"><b>Koude Oorlog</b><span class="gv">Geschiedenis</span><span class="gx">Binnenkort beschikbaar.</span></span></div>
+    <div class="game soon" aria-hidden="true"><span class="gi">✨</span><span class="gt"><b>Binnenkort meer</b><span class="gx">Er komt later meer te oefenen bij.</span></span></div></div>
     ${arch ? `<details class="archief-box"><summary class="archief-kop">Archief</summary><p class="small-note">Deze spellen zijn afgerond. Je kunt ze nog openen. Spellen met een code open je met je eigen code.</p><div class="games archief">${arch}</div></details>` : ''}</main>`);
   app.querySelectorAll('.game[data-g]').forEach(b => b.onclick = () => {
     const gg = GAMES.find(x => x.id === b.dataset.g);

@@ -5,7 +5,7 @@ try { pw = sessionStorage.getItem('woii_docent'); } catch (e) {}
 
 function render(html) { app.innerHTML = html; window.scrollTo(0, 0); }
 function header(extra) {
-  return `<header class="top"><div class="brand">Docentenpagina</div><div class="sub">Oefenspellen Tweede Wereldoorlog en Kamer en Kabinet</div></header>${extra || ''}`;
+  return `<header class="top"><div class="brand">Docentenpagina</div><div class="sub">Oefenen en leren: Tweede Wereldoorlog en Kamer en Kabinet</div></header>${extra || ''}`;
 }
 function openReveal(id) {
   window.open('/reveal?klas=' + encodeURIComponent(id), '_blank');
