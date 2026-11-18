@@ -20,6 +20,7 @@ function telGoed(h) { return ALLE.filter(q => (!h || q.h === h) && goed[sleutel(
 function totaal(h) { return ALLE.filter(q => !h || q.h === h).length; }
 
 function start() {
+  ronde = null;
   const knop = (h, titel) => {
     const g = telGoed(h), t = totaal(h);
     return `<button class="og-keuze" data-h="${h}"><b>${esc(titel)}</b>${g} van ${t} goed beantwoord<div class="og-bar"><span style="width:${Math.round(100 * g / t)}%"></span></div></button>`;
@@ -41,6 +42,8 @@ function nieuweRonde(h) {
     const opts = mix(q.o.map((t, n) => ({ t, juist: n === 0 })));
     return { q, opts, gekozen: null };
   }) };
+  const st = history.state && history.state.s;
+  if (st === 'start') history.pushState({ s: 'ronde' }, ''); else history.replaceState({ s: 'ronde' }, '');
   toon();
 }
 
@@ -70,7 +73,7 @@ function toon() {
   }));
   const vb = app.querySelector('#volgende');
   if (vb) vb.addEventListener('click', () => { if (laatste) einde(); else { r.i++; toon(); } });
-  app.querySelector('#stop').addEventListener('click', start);
+  app.querySelector('#stop').addEventListener('click', terug);
 }
 
 function einde() {
@@ -80,6 +83,10 @@ function einde() {
   render(`<p class="og-meta">Klaar</p><p class="og-score">${r.score} van ${r.vragen.length} goed</p>${lijst}
   <div class="og-acties"><button class="og-knop" id="weer">Nog een ronde</button><button class="og-knop licht" id="menu">Terug naar het begin</button></div>`);
   app.querySelector('#weer').addEventListener('click', () => nieuweRonde(r.h));
-  app.querySelector('#menu').addEventListener('click', start);
+  app.querySelector('#menu').addEventListener('click', terug);
 }
+/* Terug-knop van telefoon of browser gaat naar het scherm ervoor, niet uit de app */
+function terug() { if (history.state && history.state.s === 'ronde') history.back(); else start(); }
+window.addEventListener('popstate', () => start());
+history.replaceState({ s: 'start' }, '');
 start();
