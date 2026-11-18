@@ -1,7 +1,6 @@
 const app = document.getElementById('app');
 const R = window.READER;
 const fmt = v => String(v).replace('.', ',');
-const KEY_REDEN = 'reader_kw_reden_';
 let lesNr = 1;
 
 function head() {
@@ -95,10 +94,6 @@ function view(n) {
       <p class="chap-intro">${esc(h.intro)}</p>
       ${h.kaarten.map(k => { kaartNr++; return kaartHtml(k, hi, kaartNr); }).join('')}
     </section>`).join('');
-  const rijen = l.lijn.map((p, i) => {
-    const sv = store.get(KEY_REDEN + l.id + '_' + i) || '';
-    return `<tr><td>${esc(p.k)}</td><td><input type="text" class="reden" data-i="${i}" value="${esc(sv)}" placeholder="Schrijf hier je reden" aria-label="Mijn reden bij ${esc(p.k)}"></td><td class="num">${p.v}</td></tr>`;
-  }).join('');
   const toetsTip = n === 4 ? '<li>Leer voor de toets met de reader en de oefentoets in de app.</li>' : '';
   app.innerHTML = head() + `<main class="reader">
     <nav class="lestabs" aria-label="Kies een les">${tabs}</nav>
@@ -123,11 +118,6 @@ function view(n) {
     </section>
     <div class="tools"><button class="btn ghost small" id="open" type="button">Alles openklappen</button><button class="btn ghost small" id="dicht" type="button">Alles dichtklappen</button><button class="btn ghost small" id="print" type="button">Print deze les</button></div>
     ${chap}
-    <section class="mijn">
-      <h2>Mijn spanningslijn</h2>
-      <p>Loop de lijn na. Schrijf per moment één reden in je eigen woorden. Je tekst blijft bewaard op dit apparaat.</p>
-      <table class="rtab"><thead><tr><th>Moment</th><th>Mijn reden in één zin</th><th class="num">Op de lijn</th></tr></thead><tbody>${rijen}</tbody></table>
-    </section>
     <div class="les-nav">
       ${n > 1 ? `<a class="btn ghost" href="#les${n - 1}">← Les ${n - 1}</a>` : '<span></span>'}
       ${n < R.lessen.length ? `<a class="btn" href="#les${n + 1}">Les ${n + 1} →</a>` : '<a class="btn" href="/">Naar het menu</a>'}
@@ -139,9 +129,6 @@ function view(n) {
   document.getElementById('open').onclick = () => all().forEach(d => d.open = true);
   document.getElementById('dicht').onclick = () => all().forEach(d => d.open = false);
   document.getElementById('print').onclick = () => window.print();
-  app.querySelectorAll('input.reden').forEach(inp => {
-    inp.oninput = () => store.set(KEY_REDEN + l.id + '_' + inp.dataset.i, inp.value);
-  });
   document.title = l.titel + ' | Reader Koude Oorlog';
 }
 
