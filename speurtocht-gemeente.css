@@ -1,0 +1,32 @@
+/* Speurtocht Gemeente: aanvulling op style.css en reader-gemeente.css */
+.st-slots { display: flex; gap: 8px; margin: 12px 0 4px; }
+.st-slot { flex: 1; max-width: 64px; aspect-ratio: 1; display: grid; place-items: center; border: 2px dashed var(--line-strong); border-radius: 8px; font-size: 28px; font-weight: 700; color: var(--muted); background: var(--card); }
+.st-slot.vol { border: 2px solid var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+.st-kop { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; }
+.st-nr { flex: none; width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; display: grid; place-items: center; }
+.st-kop h2 { margin: 0; font-size: 20px; }
+.st-letter { margin-left: auto; font-weight: 700; font-size: 22px; color: var(--accent-ink); }
+.st-card.klaar { border-color: var(--good-line); }
+.st-stap { margin: 16px 0 0; font-weight: 700; color: var(--accent-ink); font-size: 14px; text-transform: uppercase; letter-spacing: .4px; }
+.st-kaart { border: 1px solid var(--line); border-radius: 8px; padding: 0 14px; background: var(--soft); margin: 8px 0 0; }
+.st-kaart summary { cursor: pointer; padding: 12px 0; font-weight: 700; min-height: 44px; }
+.st-vraag { font-size: 18px; font-weight: 700; margin: 8px 0 10px; }
+.st-opts { display: grid; gap: 8px; }
+.st-opt { font: inherit; text-align: left; background: var(--card); border: 1px solid var(--line-strong); border-radius: 6px; padding: 11px 14px; min-height: 44px; cursor: pointer; color: inherit; display: flex; gap: 10px; }
+.st-opt:hover { border-color: var(--accent); }
+.st-opt .let { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-ink); font-weight: 700; display: grid; place-items: center; font-size: 14px; }
+.st-opt.fout { border-color: var(--bad-line); background: var(--bad-bg); }
+.st-opt.goed { border-color: var(--good-line); background: var(--good-bg); }
+.st-fb { margin: 10px 0 0; padding: 10px 12px; border-radius: 6px; }
+.st-fb.ok { background: var(--good-bg); border: 1px solid var(--good-line); }
+.st-fb.nok { background: var(--bad-bg); border: 1px solid var(--bad-line); }
+.st-onderzoek { background: var(--tip-bg); border: 1px solid var(--tip-line); border-radius: 8px; padding: 12px 14px; margin: 8px 0 0; }
+.st-onderzoek p { margin: 0 0 8px; }
+.st-onderzoek textarea { width: 100%; min-height: 84px; font: inherit; padding: 10px; border: 1px solid var(--line-strong); border-radius: 6px; box-sizing: border-box; background: #fff; }
+.st-eind h2 { margin-top: 0; }
+.st-code { font-size: 44px; font-weight: 700; letter-spacing: 8px; color: var(--accent-ink); margin: 6px 0; }
+.st-dossier { white-space: pre-wrap; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 8px 0 0; }
+.st-lijst { margin: 8px 0 0; padding-left: 22px; }
+.st-lijst li { margin: 6px 0; }
+.st-acties { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+@media print { .st-acties, .st-opts { display: none; } }

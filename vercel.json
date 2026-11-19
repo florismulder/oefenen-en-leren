@@ -179,6 +179,10 @@
     {
       "source": "/gemeente/oefenen",
       "destination": "/oefenen-gemeente"
+    },
+    {
+      "source": "/gemeente/speurtocht",
+      "destination": "/speurtocht-gemeente"
     }
   ]
 }
