@@ -1,12 +1,36 @@
-/* Speurtocht Gemeente: open voor iedereen, zonder code. Voortgang en notities staan alleen in deze browser. */
+/* Speurtocht Gemeente: open voor iedereen, zonder code. Voortgang en notities staan in deze browser. De voortgang gaat anoniem, zonder naam, ook naar de docent. */
 const app = document.getElementById('app');
 const G = window.GEMEENTE;
 const KEY = 'gemeente_speurtocht';
 const LET = ['A', 'B', 'C', 'D'];
 const CODE = ['L', 'O', 'K', 'E', 'T'];
-let S = { klaar: {}, fout: {}, notes: {} };
+let S = { klaar: {}, fout: {}, notes: {}, tijd: {}, btijd: {}, start: 0 };
 try { S = Object.assign(S, JSON.parse(store.get(KEY) || '{}') || {}); } catch (e) { /* leeg beginnen */ }
-function bewaar() { store.set(KEY, JSON.stringify(S)); }
+if (!S.tijd) S.tijd = {};
+if (!S.btijd) S.btijd = {};
+if (!S.start) S.start = Date.now();
+const RUNKEY = 'gemeente_speurtocht_run';
+function nieuwId() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  const h = n => Array.from({ length: n }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+  return `${h(8)}-${h(4)}-4${h(3)}-a${h(3)}-${h(12)}`;
+}
+let RUN = store.get(RUNKEY);
+if (!RUN) { RUN = nieuwId(); store.set(RUNKEY, RUN); }
+const sec = () => Math.max(0, Math.round((Date.now() - S.start) / 1000));
+let stuurTimer = null;
+function stateVoorServer() {
+  const notes = {};
+  Object.keys(S.notes || {}).forEach(k => { const v = String(S.notes[k] || '').trim(); if (v) notes[k] = v.slice(0, 600); });
+  const fout = {};
+  Object.keys(S.fout || {}).forEach(k => { fout[k] = (S.fout[k] || []).length; });
+  return { v: 1, start: S.start, klaar: S.klaar, fout, tijd: S.tijd, btijd: S.btijd, notes };
+}
+function stuur() {
+  clearTimeout(stuurTimer);
+  stuurTimer = setTimeout(() => { rpc('speurtocht_save', { p_run: RUN, p_state: stateVoorServer() }); }, 1500);
+}
+function bewaar() { store.set(KEY, JSON.stringify(S)); stuur(); }
 
 const STATIONS = [
   {
@@ -185,6 +209,7 @@ function view() {
         <li>Elk station heeft drie stappen: lees, beantwoord, zoek zelf verder.</li>
         <li>Een goed antwoord geeft een letter. Een fout antwoord? Lees de kaart nog eens en probeer opnieuw.</li>
       </ul>
+      <p class="small-note">Je docent ziet hoe ver je bent en wat je invult. Er staat geen naam bij. Schrijf dus je naam niet in je notities.</p>
       ${slots()}
       <p class="small-note">${n} van 5 sleutels gevonden</p>
     </section>
@@ -196,13 +221,13 @@ function view() {
     const nr = parseInt(b.dataset.s, 10), i = parseInt(b.dataset.i, 10);
     const s = STATIONS[nr - 1];
     if (S.klaar[nr]) return;
-    if (i === s.juist) { S.klaar[nr] = true; } else { S.fout[nr] = (S.fout[nr] || []).concat(i); }
+    if (i === s.juist) { S.klaar[nr] = true; S.tijd[nr] = sec(); } else { S.fout[nr] = (S.fout[nr] || []).concat(i); }
     bewaar();
     const y = window.scrollY;
     view();
     window.scrollTo(0, y);
   });
-  app.querySelectorAll('textarea').forEach(t => t.oninput = () => { S.notes[t.dataset.n] = t.value; bewaar(); const d = app.querySelector('.st-dossier'); if (d) d.textContent = dossier(); const bt = document.getElementById('bteller'); if (bt) bt.textContent = bonusTekst(bonusKlaar()); });
+  app.querySelectorAll('textarea').forEach(t => t.oninput = () => { S.notes[t.dataset.n] = t.value; if (/^b\d$/.test(t.dataset.n) && t.value.trim().length >= 15 && !S.btijd[t.dataset.n]) S.btijd[t.dataset.n] = sec(); bewaar(); const d = app.querySelector('.st-dossier'); if (d) d.textContent = dossier(); const bt = document.getElementById('bteller'); if (bt) bt.textContent = bonusTekst(bonusKlaar()); });
   const kop = document.getElementById('kopieer');
   if (kop) kop.onclick = () => {
     const fb = document.getElementById('kopieerfb');
@@ -212,7 +237,7 @@ function view() {
   };
   document.getElementById('opnieuw').onclick = () => {
     if (!confirm('Alles wissen en opnieuw beginnen? Je notities gaan ook weg.')) return;
-    S = { klaar: {}, fout: {}, notes: {} };
+    S = { klaar: {}, fout: {}, notes: {}, tijd: {}, btijd: {}, start: Date.now() };
     bewaar();
     view();
     window.scrollTo(0, 0);

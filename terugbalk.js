@@ -4,7 +4,7 @@
     '/reader': 'geschiedenis', '/koude-oorlog/reader': 'geschiedenis',
     '/reader-gemeente': 'politiek', '/gemeente/reader': 'politiek',
     '/oefenen-gemeente': 'politiek', '/gemeente/oefenen': 'politiek',
-    '/speurtocht-gemeente': 'politiek', '/gemeente/speurtocht': 'politiek',
+    '/speurtocht-gemeente': 'politiek', '/gemeente/speurtocht': 'politiek', '/speurtocht-docent': 'politiek', '/gemeente/resultaten': 'politiek',
     '/flash': 'politiek'
   };
   var vak = VAKKEN[p];

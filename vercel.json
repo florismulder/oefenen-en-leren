@@ -183,6 +183,10 @@
     {
       "source": "/gemeente/speurtocht",
       "destination": "/speurtocht-gemeente"
+    },
+    {
+      "source": "/gemeente/resultaten",
+      "destination": "/speurtocht-docent"
     }
   ]
 }
