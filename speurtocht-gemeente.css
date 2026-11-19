@@ -29,4 +29,9 @@
 .st-lijst { margin: 8px 0 0; padding-left: 22px; }
 .st-lijst li { margin: 6px 0; }
 .st-acties { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.st-bonus { border-color: var(--accent); }
+.st-bonus h2 { margin-top: 0; }
+.st-bmissie { margin: 12px 0 0; }
+.st-bmissie.klaar { border-color: var(--good-line); background: var(--good-bg); }
+.st-bteller { font-weight: 700; color: var(--accent-ink); margin: 14px 0 0; }
 @media print { .st-acties, .st-opts { display: none; } }

@@ -61,6 +61,13 @@ const STATIONS = [
   }
 ];
 
+const BONUS = [
+  { id: 'b1', titel: 'Vergelijk met een buurgemeente', tekst: 'Kies een gemeente naast de jouwe. Zoek haar burgemeester en haar aantal inwoners. Schrijf één zin: wat valt je op als je ze vergelijkt?', veld: 'Mijn vergelijking met een buurgemeente (met bron en datum)' },
+  { id: 'b2', titel: 'Kijk in de gemeenteraad', tekst: 'Zoek op de site van jouw gemeente hoeveel zetels de gemeenteraad heeft. Welke partij heeft de meeste zetels? Zet de bron en de datum erbij.', veld: 'Mijn gemeenteraad: aantal zetels en grootste partij (met bron en datum)' },
+  { id: 'b3', titel: 'Schrijf het nieuws', tekst: 'Zoek een nieuw plan of besluit van jouw gemeente. Schrijf een kop van hooguit 8 woorden en twee zinnen: wat gebeurt er en wat betekent het voor jongeren?', veld: 'Mijn nieuwsbericht: kop en twee zinnen (met bron en datum)' }
+];
+const bonusKlaar = () => BONUS.filter(b => (S.notes[b.id] || '').trim().length >= 15).length;
+
 const kaartVan = nr => G.hoofdstukken[0].kaarten.find(k => k.nr === nr);
 
 function head() {
@@ -110,7 +117,26 @@ function stationHtml(s) {
 }
 
 function dossier() {
-  return STATIONS.map(s => `${s.veld}:\n${(S.notes[s.nr] || '').trim() || '(nog niets ingevuld)'}`).join('\n\n');
+  const basis = STATIONS.map(s => `${s.veld}:\n${(S.notes[s.nr] || '').trim() || '(nog niets ingevuld)'}`);
+  const bonus = BONUS.filter(b => (S.notes[b.id] || '').trim()).map(b => `Bonus, ${b.veld}:\n${S.notes[b.id].trim()}`);
+  return basis.concat(bonus).join('\n\n');
+}
+
+function bonusHtml() {
+  const n = bonusKlaar();
+  return `<section class="card st-bonus">
+    <h2>Bonusronde: de geheime kluis</h2>
+    <p>Klaar met je dia? Dan is er nog een kluis. Er zijn drie missies. Kies er zoveel als je wilt. Je mag in elke volgorde.</p>
+    ${BONUS.map((b, i) => `<div class="st-onderzoek st-bmissie${(S.notes[b.id] || '').trim().length >= 15 ? ' klaar' : ''}">
+      <p class="st-stap">Missie ${i + 1}: ${esc(b.titel)}</p>
+      <p>${esc(b.tekst)}</p>
+      <textarea data-n="${b.id}" aria-label="${esc(b.veld)}" placeholder="${esc(b.veld)}">${esc(S.notes[b.id] || '')}</textarea></div>`).join('')}
+    <p class="st-bteller" id="bteller" aria-live="polite">${bonusTekst(n)}</p>
+  </section>`;
+}
+function bonusTekst(n) {
+  if (n >= 3) return 'Alle drie de missies klaar. Je bent een topspeurder! Laat het aan je docent zien.';
+  return `${n} van 3 missies klaar.`;
 }
 
 function eindHtml() {
@@ -144,7 +170,7 @@ function eindHtml() {
     <div class="st-acties"><button type="button" class="btn small" id="kopieer">Kopieer mijn dossier</button>
       <a class="btn ghost small" href="/gemeente/oefenen">Oefen met vragen</a></div>
     <p class="small-note" id="kopieerfb" aria-live="polite"></p>
-  </section>`;
+  </section>` + bonusHtml();
 }
 
 function view() {
@@ -176,7 +202,7 @@ function view() {
     view();
     window.scrollTo(0, y);
   });
-  app.querySelectorAll('textarea').forEach(t => t.oninput = () => { S.notes[t.dataset.n] = t.value; bewaar(); const d = app.querySelector('.st-dossier'); if (d) d.textContent = dossier(); });
+  app.querySelectorAll('textarea').forEach(t => t.oninput = () => { S.notes[t.dataset.n] = t.value; bewaar(); const d = app.querySelector('.st-dossier'); if (d) d.textContent = dossier(); const bt = document.getElementById('bteller'); if (bt) bt.textContent = bonusTekst(bonusKlaar()); });
   const kop = document.getElementById('kopieer');
   if (kop) kop.onclick = () => {
     const fb = document.getElementById('kopieerfb');
