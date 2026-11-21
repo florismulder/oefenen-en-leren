@@ -177,6 +177,10 @@
       "destination": "/oefenen-koude-oorlog"
     },
     {
+      "source": "/koude-oorlog/tijdlijn",
+      "destination": "/tijdlijn"
+    },
+    {
       "source": "/koude-oorlog/toetsvraag",
       "destination": "/toetsvraag"
     },

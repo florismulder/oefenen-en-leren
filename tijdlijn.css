@@ -1,0 +1,99 @@
+:root{--ink:#17181A;--cream:#EDE8DC;--paper:#F1EDE4;--card:#E4DFD3;--dark2:#26282B;--mag:#FF00E7;--blue:#3D5A80;--grey:#5B5F64;--line:#BDB7A8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--cream);font-family:Arial,Helvetica,sans-serif}
+#app{max-width:1280px;margin:0 auto;padding:20px 16px 60px}
+.tag{display:inline-block;font:700 14px/1 "Courier New",monospace;letter-spacing:2px;text-transform:uppercase;background:var(--mag);color:#fff;padding:7px 12px}
+h1,h2{text-transform:uppercase;line-height:1.02;margin:0}
+.hero h1{font-size:clamp(40px,8vw,92px);margin:14px 0 10px}
+.hero p{font-size:20px;line-height:1.35;max-width:760px;margin:0 0 20px}
+.btn{font:700 17px Arial;background:var(--mag);color:#fff;border:0;padding:14px 22px;cursor:pointer;min-height:48px}
+.btn:hover{filter:brightness(.92)}
+.btn.licht{background:transparent;color:var(--cream);border:2px solid var(--cream)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--dark2);padding:18px 20px;margin:0 0 16px}
+.card h2{font-size:22px;margin-bottom:10px}
+.namen{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld label{display:block;font:700 12px "Courier New",monospace;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 6px;color:#9AA0A6}
+.fld input{width:100%;font:700 20px Arial;padding:12px;border:0;background:var(--cream);color:var(--ink)}
+.stappen{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 16px}
+.vink{font:700 13px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;padding:6px 10px;background:var(--dark2);color:#9AA0A6}
+.vink.ok{background:var(--mag);color:#fff}
+.moment-groep{margin:0 0 14px}
+.moment-groep h3{font:700 13px "Courier New",monospace;letter-spacing:2px;text-transform:uppercase;color:var(--mag);margin:0 0 8px}
+.momenten{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.mom{text-align:left;font:inherit;color:var(--ink);background:var(--card);border:3px solid transparent;padding:12px 14px;cursor:pointer;min-height:84px}
+.mom b{display:block;font:700 13px "Courier New",monospace;letter-spacing:1px;margin-bottom:4px}
+.mom span{font-size:17px;line-height:1.25}
+.mom.aan{border-color:var(--mag);background:#fff}
+.mom.vol:not(.aan){opacity:.4;cursor:not-allowed}
+.teller{font:700 14px "Courier New",monospace;letter-spacing:1px;margin:0 0 10px}
+/* poster */
+.poster{background:var(--paper);color:var(--ink);padding:0 0 18px;position:relative;margin:18px 0}
+.poster .bar{height:12px;background:var(--mag)}
+.p-kop{padding:16px 22px 6px}
+.p-kop .tag{font-size:12px}
+.p-titel{font-size:clamp(26px,4.2vw,50px);font-weight:700;text-transform:uppercase;line-height:1;margin:8px 0 4px;min-height:1em}
+.p-titel.leeg{color:var(--line)}
+.p-namen{font:700 16px "Courier New",monospace;min-height:1.2em}
+.p-grid{display:grid;grid-template-columns:90px repeat(6,1fr);gap:0 10px;padding:0 22px}
+.p-chart{grid-column:2/8;position:relative}
+.p-as{grid-column:1;position:relative}
+.p-as span{position:absolute;left:0;font:700 12px "Courier New",monospace;color:var(--grey);line-height:1.1}
+.p-as .hi{color:var(--mag);font-size:26px}
+.p-as .lo{color:var(--blue);font-size:26px}
+svg.lijn{display:block;width:100%;height:auto;overflow:visible}
+svg .rij{transition:cy .5s cubic-bezier(.3,1.4,.5,1)}
+.slot{background:var(--card);padding:0;display:flex;flex-direction:column;min-height:300px;grid-row:2;margin-top:6px}
+.slot.leeg{background:transparent;border:3px dashed var(--line);align-items:center;justify-content:center;text-align:center;font:700 14px "Courier New",monospace;color:var(--grey);padding:14px}
+.s-kop{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap;background:var(--ink);color:var(--cream);padding:6px 8px;font:700 12px "Courier New",monospace;letter-spacing:.5px}
+.s-kop em{font-style:normal;color:var(--mag)}
+.s-foto{aspect-ratio:4/3;background:#ccc;position:relative;overflow:hidden;border:0;padding:0;cursor:pointer;width:100%}
+.s-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.s-foto .kies{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 13px "Courier New",monospace;text-align:center;background:#d8d3c6;color:var(--grey);padding:6px}
+.s-foto:hover .wissel{opacity:1}
+.wissel{position:absolute;right:4px;bottom:4px;background:var(--mag);color:#fff;font:700 11px "Courier New",monospace;padding:3px 6px;opacity:0;transition:.15s}
+.s-zin{width:100%;border:0;background:#fff;padding:8px;font:15px/1.25 Arial;resize:none;height:84px;color:var(--ink)}
+.s-zin-print{display:none;padding:8px;font:700 13px/1.25 Arial}
+.s-teller{font:11px "Courier New",monospace;color:var(--grey);text-align:right;padding:0 6px 4px;background:#fff}
+.cijfers{display:grid;grid-template-columns:repeat(10,1fr);margin-top:auto}
+.cijfers button{border:0;padding:8px 0;font:700 13px Arial;cursor:pointer;color:#fff}
+.cijfers button.sel{outline:3px solid var(--ink);outline-offset:-3px;position:relative;z-index:1}
+.cijfers button:hover{filter:brightness(1.15)}
+.s-cijfer-print{display:none}
+.p-voet{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;gap:12px}
+.p-voet img{height:34px}
+.p-voet span{font:700 12px "Courier New",monospace;color:var(--grey);text-align:right}
+.acties{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0}
+.meld{background:var(--dark2);padding:14px 18px;margin:12px 0;font-size:17px;line-height:1.35}
+.meld b{color:var(--mag)}
+.fout{color:#ff7a7a;font-weight:700}
+.toets{background:var(--mag);color:#fff;padding:16px 20px;margin:14px 0}
+.toets h3{margin:0 0 6px;text-transform:uppercase;font-size:22px}
+.toets ul{margin:6px 0 0;padding-left:20px}
+dialog{border:0;padding:18px;background:var(--ink);color:var(--cream);width:min(960px,94vw)}
+dialog::backdrop{background:rgba(0,0,0,.7)}
+.fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px}
+.fotos button{border:3px solid transparent;padding:0;background:none;cursor:pointer;text-align:left;color:var(--cream)}
+.fotos button:hover,.fotos button.aan{border-color:var(--mag)}
+.fotos img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.fotos span{display:block;font-size:13px;line-height:1.25;padding:6px 2px}
+.tip{color:#9AA0A6;font-size:15px;margin:10px 0 0}
+@media(max-width:900px){.p-grid{grid-template-columns:repeat(2,1fr);gap:10px}.p-as{display:none}.p-chart{grid-column:1/-1}.slot{grid-row:auto}.namen{grid-template-columns:1fr}}
+@media print{
+ @page{size:A4 landscape;margin:7mm}
+ body{background:#fff}
+ #app{max-width:none;padding:0}
+ .hero,.stappen,.keuze,.acties,.meld,.toets,.tip,.btn,.nietprint,dialog,.terugbalk{display:none!important}
+ .poster{margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-inside:avoid}
+ .p-grid{grid-template-columns:76px repeat(6,1fr)}
+ .slot{min-height:0}
+ .s-foto{aspect-ratio:16/10}
+ .p-grid svg{max-height:120mm}
+ .slot.leeg{display:none}
+ .s-zin,.s-teller,.wissel{display:none}
+ .s-zin-print{display:block;min-height:60px}
+ .cijfers{display:none}
+ .s-cijfer-print{display:block;font:700 22px Arial;text-align:center;color:#fff;padding:4px 0}
+ .s-foto{cursor:default}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
