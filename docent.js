@@ -102,7 +102,7 @@ function viewClasses(r) {
     <td>${esc(fmtDay(k.eind_datum))}${k.afgelopen ? ' (afgelopen)' : ''}</td>
     <td><button class="btn small" data-open="${esc(k.id)}">Openen</button> <button class="btn small ghost" data-reveal="${esc(k.id)}">Onthul stand</button> <button class="btn small ghost" data-xl="${esc(k.id)}">Excel</button> <button class="btn small danger" data-del="${esc(k.id)}" data-naam="${esc(k.naam)}">Verwijderen</button></td></tr>`).join('');
   render(header() + `
-    <div class="row" style="margin-bottom:12px"><div><button class="btn ghost small" id="out">Uitloggen</button></div>${r.klassen.length ? '<div><button class="btn small" id="xlall">Download alle klassen als Excel</button></div>' : ''}</div>
+    <div class="row" style="margin-bottom:12px"><div><button class="btn ghost small" id="out">Uitloggen</button></div><div><a class="btn small" href="/quiz-docent">Live quiz beheren</a></div>${r.klassen.length ? '<div><button class="btn small" id="xlall">Download alle klassen als Excel</button></div>' : ''}</div>
     <h2>Mijn klassen</h2>
     ${r.klassen.length ? `<div class="table-scroll"><table class="docent"><thead><tr><th>Klas</th><th>Vak</th><th>Studenten</th><th>Einddatum</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="small-note">In het Excel-bestand staat een lege kolom Naam student. Vul die alleen op je eigen computer in. Het systeem slaat geen namen op.</p>` : '<p>Nog geen klassen. Maak hieronder je eerste klas aan.</p>'}

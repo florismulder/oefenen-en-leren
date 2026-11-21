@@ -1,0 +1,197 @@
+/* Live quiz: thema's, spelerscherm, digibord en beheer. Bouwt voort op style.css. */
+
+/* ---------- Thema's ---------- */
+body.kq {
+  --kq-timer: #ff00e6;
+  --a0: #a8008f; --a1: #1f4a96; --a2: #1a7f4b; --a3: #8a5a00;
+  --kq-deco: none;
+}
+body.kq[data-kq="koude_oorlog"] {
+  --bg: #0f1720; --ink: #eaf1f6; --card: #1a2530; --line: #2c3b49; --line-strong: #3d5063; --muted: #9db0c0; --soft: #223140;
+  --accent: #e5484d; --accent-ink: #ff8a8e; --primary: #c92a30; --primary-ink: #ffffff; --primary-hover: #a82227;
+  --head-bg: #0a1118; --head-ink: #ffffff; --head-sub: #9db0c0;
+  --good: #6fdc9a; --good-bg: #12301f; --good-line: #2f7a52; --bad: #ff8a8e; --bad-bg: #3a1519; --bad-line: #7a2a31;
+  --bar: #2c3b49; --bar-fill: #e5484d;
+  --a0: #b3263c; --a1: #1f5f99; --a2: #55657a; --a3: #8f6410;
+  --kq-timer: #e5484d;
+  --kq-deco: repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 2px, transparent 2px 24px);
+}
+body.kq[data-kq="woii"] {
+  --bg: #1c1e16; --ink: #f1edde; --card: #2a2d21; --line: #3c402f; --line-strong: #535a40; --muted: #b5b394; --soft: #33372a;
+  --accent: #d9a441; --accent-ink: #e8bd68; --primary: #d9a441; --primary-ink: #1c1e16; --primary-hover: #c4912f;
+  --head-bg: #141610; --head-ink: #ffffff; --head-sub: #b5b394;
+  --good: #8fe0a8; --good-bg: #1d3323; --good-line: #3d7a52; --bad: #ff9a8a; --bad-bg: #3a1d17; --bad-line: #7a3a30;
+  --bar: #3c402f; --bar-fill: #d9a441;
+  --a0: #5a742a; --a1: #a24a2a; --a2: #7b6a25; --a3: #3f5f73;
+  --kq-timer: #d9a441;
+  --kq-deco: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 18px);
+}
+body.kq[data-kq="politiek"] {
+  --bg: #eef2fa; --ink: #14223f; --card: #ffffff; --line: #d6deee; --line-strong: #bccae6; --muted: #52617f; --soft: #e9eef9;
+  --accent: #e87722; --accent-ink: #b85a10; --primary: #1f4a96; --primary-ink: #ffffff; --primary-hover: #173a78;
+  --head-bg: #14305f; --head-ink: #ffffff; --head-sub: #cbd8f3;
+  --bar: #dbe3f3; --bar-fill: #e87722;
+  --a0: #1f4a96; --a1: #b85a10; --a2: #1a7f4b; --a3: #6b3fa0;
+  --kq-timer: #e87722;
+}
+body.kq { background-image: var(--kq-deco); }
+body.kq input, body.kq select, body.kq textarea {
+  background: var(--card); color: var(--ink); border-color: var(--line-strong);
+}
+body.kq .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+body.kq .btn.ghost:hover { background: var(--soft); }
+body.kq .btn.danger { background: transparent; }
+body.kq .pill { background: var(--soft); color: var(--ink); border: 1px solid var(--line); }
+
+/* ---------- Gedeelde onderdelen ---------- */
+.kq-opt {
+  display: flex; align-items: center; gap: 14px; text-align: left; font: inherit; font-weight: 700; color: #ffffff;
+  background: var(--c, var(--a0)); border: 3px solid transparent; border-radius: 12px; padding: 14px 16px; cursor: pointer;
+  min-height: 72px; width: 100%;
+}
+.kq-opt .kq-l {
+  flex: none; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px;
+  border-radius: 8px; background: rgba(255,255,255,.22); font-size: 20px;
+}
+.kq-opt .kq-t { flex: 1; font-size: 18px; line-height: 1.3; overflow-wrap: anywhere; }
+.kq-opt:disabled { cursor: default; }
+.kq-opt.dim { opacity: .38; }
+.kq-opt.sel { border-color: #ffffff; box-shadow: 0 0 0 3px var(--accent); }
+.kq-opt.juist { border-color: #ffffff; box-shadow: 0 0 0 4px var(--good, #1a7f4b); }
+.kq-bar { height: 10px; border-radius: 6px; background: var(--bar, #e7e1ee); overflow: hidden; }
+.kq-bar > i { display: block; height: 100%; width: 100%; background: var(--kq-timer); transition: width .12s linear; }
+.kq-bar > i.laag { background: var(--bad, #b3263c); }
+.kq-badge {
+  display: inline-block; font-weight: 700; font-size: 13px; letter-spacing: .5px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 6px; background: var(--accent); color: var(--primary-ink, #fff);
+}
+body.kq[data-kq="koude_oorlog"] .kq-badge { color: #fff; background: #c92a30; }
+body.kq[data-kq="neutraal"] .kq-badge, body.kq[data-kq="politiek"] .kq-badge { background: var(--accent-ink); color: #fff; }
+
+/* ---------- Spelerscherm (telefoon) ---------- */
+body.kq-s .wrap { max-width: 520px; }
+.kq-avatars { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; margin: 6px 0 4px; }
+.kq-avatars button {
+  font-size: 24px; line-height: 1; padding: 6px 0; background: var(--card); border: 2px solid var(--line); border-radius: 8px; cursor: pointer;
+}
+.kq-avatars button[aria-pressed="true"] { border-color: var(--accent-ink); background: var(--soft); box-shadow: 0 0 0 2px var(--accent-ink); }
+.kq-pin { letter-spacing: 6px; font-size: 24px; text-align: center; font-weight: 700; }
+.kq-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0 12px; font-weight: 700; }
+.kq-top .kq-who { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.kq-top .kq-who span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kq-vraagtekst { font-size: 22px; line-height: 1.3; font-weight: 700; margin: 16px 0; overflow-wrap: anywhere; }
+.kq-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 52vh; align-content: stretch; }
+.kq-opts.two { grid-template-columns: 1fr; min-height: 40vh; }
+.kq-opts .kq-opt { height: 100%; }
+.kq-mid { text-align: center; padding: 28px 8px; }
+.kq-mid .kq-big { font-size: 64px; line-height: 1.1; margin: 8px 0; }
+.kq-mid h1 { font-size: 30px; }
+.kq-res { border-radius: var(--radius); padding: 24px 16px; text-align: center; border: 2px solid; margin: 12px 0; }
+.kq-res.ok { background: var(--good-bg); border-color: var(--good-line); color: var(--good); }
+.kq-res.fout { background: var(--bad-bg); border-color: var(--bad-line); color: var(--bad); }
+.kq-res b { display: block; font-size: 32px; }
+.kq-res span { font-size: 18px; }
+.kq-stat { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+.kq-stat > div { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; text-align: center; }
+.kq-stat b { display: block; font-size: 28px; }
+.kq-stat small { color: var(--muted); }
+.kq-juistant { margin: 12px 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.kq-net { position: fixed; left: 0; right: 0; bottom: 0; padding: 8px 12px; text-align: center; background: var(--bad-bg, #fcedf0); color: var(--bad, #b3263c); font-weight: 700; z-index: 10; }
+
+/* ---------- Digibord ---------- */
+body.kq-h { margin: 0; overflow-x: hidden; }
+.kqh { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; padding: 18px clamp(16px, 3vw, 48px) 28px; gap: 18px; }
+.kqh-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; font-weight: 700; font-size: clamp(16px, 1.6vw, 24px); border-bottom: 3px solid var(--accent); padding-bottom: 12px; }
+.kqh-top .kqh-set { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.kqh-top .kqh-pin { background: var(--soft); border: 1px solid var(--line); border-radius: 8px; padding: 4px 14px; letter-spacing: 3px; }
+.kqh-top .btn { margin-top: 0; }
+.kqh-main { display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+
+.kqh-lobby { display: grid; grid-template-columns: minmax(280px, 5fr) 7fr; gap: clamp(20px, 3vw, 48px); align-items: stretch; }
+.kqh-join { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: clamp(20px, 2.4vw, 40px); display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+.kqh-join h1 { font-size: clamp(24px, 2.6vw, 40px); margin: 0; }
+.kqh-join .kqh-url { font-size: clamp(20px, 2.2vw, 34px); font-weight: 700; color: var(--accent-ink); overflow-wrap: anywhere; }
+.kqh-join .kqh-bigpin { font-size: clamp(56px, 8vw, 128px); font-weight: 700; letter-spacing: .08em; line-height: 1; }
+.kqh-wie { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: clamp(16px, 2vw, 32px); display: flex; flex-direction: column; gap: 14px; min-height: 360px; }
+.kqh-wie h2 { margin: 0; font-size: clamp(20px, 2vw, 30px); }
+.kqh-chips { display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; flex: 1; }
+.kqh-chip { display: inline-flex; align-items: center; gap: 8px; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 6px 8px 6px 14px; font-size: clamp(16px, 1.6vw, 24px); font-weight: 700; }
+.kqh-chip button { font: inherit; font-size: 14px; line-height: 1; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line-strong); background: transparent; color: var(--muted); cursor: pointer; }
+.kqh-chip button:hover { background: var(--bad-bg, #fcedf0); color: var(--bad, #b3263c); }
+.kqh-leeg { color: var(--muted); font-size: clamp(16px, 1.6vw, 24px); }
+.kqh-start { align-self: flex-start; font-size: clamp(18px, 1.8vw, 28px); padding: 14px 36px; min-height: 60px; }
+
+.kqh-vraag { font-size: clamp(28px, 4vw, 64px); line-height: 1.2; font-weight: 700; overflow-wrap: anywhere; }
+.kqh-tijdrij { display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center; }
+.kqh-tijdrij .kq-bar { height: clamp(14px, 1.6vw, 24px); border-radius: 12px; }
+.kqh-sec { font-size: clamp(32px, 4vw, 64px); font-weight: 700; min-width: 2.2ch; text-align: right; }
+.kqh-teller { font-size: clamp(16px, 1.8vw, 28px); color: var(--muted); white-space: nowrap; }
+.kqh-teller b { color: var(--ink); }
+.kqh-opts { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 1.4vw, 20px); }
+.kqh-opts.two { grid-template-columns: 1fr 1fr; }
+.kqh-opt { position: relative; display: flex; align-items: center; gap: 16px; color: #fff; background: var(--c); border-radius: 14px; padding: clamp(14px, 2vw, 30px); min-height: clamp(90px, 14vh, 170px); font-weight: 700; font-size: clamp(20px, 2.6vw, 40px); overflow: hidden; }
+.kqh-opt .kq-l { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 1.6em; height: 1.6em; border-radius: 10px; background: rgba(255,255,255,.22); }
+.kqh-opt .kq-t { flex: 1; line-height: 1.2; overflow-wrap: anywhere; }
+.kqh-opt .kqh-n { flex: none; font-size: 1.3em; }
+.kqh-opt.dim { opacity: .3; }
+.kqh-opt.juist { box-shadow: 0 0 0 6px var(--good, #1a7f4b); }
+.kqh-opt .kqh-tel { position: absolute; left: 0; bottom: 0; height: 8px; background: rgba(255,255,255,.6); }
+
+.kqh-uitslag { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(16px, 2.4vw, 40px); align-items: start; }
+.kqh-top5 { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: clamp(14px, 1.8vw, 28px); }
+.kqh-top5 h2 { margin: 0 0 10px; font-size: clamp(20px, 2vw, 30px); }
+.kqh-rij { display: grid; grid-template-columns: 2.2ch 1fr auto; gap: 12px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); font-size: clamp(16px, 1.8vw, 28px); font-weight: 700; }
+.kqh-rij:first-of-type { border-top: 0; }
+.kqh-rij .plus { color: var(--good, #1a7f4b); font-size: .7em; margin-left: 8px; }
+.kqh-rij .sc { font-variant-numeric: tabular-nums; }
+.kqh-acties { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.kqh-acties .btn { margin-top: 0; font-size: clamp(16px, 1.6vw, 24px); padding: 12px 28px; min-height: 56px; }
+
+.kqh-podium { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(10px, 2vw, 32px); align-items: end; min-height: 46vh; max-width: 1100px; margin: 0 auto; width: 100%; }
+.kqh-pod { text-align: center; opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; display: flex; flex-direction: column; justify-content: flex-end; }
+.kqh-pod.zicht { opacity: 1; transform: none; }
+.kqh-pod .av { font-size: clamp(48px, 7vw, 110px); line-height: 1; }
+.kqh-pod .nm { font-weight: 700; font-size: clamp(20px, 2.6vw, 40px); overflow-wrap: anywhere; }
+.kqh-pod .pt { color: var(--muted); font-size: clamp(16px, 1.8vw, 28px); font-variant-numeric: tabular-nums; margin-bottom: 8px; }
+.kqh-pod .blok { background: var(--accent); color: var(--primary-ink, #fff); border-radius: 12px 12px 0 0; font-weight: 700; font-size: clamp(32px, 5vw, 80px); padding: 10px 0; }
+body.kq[data-kq="neutraal"] .kqh-pod .blok, body.kq[data-kq="politiek"] .kqh-pod .blok { background: var(--accent-ink); color: #fff; }
+body.kq[data-kq="koude_oorlog"] .kqh-pod .blok { color: #fff; background: #c92a30; }
+.kqh-pod.p1 .blok { height: clamp(150px, 24vh, 280px); }
+.kqh-pod.p2 .blok { height: clamp(110px, 17vh, 200px); opacity: .85; }
+.kqh-pod.p3 .blok { height: clamp(80px, 12vh, 150px); opacity: .7; }
+.kqh-rest { max-width: 1100px; margin: 0 auto; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 8px clamp(14px, 1.8vw, 28px); opacity: 0; transition: opacity .6s ease; }
+.kqh-rest.zicht { opacity: 1; }
+.kqh-start-overlay { position: fixed; inset: 0; z-index: 20; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.kqh-start-overlay .card { max-width: 520px; text-align: center; }
+.kqh-start-overlay .btn { display: block; width: 100%; }
+
+/* ---------- Beheer ---------- */
+.kqd-vraag { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); padding: 14px; margin-bottom: 12px; }
+.kqd-vraag .kop { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; font-weight: 700; }
+.kqd-vraag textarea { width: 100%; font: inherit; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 8px; min-height: 64px; resize: vertical; }
+.kqd-opt { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; margin-top: 8px; }
+.kqd-opt .let { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; min-width: 3.4em; }
+.kqd-opt input[type=radio] { width: 18px; height: 18px; margin: 0; }
+.kqd-instel { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: 12px; }
+.kqd-instel label { display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+.kqd-instel input[type=number] { width: 80px; }
+.kqd-instel input[type=checkbox] { width: 18px; height: 18px; margin: 0; }
+.kqd-fouten { background: var(--bad-bg); border: 1px solid var(--bad-line); color: var(--bad); border-radius: var(--radius); padding: 10px 14px; margin: 10px 0; }
+.kqd-fouten ul { margin: 6px 0 0; padding-left: 20px; }
+.kqd-ok { background: var(--good-bg); border: 1px solid var(--good-line); color: var(--good); border-radius: var(--radius); padding: 10px 14px; margin: 10px 0; }
+.kqd-import textarea { width: 100%; min-height: 220px; font: 14px/1.4 'Courier New', Courier, monospace; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 8px; }
+.kqd-acties { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.kqd-acties .btn { margin-top: 0; }
+
+@media (max-width: 760px) {
+  .kqh-lobby, .kqh-uitslag { grid-template-columns: 1fr; }
+  .kqh-opts { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kqh-pod, .kqh-rest { transition: none; }
+  .kq-bar > i { transition: none; }
+}
+
+/* Telefoon: alleen de letter, het antwoord staat op het digibord */
+body.kq-s .kq-opts .kq-opt { justify-content: center; }
+body.kq-s .kq-opts .kq-opt .kq-l { width: 96px; height: 96px; font-size: 56px; border-radius: 22px; }

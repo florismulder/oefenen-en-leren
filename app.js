@@ -13,6 +13,8 @@ const RONDES = [
   { t: 'Finale: alle stof door elkaar', s: 'Met formatie en coalitie. 20 seconden per vraag en dubbele punten.' }
 ];
 const GAMES = [
+  { id: 'quiz-ge', soort: 'les', href: 'quiz', icon: 'QUIZ', titel: 'Live quiz', vak: 'Geschiedenis', tekst: 'Speel mee met de hele klas op je telefoon. Vul de pincode in die je docent op het scherm laat zien.' },
+  { id: 'quiz-pol', soort: 'les', href: 'quiz', icon: 'QUIZ', titel: 'Live quiz', vak: 'Politiek', tekst: 'Speel mee met de hele klas op je telefoon. Vul de pincode in die je docent op het scherm laat zien.' },
   { id: 'gemeente-simulator', soort: 'les', href: 'gemeente/simulator', icon: 'SIMULATOR', titel: 'Simulator Gemeenteraad', vak: 'Politiek', tekst: 'Je bent wethouder. Zoek steun in de raad, praat met fracties en schrijf het nieuws. Alleen op een computer.' },
   { id: 'gemeente-speurtocht', href: 'gemeente/speurtocht', icon: 'SPEURTOCHT', titel: 'Speurtocht Gemeente', vak: 'Politiek', tekst: 'Vind vijf sleutels, leer wat een gemeente doet en bouw je opdracht. Open voor iedereen.', archief: true },
   { id: 'gemeente-oefenen', href: 'gemeente/oefenen', icon: 'OEFENEN', titel: 'Oefenvragen Gemeentepolitiek', vak: 'Politiek', tekst: '152 vragen met uitleg. Kies een hoofdstuk en oefen. Open voor iedereen.' },
