@@ -290,3 +290,76 @@ body[data-vak="politiek"] header.top .hemi { right: 168px; bottom: 6px; }
 .vak-tegel span:last-child { font-size: 14px; color: var(--muted); }
 .vak-tegel[data-v="politiek"] { border-left-color: #1f4a96; }
 @media (max-width: 480px) { .vakken { grid-template-columns: 1fr; } .vak-tegel { min-height: 130px; } }
+
+/* ---------- Modern: stijl van de presentaties (beige, zwart, magenta, Courier-labels) ---------- */
+:root {
+  --bg: #F1EDE4; --card: #FAF7F0; --soft: #E4DFD3; --ink: #17181A; --muted: #5B5F64;
+  --line: #D9D3C5; --line-strong: #B9B2A2; --accent-ink: #B3009F; --accent-soft: #FFD9FA;
+  --primary: #FF00E7; --primary-ink: #FFFFFF; --primary-hover: #D600C2;
+  --head-bg: transparent; --head-ink: #17181A; --head-sub: #5B5F64;
+  --radius: 4px; --mono: 'Courier New', Courier, monospace;
+}
+body { font-family: Arial, Helvetica, sans-serif; }
+.wrap { max-width: 720px; }
+.wrap.wide, .wrap.menu { max-width: 1040px; }
+h1 { font-size: 34px; line-height: 1.05; text-transform: uppercase; letter-spacing: 0; }
+h2 { text-transform: uppercase; letter-spacing: .2px; }
+.tag { display: inline-block; font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; background: #FF00E7; color: #fff; padding: 5px 12px; }
+header.top { padding: 28px 18px 18px; margin: 0 -16px 28px; border-bottom: 0; background: var(--head-bg); }
+header.top .brand { font-size: 40px; line-height: 1; text-transform: uppercase; letter-spacing: -.5px; margin-top: 14px; }
+header.top .sub { font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 8px; }
+header.top::after { top: 28px; transform: none; mix-blend-mode: multiply; right: 18px; height: 40px; width: 150px; }
+.btn { border-radius: 2px; letter-spacing: .2px; }
+.btn.ghost { background: transparent; color: var(--ink); border: 2px solid var(--ink); }
+.btn.ghost:hover { background: var(--ink); color: #fff; }
+.card { border-radius: var(--radius); }
+.qtext, .opt, .result, .reveal { border-radius: 2px; }
+.opt { border: 2px solid var(--line-strong); background: var(--card); }
+.opt:hover:not(:disabled) { background: #fff; border-color: var(--ink); }
+input[type=text], input[type=password], input[type=number], input[type=date], input:not([type]), select { border-radius: 2px; border: 2px solid var(--line-strong); background: #fff; }
+input:focus, select:focus { border-color: var(--ink); }
+
+/* Startscherm: twee grote vakblokken */
+.vakken { grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px; }
+.vak-tegel { position: relative; align-items: flex-start; justify-content: flex-end; gap: 8px; text-align: left; min-height: 340px; padding: 32px; background: #E4DFD3; border: 0; border-left: 0; border-radius: 0; transition: background .15s ease, color .15s ease; }
+.vak-tegel .vi { font-family: var(--mono); font-weight: 700; font-size: 15px; letter-spacing: 2px; color: #fff; background: #FF00E7; padding: 4px 12px; position: absolute; top: 32px; left: 32px; }
+.vak-tegel b { font-size: 52px; line-height: 1; text-transform: uppercase; letter-spacing: -1px; }
+.vak-tegel span:last-child { font-size: 18px; color: var(--muted); }
+.vak-tegel::after { content: "→"; position: absolute; top: 24px; right: 32px; font-size: 40px; font-weight: 700; }
+.vak-tegel:hover { background: #17181A; color: #EDE8DC; }
+.vak-tegel:hover span:last-child { color: #B9B2A2; }
+.vak-tegel:hover::after { color: #FF00E7; }
+.vak-tegel[data-v="politiek"] { border-left: 0; }
+
+/* Spelmenu: rijen met label, titel en pijl */
+.games { gap: 12px; }
+.game { position: relative; border: 0; border-left: 0; border-radius: 0; background: #E4DFD3; padding: 22px 64px 22px 24px; min-height: 0; gap: 22px; transition: background .15s ease, color .15s ease; }
+.game::after { content: "→"; position: absolute; right: 24px; top: 50%; transform: translateY(-50%); font-size: 30px; font-weight: 700; }
+.game:hover { background: #17181A; color: #EDE8DC; }
+.game:hover .gx { color: #B9B2A2; }
+.game:hover::after { color: #FF00E7; }
+.game .gi { width: auto; height: auto; background: #FF00E7; color: #fff; border-radius: 0; font-family: var(--mono); font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 12px; min-width: 112px; text-align: center; }
+.game .gt b { font-size: 22px; text-transform: uppercase; letter-spacing: -.2px; }
+.game .gv { color: #FF00E7; font-family: var(--mono); }
+.game[data-g="politiek"] .gv { color: #FF00E7; }
+.game[data-g="politiek"] { border-left-color: transparent; }
+.game.soon { border: 2px dashed var(--line-strong); background: transparent; }
+.game.soon::after { content: ""; }
+@media (min-width: 900px) { .games:not(.archief) { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) {
+  .vakken { grid-template-columns: 1fr; }
+  .vak-tegel { min-height: 220px; padding: 24px; }
+  .vak-tegel .vi { top: 24px; left: 24px; }
+  .vak-tegel b { font-size: 40px; }
+  header.top .brand { font-size: 30px; }
+  .game { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+.game .gt b { line-height: 1.1; }
+.archief-box > summary.archief-kop { text-transform: uppercase; font-size: 1.1rem; letter-spacing: .3px; }
+header.top { padding-right: 190px; }
+@media (max-width: 640px) {
+  header.top { display: flex; flex-direction: column; padding: 20px 18px 14px; }
+  header.top::after { position: static; order: -1; display: block; transform: none; width: 120px; height: 32px; margin-bottom: 14px; background-position: left center; }
+  header.top .tag { align-self: flex-start; }
+  header.top .brand { margin-top: 10px; }
+}

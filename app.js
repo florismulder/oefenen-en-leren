@@ -13,17 +13,17 @@ const RONDES = [
   { t: 'Finale: alle stof door elkaar', s: 'Met formatie en coalitie. 20 seconden per vraag en dubbele punten.' }
 ];
 const GAMES = [
-  { id: 'gemeente-simulator', href: 'gemeente/simulator', icon: '🏛️', titel: 'Simulator Gemeenteraad', vak: 'Politiek', tekst: 'Je bent wethouder. Zoek steun in de raad, praat met fracties en schrijf het nieuws. Alleen op een computer.' },
-  { id: 'gemeente-speurtocht', href: 'gemeente/speurtocht', icon: '🔎', titel: 'Speurtocht Gemeente', vak: 'Politiek', tekst: 'Vind vijf sleutels, leer wat een gemeente doet en bouw je opdracht. Open voor iedereen.', archief: true },
-  { id: 'gemeente-oefenen', href: 'gemeente/oefenen', icon: '✅', titel: 'Oefenvragen Gemeentepolitiek', vak: 'Politiek', tekst: '152 vragen met uitleg. Kies een hoofdstuk en oefen. Open voor iedereen.' },
-  { id: 'gemeente', href: 'gemeente/reader', icon: '🏘️', titel: 'Reader Gemeentepolitiek', vak: 'Politiek', tekst: 'Lees de kaarten over de gemeente en maak de oefenvragen. Open voor iedereen.' },
-  { id: 'reader', href: 'koude-oorlog/reader', icon: '📖', titel: 'Reader Koude Oorlog', vak: 'Geschiedenis', tekst: 'Lees de stof van les 1 tot en met 4, met foto\'s en de spanningslijn.' },
-  { id: 'oefenen-ko', href: 'koude-oorlog/oefenen', icon: '✅', titel: 'Oefenvragen Koude Oorlog', vak: 'Geschiedenis', tekst: '122 vragen met uitleg. Kies een les en oefen. Open voor iedereen.' },
-  { id: 'tijdlijn', href: 'koude-oorlog/tijdlijn', icon: '📈', titel: 'Tijdlijn bouwen (les 2)', vak: 'Geschiedenis', tekst: 'Kies zes momenten, voeg foto en zin toe en teken de spanningslijn. Download als pdf.' },
-  { id: 'toetsvraag', href: 'koude-oorlog/toetsvraag', icon: '✍️', titel: 'Toetsvraag Koude Oorlog', vak: 'Geschiedenis', tekst: 'Bedenk een meerkeuzevraag, vul het formulier in en download het als pdf.' },
-  { id: 'flash', href: 'flash', icon: '🃏', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.', archief: true },
-  { id: 'woii', icon: '🕰️', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
-  { id: 'politiek', icon: '🏛️', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
+  { id: 'gemeente-simulator', href: 'gemeente/simulator', icon: 'SIMULATOR', titel: 'Simulator Gemeenteraad', vak: 'Politiek', tekst: 'Je bent wethouder. Zoek steun in de raad, praat met fracties en schrijf het nieuws. Alleen op een computer.' },
+  { id: 'gemeente-speurtocht', href: 'gemeente/speurtocht', icon: 'SPEURTOCHT', titel: 'Speurtocht Gemeente', vak: 'Politiek', tekst: 'Vind vijf sleutels, leer wat een gemeente doet en bouw je opdracht. Open voor iedereen.', archief: true },
+  { id: 'gemeente-oefenen', href: 'gemeente/oefenen', icon: 'OEFENEN', titel: 'Oefenvragen Gemeentepolitiek', vak: 'Politiek', tekst: '152 vragen met uitleg. Kies een hoofdstuk en oefen. Open voor iedereen.' },
+  { id: 'gemeente', href: 'gemeente/reader', icon: 'LEZEN', titel: 'Reader Gemeentepolitiek', vak: 'Politiek', tekst: 'Lees de kaarten over de gemeente en maak de oefenvragen. Open voor iedereen.' },
+  { id: 'reader', href: 'koude-oorlog/reader', icon: 'LEZEN', titel: 'Reader Koude Oorlog', vak: 'Geschiedenis', tekst: 'Lees de stof van les 1 tot en met 4, met foto\'s en de spanningslijn.' },
+  { id: 'oefenen-ko', href: 'koude-oorlog/oefenen', icon: 'OEFENEN', titel: 'Oefenvragen Koude Oorlog', vak: 'Geschiedenis', tekst: '122 vragen met uitleg. Kies een les en oefen. Open voor iedereen.' },
+  { id: 'tijdlijn', href: 'koude-oorlog/tijdlijn', icon: 'BOUWEN', titel: 'Tijdlijn bouwen (les 2)', vak: 'Geschiedenis', tekst: 'Kies zeven momenten, voeg foto en zin toe en teken de spanningslijn. Download als pdf.' },
+  { id: 'toetsvraag', href: 'koude-oorlog/toetsvraag', icon: 'SCHRIJVEN', titel: 'Toetsvraag Koude Oorlog', vak: 'Geschiedenis', tekst: 'Bedenk een meerkeuzevraag, vul het formulier in en download het als pdf.' },
+  { id: 'flash', href: 'flash', icon: 'FLASHCARDS', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.', archief: true },
+  { id: 'woii', icon: 'OEFENEN', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
+  { id: 'politiek', icon: 'OEFENEN', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
 ];
 let vak = store.get('oefen_vak') === 'politiek' ? 'politiek' : 'woii';
 let inMenu = false;
@@ -42,12 +42,13 @@ function clearTimers() {
 }
 function render(html) {
   clearTimers();
+  app.className = inMenu ? 'wrap menu' : 'wrap';
   app.innerHTML = html;
   window.scrollTo(0, 0);
 }
 function header() {
   if (inMenu) {
-    return '<header class="top"><div class="brand">Oefenen en leren</div><div class="sub">Mediacollege Amsterdam</div></header>';
+    return '<header class="top"><span class="tag">Mediacollege Amsterdam</span><div class="brand">Oefenen en leren</div></header>';
   }
   if (vak === 'politiek') {
     return '<header class="top">' + hemicycle() + '<div class="brand">Kamer en Kabinet</div><div class="sub">Oefenrondes bij de reader</div></header>';
@@ -62,8 +63,8 @@ function logout() {
 
 /* ---------- Menu ---------- */
 const VAKKEN = {
-  geschiedenis: { naam: 'Geschiedenis', icon: '🕰️', tekst: 'Koude Oorlog en Tweede Wereldoorlog', soon: [] },
-  politiek: { naam: 'Politiek', icon: '🏛️', tekst: 'Gemeente, Kamer en Kabinet', soon: [] }
+  geschiedenis: { naam: 'Geschiedenis', icon: '01', tekst: 'Koude Oorlog en Tweede Wereldoorlog', soon: [] },
+  politiek: { naam: 'Politiek', icon: '02', tekst: 'Gemeente, Kamer en Kabinet', soon: [] }
 };
 let menuVak = null;
 function viewMenu(kies) {
