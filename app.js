@@ -13,8 +13,6 @@ const RONDES = [
   { t: 'Finale: alle stof door elkaar', s: 'Met formatie en coalitie. 20 seconden per vraag en dubbele punten.' }
 ];
 const GAMES = [
-  { id: 'quiz-ge', soort: 'les', href: 'quiz', icon: 'QUIZ', titel: 'Live quiz', vak: 'Geschiedenis', tekst: 'Speel mee met de hele klas op je telefoon. Vul de pincode in die je docent op het scherm laat zien.' },
-  { id: 'quiz-pol', soort: 'les', href: 'quiz', icon: 'QUIZ', titel: 'Live quiz', vak: 'Politiek', tekst: 'Speel mee met de hele klas op je telefoon. Vul de pincode in die je docent op het scherm laat zien.' },
   { id: 'gemeente-simulator', soort: 'les', href: 'gemeente/simulator', icon: 'SIMULATOR', titel: 'Simulator Gemeenteraad', vak: 'Politiek', tekst: 'Je bent wethouder. Zoek steun in de raad, praat met fracties en schrijf het nieuws. Alleen op een computer.' },
   { id: 'gemeente-speurtocht', href: 'gemeente/speurtocht', icon: 'SPEURTOCHT', titel: 'Speurtocht Gemeente', vak: 'Politiek', tekst: 'Vind vijf sleutels, leer wat een gemeente doet en bouw je opdracht. Open voor iedereen.', archief: true },
   { id: 'gemeente-oefenen', href: 'gemeente/oefenen', icon: 'OEFENEN', titel: 'Oefenvragen Gemeentepolitiek', vak: 'Politiek', tekst: '152 vragen met uitleg. Kies een hoofdstuk en oefen. Open voor iedereen.' },
@@ -103,8 +101,11 @@ function viewVakken() {
   render(header() + `<main><h1>Kies je vak</h1>
     <p>Kies eerst het vak waar je mee wilt leren of oefenen.</p>
     <div class="vakken">${Object.keys(VAKKEN).map(k => `<button class="vak-tegel" data-v="${k}" type="button">
-      <span class="vi" aria-hidden="true">${VAKKEN[k].icon}</span><b>${esc(VAKKEN[k].naam)}</b><span>${esc(VAKKEN[k].tekst)}</span></button>`).join('')}</div></main>`);
+      <span class="vi" aria-hidden="true">${VAKKEN[k].icon}</span><b>${esc(VAKKEN[k].naam)}</b><span>${esc(VAKKEN[k].tekst)}</span></button>`).join('')}</div>
+    ${groep('Live in de klas', 'Doe mee met je telefoon.', `<button class="game" id="live-quiz" type="button" style="grid-column:1/-1;width:100%"><span class="gi" aria-hidden="true">QUIZ</span><span class="gt"><b>Live quiz</b><span class="gx">Speel mee met de hele klas op je telefoon. Vul de pincode in die je docent op het scherm laat zien.</span></span></button>`)}</main>`);
   app.querySelectorAll('.vak-tegel').forEach(b => b.onclick = () => viewMenu(b.dataset.v));
+  const q = app.querySelector('#live-quiz');
+  if (q) q.onclick = () => { location.href = 'quiz'; };
 }
 
 /* ---------- Inloggen ---------- */
