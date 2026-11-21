@@ -33,7 +33,16 @@
   function foto(id) { return FOTOS.filter(function (f) { return f.id === id; })[0]; }
   function heat(n) { var a = [61, 90, 128], b = [255, 0, 231], f = (n - 1) / 9; return 'rgb(' + a.map(function (v, i) { return Math.round(v + (b[i] - v) * f); }).join(',') + ')'; }
   function gesorteerd() { return S.gekozen.slice().sort(function (a, b) { return mom(a).d < mom(b).d ? -1 : mom(a).d > mom(b).d ? 1 : mom(a).id < mom(b).id ? -1 : 1; }); }
+  function fmt(n) { return String(Math.round(n * 10) / 10).replace('.', ','); }
   function slotOk(id) { var s = S.slots[id] || {}; return !!(s.foto && s.cijfer && (s.zin || '').trim().length >= 8); }
+  function pct() {
+    var done = 0, tot = 3 + MAX * 4;
+    if (S.n1.trim()) done++; if (S.n2.trim()) done++; if (S.titel.trim()) done++;
+    var ids = gesorteerd();
+    done += Math.min(S.gekozen.length, MAX);
+    ids.forEach(function (id) { var x = S.slots[id] || {}; if (x.foto) done++; if ((x.zin || '').trim().length >= 8) done++; if (x.cijfer) done++; });
+    return Math.round(100 * done / tot);
+  }
   function controle() {
     var mis = [];
     if (!S.n1.trim() || !S.n2.trim()) mis.push('jullie twee namen');
@@ -92,31 +101,31 @@
     ids.forEach(function (id, i) { var s = S.slots[id]; if (s && s.cijfer) pts.push({ x: X(i), y: Y(s.cijfer), v: s.cijfer, id: id }); });
     g += '<line x1="0" y1="' + Y(10) + '" x2="' + W + '" y2="' + Y(10) + '" stroke="#BDB7A8" stroke-width="2" stroke-dasharray="10 9"/>';
     g += '<line x1="0" y1="' + Y(1) + '" x2="' + W + '" y2="' + Y(1) + '" stroke="#BDB7A8" stroke-width="2" stroke-dasharray="10 9"/>';
-    var line = [{ x: 20, y: Y(9) }].concat(pts), path = '';
-    if (pts.length) { path = 'M' + line.map(function (p) { return p.x + ' ' + p.y; }).join(' L'); g += '<path d="' + path + '" fill="none" stroke="#FF00E7" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>'; }
-    g += '<circle cx="20" cy="' + Y(9) + '" r="15" fill="#17181A"/><text x="20" y="' + (Y(9) + 5) + '" text-anchor="middle" fill="#fff" font-size="15" font-weight="700" font-family="Arial">9</text>';
-    g += '<text x="20" y="' + (Y(9) - 24) + '" text-anchor="middle" fill="#5B5F64" font-size="13" font-weight="700" font-family="Courier New">1949</text>';
+    var line = [{ x: 20, y: Y(9) }].concat(pts);
+    if (pts.length) g += '<path d="M' + line.map(function (p) { return p.x + ' ' + p.y; }).join(' L') + '" fill="none" stroke="#FF00E7" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>';
+    g += '<circle cx="20" cy="' + Y(9) + '" r="7" fill="#17181A"/><text x="20" y="' + (Y(9) + 24) + '" text-anchor="start" fill="#5B5F64" font-size="13" font-weight="700" font-family="Courier New">1949 · 9</text>';
     if (S.vergelijk && pts.length) {
-      var rp = pts.map(function (p) { return { x: p.x, y: Y(REEEL[mom(p.id).ev]), v: REEEL[mom(p.id).ev] }; });
-      g += '<path d="M' + rp.map(function (p) { return p.x + ' ' + p.y; }).join(' L') + '" fill="none" stroke="#17181A" stroke-width="4" stroke-dasharray="4 10" stroke-linecap="round"/>';
-      rp.forEach(function (p) { g += '<circle cx="' + p.x + '" cy="' + p.y + '" r="9" fill="#F1EDE4" stroke="#17181A" stroke-width="4"/>'; });
+      var rp = pts.map(function (p) { return { x: p.x, y: Y(REEEL[mom(p.id).ev]) }; });
+      g += '<path d="M' + rp.map(function (p) { return p.x + ' ' + p.y; }).join(' L') + '" fill="none" stroke="#17181A" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round"/>';
+      rp.forEach(function (p) { g += '<circle cx="' + p.x + '" cy="' + p.y + '" r="6" fill="#F1EDE4" stroke="#17181A" stroke-width="2.5"/>'; });
     }
     pts.forEach(function (p) {
-      g += '<circle class="rij" cx="' + p.x + '" cy="' + p.y + '" r="25" fill="' + heat(p.v) + '" stroke="#17181A" stroke-width="3"/><text x="' + p.x + '" y="' + (p.y + 7) + '" text-anchor="middle" fill="#fff" font-size="22" font-weight="700" font-family="Arial">' + p.v + '</text>';
+      g += '<circle class="rij" cx="' + p.x + '" cy="' + p.y + '" r="9" fill="' + heat(p.v) + '" stroke="#F1EDE4" stroke-width="3"/><text x="' + p.x + '" y="' + (p.y - 17) + '" text-anchor="middle" fill="#17181A" font-size="17" font-weight="700" font-family="Arial">' + fmt(p.v) + '</text>';
     });
     return '<svg class="lijn" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Jullie spanningslijn">' + g + '</svg>';
   }
   function slotHtml(i) {
     var ids = gesorteerd(), id = ids[i];
-    if (!id) return '<div class="slot leeg"' + ' style="grid-column:' + (i + 2) + '"' + '>Moment ' + (i + 1) + '<br>kies hierboven een moment</div>';
-    var m = mom(id), s = S.slots[id] || {}, f = s.foto ? foto(s.foto) : null;
-    var cij = ''; for (var n = 1; n <= 10; n++) cij += '<button type="button" data-c="' + n + '" data-id="' + id + '" class="' + (s.cijfer === n ? 'sel' : '') + '" style="background:' + heat(n) + '" aria-label="Spanning ' + n + '">' + n + '</button>';
-    return '<div class="slot"' + ' style="grid-column:' + (i + 2) + '"' + '><div class="s-kop"><span>' + esc(m.dt) + '</span><em>' + esc(EV[m.ev]) + '</em></div>' +
-      '<button type="button" class="s-foto" data-foto="' + id + '" aria-label="Kies een foto">' + (f ? '<img src="/reader-img/' + f.id + '.jpg" alt="' + esc(f.t) + '"><span class="wissel">andere foto</span>' : '<span class="kies">Klik en kies een foto</span>') + '</button>' +
+    if (!id) return '<div class="slot leeg">Moment ' + (i + 1) + '<br>kies hierboven een moment</div>';
+    var m = mom(id), s = S.slots[id] || {}, f = s.foto ? foto(s.foto) : null, c = s.cijfer;
+    return '<div class="slot"><div class="s-kop"><span>' + esc(m.dt) + '</span><em>' + esc(EV[m.ev]) + '</em></div>' +
+      '<button type="button" class="s-foto" data-foto="' + id + '" aria-label="Kies een foto">' + (f ? '<img src="/reader-img/' + f.id + '.jpg" alt="' + esc(f.t) + '"><span class="wissel">andere foto</span>' : '<span class="kies">Klik hier en kies een foto</span>') + '</button>' +
       '<textarea class="s-zin" data-zin="' + id + '" maxlength="140" placeholder="Wat gebeurde er? Eén zin in je eigen woorden." aria-label="Jouw zin">' + esc(s.zin || '') + '</textarea>' +
       '<div class="s-teller" data-tel="' + id + '">' + (s.zin || '').length + '/140</div><p class="s-zin-print">' + esc(s.zin || '') + '</p>' +
-      (s.cijfer ? '<div class="s-cijfer-print" style="background:' + heat(s.cijfer) + '">Spanning ' + s.cijfer + '</div>' : '') +
-      '<div class="cijfers" role="group" aria-label="Cijfer voor de spanning">' + cij + '</div></div>';
+      (c ? '<div class="s-cijfer-print" style="background:' + heat(c) + '">Spanning ' + fmt(c) + '</div>' : '') +
+      '<div class="cijferbox"><div class="c-kop"><span>Hoe hoog is de spanning?</span><b class="c-lees' + (c ? '' : ' nog') + '" data-cl="' + id + '" style="' + (c ? 'background:' + heat(c) : '') + '">' + (c ? fmt(c) : 'kies') + '</b></div>' +
+      '<input type="range" class="c-slider" data-c="' + id + '" min="1" max="9.9" step="0.1" value="' + (c || 5) + '" aria-label="Spanning van 1 tot 9,9">' +
+      '<div class="c-as"><span>1 vrede</span><span>5</span><span>9,9 net geen kernoorlog</span></div></div></div>';
   }
   function vinkjes() {
     var evs = {}; S.gekozen.forEach(function (id) { evs[mom(id).ev] = 1; });
@@ -137,18 +146,25 @@
       '<div class="card"><h2>Stap 2 · Naam en titel</h2><div class="namen"><div class="fld"><label for="n1">Naam 1</label><input id="n1" value="' + esc(S.n1) + '"></div><div class="fld"><label for="n2">Naam 2</label><input id="n2" value="' + esc(S.n2) + '"></div></div><div class="fld" style="margin-top:12px"><label for="titel">Titel van jullie tijdlijn</label><input id="titel" maxlength="60" placeholder="Bijvoorbeeld: Van schieten naar bijna schieten" value="' + esc(S.titel) + '"></div></div>' +
       '<span class="tag">Stap 3 · Maak je tijdlijn af</span><p class="tip">Kies per moment een foto, schrijf één zin en klik een cijfer. 1 is vrede. 10 is kernoorlog. Jullie lijn begint in 1949 bij een 9.</p></div>' +
       '<div class="poster" id="poster"><div class="bar"></div><div class="p-kop"><span class="tag">Koude Oorlog · Les 2 · 1950 tot 1962</span><div class="p-titel' + (S.titel ? '' : ' leeg') + '" id="ptitel">' + esc(S.titel || 'Jullie titel') + '</div><div class="p-namen" id="pnamen">' + esc([S.n1, S.n2].filter(Boolean).join(' en ')) + '</div></div>' +
-      '<div class="p-grid"><div class="p-as"><span class="hi" style="top:8%">10</span><span style="top:22%">Kernoorlog</span><span class="lo" style="top:78%">1</span><span style="top:91%">Vrede</span></div><div class="p-chart" id="chart">' + chartHtml() + '</div>' + slots + '</div>' +
+      '<div class="p-chartwrap"><div class="p-as"><span class="hi" style="top:8%">10</span><span style="top:22%">Kernoorlog</span><span class="lo" style="top:78%">1</span><span style="top:91%">Vrede</span></div><div class="p-chart" id="chart">' + chartHtml() + '</div></div><div class="p-slots">' + slots + '</div>' +
       '<div class="p-voet"><img src="/logo-ma.jpg" alt="Mediacollege Amsterdam"><span>Spanning: 1 is vrede, 10 is kernoorlog</span></div></div>' +
-      '<div id="meld"></div>' +
+      '<div id="voortgang" class="voortgang"></div><div id="meld"></div>' +
       '<div class="acties"><button class="btn licht" id="vergelijk" type="button">' + (S.vergelijk ? 'Verberg de reader-lijn' : 'Vergelijk met de reader') + '</button><button class="btn" id="dl" type="button">Download als pdf</button><button class="btn licht" id="reset" type="button">Alles wissen</button></div>' +
       '<p class="tip">Kies bij het printen "Opslaan als pdf". Mail de pdf naar je docent. Het mailadres staat op het bord.</p>' +
       '<dialog id="dlg"><h2>Kies een foto</h2><div class="fotos" id="fotos"></div><div class="acties" style="margin-top:14px"><button class="btn licht" id="sluit" type="button">Sluiten</button></div></dialog>';
-    koppel();
+    koppel(); voortgang();
   }
   function ververs() {
     document.getElementById('chart').innerHTML = chartHtml();
     document.getElementById('teller').textContent = S.gekozen.length + ' van ' + MAX + ' gekozen';
     document.getElementById('vinks').innerHTML = vinkjes();
+    voortgang();
+  }
+  function voortgang() {
+    var p = pct(), el = document.getElementById('voortgang');
+    if (!el) return;
+    el.innerHTML = '<div class="vg-bar"><span style="width:' + p + '%"></span><i></i></div><p><b>' + p + '% klaar.</b> ' + (p >= 75 ? 'Je kunt de pdf downloaden. Maak je hem eerst helemaal af? Dat is nog beter.' : 'Vanaf 75% kun je de pdf downloaden.') + '</p>';
+    var d = document.getElementById('dl'); if (d) d.className = 'btn' + (p >= 75 ? '' : ' uit');
   }
   function meld(h) { document.getElementById('meld').innerHTML = h || ''; }
   function koppel() {
@@ -159,13 +175,23 @@
         bewaar(); var y = window.scrollY; bouw(); window.scrollTo(0, y);
       };
     });
-    ['n1', 'n2'].forEach(function (k) { document.getElementById(k).oninput = function (e) { S[k] = e.target.value; bewaar(); document.getElementById('pnamen').textContent = [S.n1, S.n2].filter(Boolean).join(' en '); }; });
-    document.getElementById('titel').oninput = function (e) { S.titel = e.target.value; bewaar(); var t = document.getElementById('ptitel'); t.textContent = S.titel || 'Jullie titel'; t.className = 'p-titel' + (S.titel ? '' : ' leeg'); };
+    ['n1', 'n2'].forEach(function (k) { document.getElementById(k).oninput = function (e) { S[k] = e.target.value; bewaar(); voortgang(); document.getElementById('pnamen').textContent = [S.n1, S.n2].filter(Boolean).join(' en '); }; });
+    document.getElementById('titel').oninput = function (e) { S.titel = e.target.value; bewaar(); voortgang(); var t = document.getElementById('ptitel'); t.textContent = S.titel || 'Jullie titel'; t.className = 'p-titel' + (S.titel ? '' : ' leeg'); };
     app.querySelectorAll('.s-zin').forEach(function (t) {
-      t.oninput = function () { var id = t.dataset.zin; S.slots[id] = S.slots[id] || {}; S.slots[id].zin = t.value; bewaar(); app.querySelector('[data-tel="' + id + '"]').textContent = t.value.length + '/140'; t.parentNode.querySelector('.s-zin-print').textContent = t.value; };
+      t.oninput = function () { var id = t.dataset.zin; S.slots[id] = S.slots[id] || {}; S.slots[id].zin = t.value; bewaar(); voortgang(); app.querySelector('[data-tel="' + id + '"]').textContent = t.value.length + '/140'; t.parentNode.querySelector('.s-zin-print').textContent = t.value; };
     });
-    app.querySelectorAll('.cijfers button').forEach(function (b) {
-      b.onclick = function () { var id = b.dataset.id; S.slots[id] = S.slots[id] || {}; S.slots[id].cijfer = +b.dataset.c; bewaar(); var y = window.scrollY; bouw(); window.scrollTo(0, y); setTimeout(function () { var e = document.getElementById('chart'); if (e) e.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 0); };
+    app.querySelectorAll('.c-slider').forEach(function (r) {
+      function zet() {
+        var id = r.dataset.c, v = Math.round(parseFloat(r.value) * 10) / 10;
+        S.slots[id] = S.slots[id] || {}; S.slots[id].cijfer = v; bewaar();
+        var l = app.querySelector('[data-cl="' + id + '"]'); l.textContent = fmt(v); l.className = 'c-lees'; l.style.background = heat(v);
+        var pr = r.closest('.slot').querySelector('.s-cijfer-print');
+        if (!pr) { pr = document.createElement('div'); pr.className = 's-cijfer-print'; r.closest('.slot').insertBefore(pr, r.closest('.slot').querySelector('.cijferbox')); }
+        pr.textContent = 'Spanning ' + fmt(v); pr.style.background = heat(v);
+        ververs();
+      }
+      r.addEventListener('input', zet); r.addEventListener('change', zet);
+      r.addEventListener('pointerdown', function () { setTimeout(zet, 0); });
     });
     app.querySelectorAll('.s-foto').forEach(function (b) { b.onclick = function () { kiesFoto(b.dataset.foto); }; });
     document.getElementById('vergelijk').onclick = function () {
@@ -180,9 +206,9 @@
       } else bouw();
     };
     document.getElementById('dl').onclick = function () {
-      var mis = controle();
-      if (mis.length) { meld('<div class="toets"><h3>Nog niet klaar</h3><ul>' + mis.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>'); document.getElementById('meld').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-      meld(''); var oud = document.title; document.title = 'Tijdlijn ' + [S.n1, S.n2].join(' en ');
+      var p = pct();
+      if (p < 75) { meld('<div class="toets"><h3>Nog niet klaar om te downloaden</h3><p style="margin:4px 0 0">Jullie zijn op ' + p + '%. Vanaf 75% kun je de pdf maken. Wat mist er nog?</p><ul>' + controle().map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>'); document.getElementById('meld').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      meld(''); var oud = document.title; document.title = 'Tijdlijn ' + [S.n1, S.n2].filter(Boolean).join(' en ');
       window.onafterprint = function () { document.title = oud; };
       var imgs = Array.prototype.slice.call(app.querySelectorAll('.poster img')), w = imgs.map(function (im) { return im.complete ? 1 : new Promise(function (r) { im.onload = im.onerror = r; }); });
       Promise.all(w).then(function () { window.print(); });
