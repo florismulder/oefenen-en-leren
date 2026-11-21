@@ -111,7 +111,7 @@
       '<div class="p-voet"><img src="/logo-ma.jpg" alt="Mediacollege Amsterdam"><span>Spanning: 1 is vrede, 10 is kernoorlog</span></div></div>' +
       '<div id="meld"></div>' +
       '<div class="acties"><button class="btn licht" id="vergelijk" type="button">' + (S.vergelijk ? 'Verberg de reader-lijn' : 'Vergelijk met de reader') + '</button><button class="btn" id="dl" type="button">Download als pdf</button><button class="btn licht" id="reset" type="button">Alles wissen</button></div>' +
-      '<p class="tip">Kies bij het printen "Opslaan als pdf". Lever de pdf in bij [INVULLEN: inleverplek in Teams].</p>' +
+      '<p class="tip">Kies bij het printen "Opslaan als pdf". Mail de pdf naar je docent. Het mailadres staat op het bord.</p>' +
       '<dialog id="dlg"><h2>Kies een foto</h2><div class="fotos" id="fotos"></div><div class="acties" style="margin-top:14px"><button class="btn licht" id="sluit" type="button">Sluiten</button></div></dialog>';
     koppel();
   }
