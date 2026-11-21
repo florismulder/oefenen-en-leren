@@ -44,6 +44,15 @@ body.kq[data-kq="politiek"] {
   --chip-bg: #c2410c; --chip-ink: #ffffff;
   --kq-deco: radial-gradient(900px 500px at 85% -10%, rgba(249,115,22,.14), transparent 60%), radial-gradient(700px 400px at -10% 110%, rgba(29,78,216,.12), transparent 60%);
 }
+/* Docentenpagina: magenta huisstijl, net als /docent */
+body.kq.docent[data-kq] {
+  --bg: #f8f6fa; --ink: #1f1a24; --card: #ffffff; --line: #e2dde8; --line-strong: #cfc8d8; --muted: #645c6d; --soft: #f3eff7;
+  --accent: #ff00e6; --accent-ink: #a8008f; --primary: #e000cc; --primary-ink: #ffffff; --primary-hover: #bf00ae;
+  --head-bg: #ffffff; --head-ink: #1f1a24; --head-sub: #645c6d;
+  --bar: #e7e1ee; --bar-fill: #ff00e6; --kq-timer: #ff00e6;
+  --chip-bg: #a8008f; --chip-ink: #ffffff;
+  --kq-deco: none;
+}
 body.kq { background-color: var(--bg); background-image: var(--kq-deco); background-attachment: fixed; color: var(--ink); }
 body.kq h1, body.kq h2 { text-transform: none; letter-spacing: -.01em; }
 body.kq .card { border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--line); background: var(--card); }
