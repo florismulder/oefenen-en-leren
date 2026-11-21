@@ -105,7 +105,7 @@
     g += '<line x1="0" y1="' + Y(1) + '" x2="' + W + '" y2="' + Y(1) + '" stroke="#BDB7A8" stroke-width="2" stroke-dasharray="10 9"/>';
     var line = [{ x: 20, y: Y(9) }].concat(pts);
     if (pts.length) g += '<path d="M' + line.map(function (p) { return p.x + ' ' + p.y; }).join(' L') + '" fill="none" stroke="#FF00E7" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>';
-    g += '<circle cx="20" cy="' + Y(9) + '" r="7" fill="#17181A"/><text x="20" y="' + (Y(9) + 24) + '" text-anchor="start" fill="#5B5F64" font-size="13" font-weight="700" font-family="Courier New">1949 · 9</text>';
+    g += '<circle cx="20" cy="' + Y(9) + '" r="7" fill="#17181A"/><text x="20" y="' + (Y(9) + 26) + '" text-anchor="middle" fill="#5B5F64" font-size="13" font-weight="700" font-family="Courier New">1949</text>';
     if (S.vergelijk && pts.length) {
       var rp = pts.map(function (p) { return { x: p.x, y: Y(REEEL[mom(p.id).ev]) }; });
       g += '<path d="M' + rp.map(function (p) { return p.x + ' ' + p.y; }).join(' L') + '" fill="none" stroke="#17181A" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round"/>';

@@ -145,3 +145,12 @@ dialog::backdrop{background:rgba(0,0,0,.7)}
  .s-foto{aspect-ratio:16/10}
  .s-kop{font-size:11px!important;padding:5px 6px!important}
 }
+@media print{
+ .poster{display:flex;flex-direction:column;min-height:192mm}
+ .p-chartwrap{flex:1}
+ .p-chart svg{max-height:none;height:100%}
+ .p-voet{margin-top:auto}
+ .s-foto{aspect-ratio:4/3}
+ .s-zin-print{font-size:12.5px!important;min-height:70px}
+ .p-titel{font-size:40px}
+}
