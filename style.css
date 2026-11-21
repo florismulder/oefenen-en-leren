@@ -370,7 +370,7 @@ header.top.menu::after { position: static; order: 2; transform: none; width: 130
 header.top.menu .tag { order: 1; font-size: 12px; }
 .menu h1 { font-size: clamp(44px, 9vw, 84px); line-height: .95; letter-spacing: -1.5px; margin: 6px 0 14px; }
 .menu h1 + p { font-size: 18px; margin-bottom: 18px; }
-.menu .small-note { margin-bottom: 4px; }
+.menu .small-note { margin-bottom: 26px; }
 .game .gt b, .vak-tegel b, h1 { text-wrap: balance; }
 @media (max-width: 640px) {
   header.top.menu { padding: 16px 18px 0; margin-bottom: 18px; }
