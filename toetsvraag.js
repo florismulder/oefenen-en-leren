@@ -1,6 +1,6 @@
 (function () {
   var KEY = 'toetsvraag-koude-oorlog';
-  var LESSEN = ['Les 1', 'Les 2', 'Les 3', 'Les 4'];
+  var LESSEN = ['Les 1', 'Les 2', 'Les 3'];
   var app = document.getElementById('app');
   var L = ['A', 'B', 'C', 'D'];
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
