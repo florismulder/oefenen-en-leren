@@ -446,3 +446,8 @@ body[data-vak="politiek"] .tools .btn.terug-start { border-color: #1F4A96; }
 body[data-vak="politiek"] .btn.ghost:hover { background: #14305F; }
 body[data-vak="politiek"].docent .btn:not(.ghost):not(.danger) { background: #1F4A96; color: #fff; }
 body[data-vak="politiek"].docent .btn:not(.ghost):not(.danger):hover { background: #14305F; }
+.zoek-voeg { align-self: center; font: inherit; font-weight: 700; font-size: 14px; white-space: nowrap; background: #FF00E7; color: #fff; border: 0; padding: 10px 14px; cursor: pointer; border-radius: var(--radius); }
+.zoek-voeg:hover { background: var(--ink); }
+.zoek-voeg.klaar { background: var(--ink); color: #EDE8DC; }
+body[data-vak="politiek"] .zoek-voeg { background: #1F4A96; }
+@media (max-width: 640px) { .zoek-res li { flex-wrap: wrap; } .zoek-kies { flex-basis: 100%; } .zoek-voeg { flex: 1; } .zoek-link { align-self: center; } }

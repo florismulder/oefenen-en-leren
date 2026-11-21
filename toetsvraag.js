@@ -27,7 +27,7 @@
     '<p class="tip">Kies bij het printen "Opslaan als pdf". Mail de pdf naar je docent. Het mailadres staat op het bord.</p>' +
     '</main>';
   function $(s) { return app.querySelector(s); }
-  if (window.ZOEK) ZOEK.mount($('#zoekvak'), { label: 'Zoek de plek in de reader', placeholder: 'Zoek een woord, klik op de kaart en de plek wordt ingevuld', linkTekst: 'Lees kaart ↗', onKies: function (k) { $('#plek').value = 'Les ' + k.les + ', kaart "' + k.titel + '"'; $('#plek').dispatchEvent(new Event('input', { bubbles: true })); $('#plek').scrollIntoView({ block: 'center', behavior: 'smooth' }); } });
+  if (window.ZOEK) ZOEK.mount($('#zoekvak'), { label: 'Zoek de plek in de reader', placeholder: 'Zoek een woord. Klik op "+ Voeg toe" en de plek wordt ingevuld', voegTekst: '+ Voeg toe', linkTekst: 'Lees kaart ↗', onKies: function (k) { $('#plek').value = 'Les ' + k.les + ', kaart "' + k.titel + '"'; $('#plek').dispatchEvent(new Event('input', { bubbles: true })); } });
   function lees() {
     var o = app.querySelector('input[name=les]:checked'), j = app.querySelector('input[name=juist]:checked');
     return { naam: $('#naam').value.trim(), les: o ? o.value : '', onderwerp: $('#onderwerp').value.trim(), vraag: $('#vraag').value.trim(), antw: L.map(function (l, i) { return $('#a' + i).value.trim(); }), juist: j ? j.value : '', uitleg: $('#uitleg').value.trim(), plek: $('#plek').value.trim() };

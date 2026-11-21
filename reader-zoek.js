@@ -76,9 +76,17 @@
       if (!r.length) { ul.innerHTML = '<li class="leeg">Niets gevonden. Probeer een ander woord.</li>'; return; }
       ul.innerHTML = r.slice(0, 8).map(function (x, i) {
         return '<li><button type="button" class="zoek-kies" data-i="' + i + '"><span class="zoek-meta">' + esc(x.k.meta) + '</span><b>' + esc(x.k.titel) + '</b><span class="zoek-sn">' + snippet(x) + '</span></button>' +
+          (opt.voegTekst ? '<button type="button" class="zoek-voeg" data-i="' + i + '">' + esc(opt.voegTekst) + '</button>' : '') +
           (opt.linkTekst ? '<a class="zoek-link" target="_blank" rel="noopener" href="' + x.k.href + '">' + esc(opt.linkTekst) + '</a>' : '') + '</li>';
       }).join('') + (r.length > 8 ? '<li class="leeg">En nog ' + (r.length - 8) + ' kaarten. Maak je zoekwoord specifieker.</li>' : '');
       ul.querySelectorAll('.zoek-kies').forEach(function (b) { b.onclick = function () { opt.onKies && opt.onKies(r[+b.dataset.i].k); }; });
+      ul.querySelectorAll('.zoek-voeg').forEach(function (b) {
+        b.onclick = function () {
+          opt.onKies && opt.onKies(r[+b.dataset.i].k);
+          ul.querySelectorAll('.zoek-voeg').forEach(function (o) { o.classList.remove('klaar'); o.textContent = opt.voegTekst; });
+          b.classList.add('klaar'); b.textContent = '\u2713 Toegevoegd';
+        };
+      });
     }
     inp.addEventListener('input', toon);
     return { leeg: function () { inp.value = ''; ul.innerHTML = ''; } };
