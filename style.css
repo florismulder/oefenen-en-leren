@@ -363,3 +363,26 @@ header.top { padding-right: 190px; }
   header.top .tag { align-self: flex-start; }
   header.top .brand { margin-top: 10px; }
 }
+
+/* Menu: kleine appnaam, grote vaknaam */
+header.top.menu { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 20px 18px 0; margin-bottom: 24px; }
+header.top.menu::after { position: static; order: 2; transform: none; width: 130px; height: 34px; margin: 0; background-position: right center; }
+header.top.menu .tag { order: 1; font-size: 12px; }
+.menu h1 { font-size: clamp(44px, 9vw, 84px); line-height: .95; letter-spacing: -1.5px; margin: 6px 0 14px; }
+.menu h1 + p { font-size: 18px; margin-bottom: 18px; }
+.menu .small-note { margin-bottom: 4px; }
+.game .gt b, .vak-tegel b, h1 { text-wrap: balance; }
+@media (max-width: 640px) {
+  header.top.menu { padding: 16px 18px 0; margin-bottom: 18px; }
+  header.top.menu::after { width: 104px; height: 28px; }
+  .menu h1 { font-size: 46px; }
+  .vak-tegel { min-height: 170px; padding: 20px; }
+  .vak-tegel .vi { top: 20px; left: 20px; }
+  .vak-tegel::after { top: 14px; right: 20px; font-size: 32px; }
+  .vak-tegel b { font-size: 34px; }
+  .vak-tegel span:last-child { font-size: 16px; }
+  .game { padding: 18px 50px 18px 18px; }
+  .game::after { right: 16px; }
+  .game .gi { min-width: 0; }
+  .game .gt b { font-size: 19px; }
+}
