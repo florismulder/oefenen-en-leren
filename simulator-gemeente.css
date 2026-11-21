@@ -187,4 +187,7 @@ blockquote { margin: 8px 0; padding: 8px 12px; border-left: 4px solid #ff00e7; b
 .sim-top .wis-knop { margin-top: 6px; background: transparent; color: #fff; border: 1px solid #cbd8f3; border-radius: 8px; padding: 4px 12px; font-size: 13px; cursor: pointer; }
 .sim-top .wis-knop:hover { background: #ff00e7; border-color: #ff00e7; }
 .sim-top .wis-top { display: block; margin-top: 6px; font-size: 13px; }
-.sim-top .wis-top .btn { color: #fff; }
+.sim-top .wis-top { color: #fff; font-weight: 700; }
+.sim-top .wis-top .btn { margin-left: 4px; }
+.sim-top .wis-top .btn.danger { background: #fff; color: #a3122a; border-color: #fff; font-weight: 700; }
+.sim-top .wis-top .btn.ghost { background: #0d2145; color: #fff; border-color: #cbd8f3; }
