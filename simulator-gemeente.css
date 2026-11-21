@@ -191,3 +191,10 @@ blockquote { margin: 8px 0; padding: 8px 12px; border-left: 4px solid #1f4a96; b
 .sim-top .wis-top .btn { margin-left: 4px; }
 .sim-top .wis-top .btn.danger { background: #fff; color: #a3122a; border-color: #fff; font-weight: 700; }
 .sim-top .wis-top .btn.ghost { background: #0d2145; color: #fff; border-color: #cbd8f3; }
+
+.steunpunt { margin: 6px 0 0; font-size: .92rem; color: #14305f; }
+.sim-schorsing { border: 2px solid #1f4a96; border-radius: 12px; background: #eef3fc; padding: 16px 20px; margin: 18px 0; }
+.sim-schorsing.klaar { background: #f7f9ff; }
+.sim-schorsing.rustig { border-color: var(--line-strong); background: var(--soft); }
+.sim-schorsing h2 { margin: 4px 0 8px; }
+.sim-schorsing blockquote { margin: 8px 0; }

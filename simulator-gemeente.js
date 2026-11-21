@@ -14,6 +14,7 @@
       voorstel: { ext: null, dagen: null, opt: { portiers: false, geluid: false, proef: false, boa: false, bus: false, meld: false } },
       fracties: [],
       debat: {},
+      twist: null,
       stemKlaar: false,
       run: '',
       pogingen: 0,
@@ -51,7 +52,8 @@
         scherm: S.scherm, gesprekken: S.gesprekken.length, fracties: S.fracties.length,
         ext: v.ext, dagen: v.dagen, opt: opt, kosten: D.kosten(v),
         klaar: !!S.stemKlaar, aangenomen: u ? u.aangenomen : null, voor: u ? u.voor : null, tegen: u ? u.tegen : null,
-        pogingen: S.pogingen || 0, pdf: !!S.pdf
+        pogingen: S.pogingen || 0, pdf: !!S.pdf,
+        schorsing: S.twist && S.twist.p ? S.twist.p + ':' + (S.twist.keuze || '-') : null
       } });
     }, 400);
   }
@@ -78,9 +80,29 @@
     });
     return d;
   }
-  function steunVan(p) { return clamp(basisSteun(p) + debatVan(p), 0, 100); }
+  function twistVan(p) {
+    const t = S.twist;
+    if (!t || !t.p || t.p !== p.id) return 0;
+    return -t.straf * (1 - (t.herstel || 0));
+  }
+  function steunVan(p) { return clamp(basisSteun(p) + debatVan(p) + twistVan(p), 0, 100); }
+  // Na het debat trekt de partij haar steun in zonder wie de meerderheid niet haalt (de zwakste van die partijen).
+  function maakTwist() {
+    const u = uitslag();
+    if (!u.aangenomen) return { geen: true };
+    const kand = u.rij.filter(r => r.voor && (u.voor - r.p.zetels) < 11).sort((a, b) => a.st - b.st);
+    if (!kand.length) return { geen: true, breed: true };
+    return { p: kand[0].p.id, straf: Math.max(kand[0].st - (D.DREMPEL - 10), 5), herstel: null, keuze: null, v0: null };
+  }
+  function toezeggingen(p) {
+    return (D.TOEZEGGINGEN[p.id] || []).filter(t => t.ok(S.voorstel)).map(t => {
+      const c = JSON.parse(JSON.stringify(S.voorstel)); t.doe(c);
+      const extra = D.kosten(c) - D.kosten(S.voorstel);
+      return { t, extra, past: D.kosten(c) <= D.BUDGET };
+    });
+  }
   function uitslag() {
-    const rij = D.PARTIJEN.map(p => { const st = steunVan(p); return { p, basis: basisSteun(p), d: debatVan(p), st, voor: st >= D.DREMPEL }; });
+    const rij = D.PARTIJEN.map(p => { const st = steunVan(p); return { p, basis: basisSteun(p), d: debatVan(p), tw: twistVan(p), st, voor: st >= D.DREMPEL }; });
     const voor = rij.reduce((a, r) => a + (r.voor ? r.p.zetels : 0), 0);
     return { rij, voor, tegen: 21 - voor, aangenomen: voor >= 11 };
   }
@@ -315,6 +337,43 @@
     </div>`;
   }
 
+  function schorsing() {
+    if (!S.twist) { S.twist = maakTwist(); bewaar(); }
+    const t = S.twist;
+    const naarStem = '<div class="sim-acties"><button type="button" class="btn" data-act="volgende">Naar de stemming →</button></div>';
+    if (t.geen) {
+      return t.breed
+        ? `<div class="sim-schorsing rustig"><h2>Geen schorsing</h2><p>Je hebt zoveel steun dat geen enkele partij de stemming kan laten mislukken. De voorzitter gaat door naar de stemming.</p></div>${naarStem}`
+        : naarStem;
+    }
+    const p = D.PARTIJEN.find(x => x.id === t.p);
+    if (!t.keuze) {
+      const mis = wensenVan(p).filter(w => w.f < 1).sort((a, b) => b.w - a.w).slice(0, 2).map(w => w.t.charAt(0).toLowerCase() + w.t.slice(1));
+      const opties = toezeggingen(p).map(o => `<button type="button" class="sim-antwoord${o.past ? '' : ' slot'}" data-act="toezeg" data-val="${o.t.id}"${o.past ? '' : ' disabled'}>
+        <b>${o.t.tekst}${o.extra ? ' (kost € ' + o.extra.toLocaleString('nl-NL') + ')' : ''}</b><small>${o.past ? 'Dit past in je voorstel. Let op: andere partijen reageren daar ook op.' : 'Past niet meer in het budget.'}</small></button>`).join('');
+      return `<div class="sim-schorsing" role="alert"><p class="sim-label">Schorsing van de vergadering</p>
+        <h2>Partij ${p.id} trekt haar steun in</h2>
+        <blockquote>“Voorzitter, wij hebben twijfels over dit voorstel${mis.length ? ': ' + mis.join(' en ') : ''}. Wij vragen een schorsing.”</blockquote>
+        <p>Zonder Partij ${p.id} heb je geen meerderheid. De vergadering is geschorst. Je overlegt op de gang met ${p.naam}. Wat zeg je toe?</p>
+        <p class="sim-uitleg">Een toezegging verandert je voorstel. Dat gebeurt in het echt ook: de raad past het voorstel aan met een amendement.</p>
+        <div class="sim-antwoorden">${opties}<button type="button" class="sim-antwoord" data-act="toezeg" data-val="vast"><b>Ik zeg niets toe</b><small>Je houdt je voorstel zoals het is. Partij ${p.id} blijft tegen.</small></button></div></div>`;
+    }
+    const nu = steunVan(p) >= D.DREMPEL;
+    const toe = (D.TOEZEGGINGEN[p.id] || []).find(x => x.id === t.keuze);
+    const reactie = t.keuze === 'vast'
+      ? `Partij ${p.id} blijft bij haar besluit en stemt straks tegen.`
+      : nu ? `Partij ${p.id}: “Dit is wat wij wilden. Wij steunen het voorstel weer.”`
+        : `Partij ${p.id}: “Het is een stap. Maar het is nog niet genoeg. Wij blijven tegen.”`;
+    const u = uitslag();
+    const flips = u.rij.filter((r, i) => r.p.id !== p.id && t.v0 && t.v0[i] !== r.voor)
+      .map(r => `Partij ${r.p.id} stemt door je toezegging nu ${r.voor ? 'voor' : 'tegen'}.`);
+    return `<div class="sim-schorsing klaar"><p class="sim-label">Na de schorsing</p>
+      <h2>${t.keuze === 'vast' ? 'Je houdt vast aan je voorstel' : 'Jij zegt toe: ' + (toe ? toe.tekst.charAt(0).toLowerCase() + toe.tekst.slice(1) : '')}</h2>
+      <p class="reactie ${nu ? 'goed' : 'slecht'}" role="status">${reactie}</p>
+      ${flips.map(f => `<p class="reactie slecht" role="status">${f}</p>`).join('')}
+      <p class="sim-uitleg">Je ziet de uitslag pas bij de stemming.</p></div>${naarStem}`;
+  }
+
   function middenS4() {
     const gedaan = D.DEBAT.filter(q => S.debat[q.id]);
     const nu = D.DEBAT.find(q => !S.debat[q.id]);
@@ -325,7 +384,8 @@
       const a = keuze === 'geen' ? null : argKaart(keuze);
       return `<div class="sim-vraag klaar"><div class="vraag-kop"><b>${q.wie}</b></div><blockquote>“${q.vraag}”</blockquote>
         <p class="jouw">Jij antwoordt: <b>${a ? a.argTitel : 'Geen echt antwoord'}</b></p>
-        <p class="reactie ${r.d > 0 ? 'goed' : r.d < 0 ? 'slecht' : ''}" role="status">${r.t}</p></div>`;
+        <p class="reactie ${r.d > 0 ? 'goed' : r.d < 0 ? 'slecht' : ''}" role="status">${r.t}</p>
+        <p class="steunpunt">Steun van Partij ${q.partij}: <b>${r.d > 0 ? '+' : ''}${r.d} punten</b></p></div>`;
     }).join('');
     let actief = '';
     if (nu) {
@@ -342,10 +402,10 @@
       <p class="sim-label">Donderdag 20:30 · Raadszaal</p>
       <h1>Het debat in de raad</h1>
       ${scene('s4')}
-      <p>De raadsvergadering is openbaar. De burgemeester is voorzitter. Drie fracties stellen je een vraag. Jij bent de wethouder en antwoordt.</p>
-      <p class="teller">Vraag <b>${Math.min(gedaan.length + 1, 3)} van 3</b></p>
+      <p>De raadsvergadering is openbaar. De burgemeester is voorzitter. Elke fractie stelt je een vraag. Jij bent de wethouder en antwoordt.</p>
+      <p class="teller">Vraag <b>${Math.min(gedaan.length + 1, D.DEBAT.length)} van ${D.DEBAT.length}</b></p>
       ${klaar}${actief}
-      ${!nu ? '<div class="sim-acties"><button type="button" class="btn" data-act="volgende">Naar de stemming →</button></div>' : ''}
+      ${!nu ? schorsing() : ''}
     </div>`;
   }
 
@@ -363,7 +423,7 @@
     if (klaar) {
       uitleg = `<div class="sim-uitslag ${u.aangenomen ? 'goed' : 'slecht'}" role="status"><b>${u.aangenomen ? 'AANGENOMEN' : 'VERWORPEN'}</b> met ${u.voor} voor en ${u.tegen} tegen.${u.aangenomen ? '' : ' Er waren 11 zetels nodig.'}</div>
         <h2>Waarom stemde elke partij zo?</h2><div class="sim-fracties">${u.rij.map(r => `<div class="sim-fractie klaar" style="--pk:${r.p.kleur}"><div class="fractie-kop"><span class="fletter">${r.p.id}</span><div><b>Partij ${r.p.id}: ${r.p.naam}</b><small>${r.p.rol} · ${r.p.zetels} zetels · stemde ${r.voor ? 'voor' : 'tegen'}</small></div></div>
-          ${wensenLijst(r.p)}<p class="sim-uitleg">Voorstel: <b>${r.basis}</b> punten${r.d ? `. Debat: <b>${r.d > 0 ? '+' : ''}${r.d}</b>` : ''}. Totaal: <b>${r.st}</b> van 100.${gesproken(r.p) ? '' : ' Jij hebt deze partij niet gesproken.'}</p></div>`).join('')}</div>
+          ${wensenLijst(r.p)}<p class="sim-uitleg">Voorstel: <b>${r.basis}</b> punten${r.d ? `. Debat: <b>${r.d > 0 ? '+' : ''}${r.d}</b>` : ''}${r.tw ? `. Steun ingetrokken in de schorsing: <b>${Math.round(r.tw)}</b>` : ''}. Totaal: <b>${r.st}</b> van 100.${gesproken(r.p) ? '' : ' Jij hebt deze partij niet gesproken.'}</p></div>`).join('')}</div>
         <div class="sim-blok les"><h3>Wat deed je als bestuurder?</h3><ul>
           <li><b>Kaders stellen.</b> De raad besliste over de regels en over ${eur(D.kosten(S.voorstel))} van het budget.</li>
           <li><b>Controleren.</b> De fracties stelden je kritische vragen. Zo controleert de raad het college.</li>
@@ -384,6 +444,11 @@
     </div>`;
   }
 
+  function toezeggingTekst() {
+    const t = S.twist; if (!t || !t.p || !t.keuze || t.keuze === 'vast') return '';
+    const toe = (D.TOEZEGGINGEN[t.p] || []).find(x => x.id === t.keuze);
+    return toe ? ` Tijdens de schorsing zegde de wethouder aan Partij ${t.p} toe: ${toe.tekst.charAt(0).toLowerCase() + toe.tekst.slice(1)}.` : '';
+  }
   function besluit() {
     const u = uitslag(), v = S.voorstel;
     const tijd = v.ext === 4 ? '04.00' : '03.00';
@@ -393,7 +458,7 @@
     const opt = D.VOORWAARDEN.filter(o => v.opt[o.id]);
     let besloten, gevolgen;
     if (u.aangenomen) {
-      besloten = `Cafés in het centrum mogen op ${dagen} open blijven tot ${tijd} uur.` + (opt.length ? ' Daarbij gelden deze afspraken: ' + opt.map(o => o.titel.charAt(0).toLowerCase() + o.titel.slice(1)).join(', ') + '.' : '');
+      besloten = `Cafés in het centrum mogen op ${dagen} open blijven tot ${tijd} uur.` + (opt.length ? ' Daarbij gelden deze afspraken: ' + opt.map(o => o.titel.charAt(0).toLowerCase() + o.titel.slice(1)).join(', ') + '.' : '') + toezeggingTekst();
       gevolgen = [];
       gevolgen.push(`Ondernemers: cafés mogen tot ${tijd} uur open.` + (v.opt.portiers || v.opt.geluid ? ' Zij betalen zelf voor ' + [v.opt.portiers ? 'portiers' : '', v.opt.geluid ? 'een geluidsbegrenzer' : ''].filter(Boolean).join(' en ') + '.' : ''));
       gevolgen.push(v.opt.geluid || v.opt.meld || v.opt.proef || v.opt.boa || v.opt.portiers
@@ -599,6 +664,19 @@
       if (nieuw && D.kosten(v) + o.kosten > D.BUDGET) return;
       v.opt[val] = nieuw; bewaar(); render();
     }
+    else if (act === 'toezeg') {
+      const t = S.twist; if (!t || !t.p || t.keuze) return;
+      const p = D.PARTIJEN.find(x => x.id === t.p);
+      t.v0 = uitslag().rij.map(r => r.voor);
+      if (val === 'vast') { t.keuze = 'vast'; t.herstel = 0; }
+      else {
+        const toe = (D.TOEZEGGINGEN[p.id] || []).find(x => x.id === val); if (!toe) return;
+        const c = JSON.parse(JSON.stringify(S.voorstel)); toe.doe(c);
+        if (D.kosten(c) > D.BUDGET) return;
+        toe.doe(S.voorstel); t.keuze = val; t.herstel = toe.herstel;
+      }
+      bewaar(); meld(); render();
+    }
     else if (act === 'antwoord') { S.debat[el.dataset.q] = val; bewaar(); render(); }
     else if (act === 'stem') stemAnimatie();
     else if (act === 'volgende') {
@@ -607,7 +685,7 @@
       ga(volgorde[i + 1]);
     }
     else if (act === 'pdf') { const c = checks(); if (c.naam && c.kop && c.intro && c.kern && c.bron) maakPdf(); }
-    else if (act === 'nieuwvoorstel') { S.debat = {}; S.stemKlaar = false; reveal = 0; S.scherm = 's3'; bewaar(); meld(); render(); window.scrollTo(0, 0); }
+    else if (act === 'nieuwvoorstel') { S.debat = {}; S.twist = null; S.stemKlaar = false; reveal = 0; S.scherm = 's3'; bewaar(); meld(); render(); window.scrollTo(0, 0); }
     else if (act === 'wis') { wisVraag = true; render(); }
     else if (act === 'wisnee') { wisVraag = false; render(); }
     else if (act === 'wisja') { const run = S.run; wisVraag = false; reveal = 0; animeert = false; S = leeg(); S.run = run; bewaar(); meld(); render(); window.scrollTo(0, 0); }

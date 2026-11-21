@@ -130,8 +130,44 @@
         jongeren: () => g(0, 'Dat gaat over jongeren. Partij B wilde iets anders weten.'),
         geen: () => g(-5, 'Je geeft geen echt antwoord. Partij B vindt dat zwak.')
       }
+    },
+    {
+      id: 'q4', partij: 'A', wie: 'Fractievoorzitter van Partij A',
+      vraag: 'Voorzitter, wat betekent dit voor onze ondernemers in het centrum? Wordt het niet te duur en te ingewikkeld?',
+      ant: {
+        horeca: v => !v.opt.portiers ? g(15, 'Goed antwoord. Ondernemers krijgen geen extra verplichte kosten. Partij A knikt.') : g(-10, 'Je zegt dat het simpel blijft, maar je voorstel verplicht portiers. Partij A gelooft je niet.'),
+        jongeren: () => g(5, 'Als jongeren blijven, is dat goed voor de ondernemers. Maar je beantwoordt de vraag over kosten niet.'),
+        agent: () => g(0, 'Toezicht kost geld en tijd. Partij A wilde iets anders weten.'),
+        bewoner: () => g(0, 'Dat gaat over bewoners. Partij A wilde iets anders weten.'),
+        geen: () => g(-5, 'Je geeft geen echt antwoord. Partij A vindt dat zwak.')
+      }
     }
   ];
+
+  /* Schorsing: een partij trekt haar steun in. Dit kan de wethouder toezeggen. herstel = hoeveel vertrouwen terugkomt (1 = alles, 0,5 = de helft). */
+  const TOEZEGGINGEN = {
+    A: [
+      { id: 'a1', tekst: 'Ik schrap de verplichte portiers', ok: v => v.opt.portiers, doe: v => { v.opt.portiers = false; }, herstel: 1 },
+      { id: 'a2', tekst: 'Ik maak het ook op vrijdag mogelijk', ok: v => v.dagen === 'za', doe: v => { v.dagen = 'vrza'; }, herstel: 1 },
+      { id: 'a3', tekst: 'Ik verleng de sluitingstijd naar 04.00 uur', ok: v => v.ext !== 4, doe: v => { v.ext = 4; }, herstel: 0.5 }
+    ],
+    B: [
+      { id: 'b1', tekst: 'Ik voeg een geluidsbegrenzer in elk café toe', ok: v => !v.opt.geluid, doe: v => { v.opt.geluid = true; }, herstel: 1 },
+      { id: 'b2', tekst: 'Ik voeg een meldpunt overlast toe', ok: v => !v.opt.meld, doe: v => { v.opt.meld = true; }, herstel: 1 },
+      { id: 'b3', tekst: 'Ik voeg een proefperiode van 1 jaar toe', ok: v => !v.opt.proef, doe: v => { v.opt.proef = true; }, herstel: 0.5 },
+      { id: 'b4', tekst: 'Ik beperk het tot alleen zaterdag', ok: v => v.dagen === 'vrza', doe: v => { v.dagen = 'za'; }, herstel: 0.5 }
+    ],
+    C: [
+      { id: 'c1', tekst: 'Ik voeg 2 extra BOA\'s toe', ok: v => !v.opt.boa, doe: v => { v.opt.boa = true; }, herstel: 1 },
+      { id: 'c2', tekst: 'Ik maak portiers verplicht', ok: v => !v.opt.portiers, doe: v => { v.opt.portiers = true; }, herstel: 1 },
+      { id: 'c3', tekst: 'Ik voeg een proefperiode van 1 jaar toe', ok: v => !v.opt.proef, doe: v => { v.opt.proef = true; }, herstel: 0.5 }
+    ],
+    D: [
+      { id: 'd1', tekst: 'Ik voeg een extra nachtbus toe', ok: v => !v.opt.bus, doe: v => { v.opt.bus = true; }, herstel: 1 },
+      { id: 'd2', tekst: 'Ik voeg een geluidsbegrenzer in elk café toe', ok: v => !v.opt.geluid, doe: v => { v.opt.geluid = true; }, herstel: 0.5 },
+      { id: 'd3', tekst: 'Ik voeg een proefperiode van 1 jaar toe', ok: v => !v.opt.proef, doe: v => { v.opt.proef = true; }, herstel: 0.5 }
+    ]
+  };
 
   const STAPPEN = [
     { id: 's1', dag: 'Vrijdag', tijd: '01:45', plek: 'Marktplein', kort: 'Praat met de mensen' },
@@ -156,5 +192,5 @@
     ['Evaluatie', 'Na een tijd kijken of een plan werkt.']
   ];
 
-  window.SIM = { BUDGET, DREMPEL: 65, KOSTEN, VOORWAARDEN, PARTIJEN, GESPREKKEN, DEBAT, STAPPEN, BEGRIPPEN, kosten };
+  window.SIM = { BUDGET, DREMPEL: 65, KOSTEN, VOORWAARDEN, PARTIJEN, GESPREKKEN, DEBAT, TOEZEGGINGEN, STAPPEN, BEGRIPPEN, kosten };
 })();
