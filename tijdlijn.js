@@ -57,10 +57,13 @@
     if (open) mis.push('bij ' + open + ' moment(en) nog een foto, een zin (minimaal 8 tekens) of een cijfer');
     return mis;
   }
+  var UA = navigator.userAgent || '';
+  var CHROMIUM = /(Chrome|Edg)\//.test(UA) && !/(CriOS|FxiOS|EdgiOS)/.test(UA);
+  var BROWSERWAARSCHUWING = CHROMIUM ? '' : '<div class="waarschuw"><b>Gebruik Chrome of Edge.</b> In een andere browser kan de pdf er anders uitzien. Open deze pagina in Chrome of Edge voordat je begint.</div>';
   function start() {
     app.innerHTML = '<section class="hero"><span class="tag">Koude Oorlog · Les 2 · 1950 tot 1962</span><h1>Bouw de tijdlijn van de spanning</h1>' +
       '<p>Jullie kiezen zeven momenten uit les 2. Bij elk moment kies je een foto, schrijf je één zin en geef je een cijfer voor de spanning. Je ziet je spanningslijn meteen groeien. Daarna download je alles als pdf.</p>' +
-      '<div class="waarschuw"><b>Gebruik een computer of laptop.</b> Op een telefoon werkt dit niet goed. Pak je laptop erbij voordat je begint.</div>' +
+      BROWSERWAARSCHUWING + '<div class="waarschuw"><b>Gebruik een computer of laptop.</b> Op een telefoon werkt dit niet goed. Pak je laptop erbij voordat je begint.</div>' +
       '<div class="card"><h2>Wie zijn jullie?</h2><div class="namen"><div class="fld"><label for="n1">Naam 1</label><input id="n1" autocomplete="off" value="' + esc(S.n1) + '"></div><div class="fld"><label for="n2">Naam 2</label><input id="n2" autocomplete="off" value="' + esc(S.n2) + '"></div></div></div>' +
       '<button class="btn" id="go" type="button">Beginnen</button></section>';
     if (window.innerWidth < 900) app.insertAdjacentHTML('afterbegin', '<div class="waarschuw groot">Je zit op een klein scherm. Open deze pagina op een computer of laptop.</div>');
@@ -152,7 +155,7 @@
       '<div class="p-chartwrap"><div class="p-as"><span class="hi" style="top:8%">10</span><span style="top:22%">Kernoorlog</span><span class="lo" style="top:78%">1</span><span style="top:91%">Vrede</span></div><div class="p-chart" id="chart">' + chartHtml() + '</div></div><div class="p-slots">' + slots + '</div>' +
       '<div class="p-voet"><img src="/logo-ma.jpg" alt="Mediacollege Amsterdam"><span>Spanning: 1 is vrede, 10 is kernoorlog</span></div></div>' +
       '<div id="voortgang" class="voortgang"></div><div id="meld"></div>' +
-      '<div class="acties"><button class="btn licht" id="vergelijk" type="button">' + (S.vergelijk ? 'Verberg de reader-lijn' : 'Vergelijk met de reader') + '</button><button class="btn" id="dl" type="button">Download als pdf</button><button class="btn licht" id="reset" type="button">Alles wissen</button></div>' +
+      BROWSERWAARSCHUWING + '<div class="acties"><button class="btn licht" id="vergelijk" type="button">' + (S.vergelijk ? 'Verberg de reader-lijn' : 'Vergelijk met de reader') + '</button><button class="btn" id="dl" type="button">Download als pdf</button><button class="btn licht" id="reset" type="button">Alles wissen</button></div>' +
       '<p class="tip">Kies bij het printen "Opslaan als pdf". Mail de pdf naar je docent. Het mailadres staat op het bord.</p>' +
       '<dialog id="dlg"><h2>Kies een foto</h2><p class="tip" style="margin:6px 0">Kies uit de set of upload je eigen foto. Gebruik een foto die bij het moment past.</p><label class="btn licht upl">Eigen foto uploaden<input type="file" id="upl" accept="image/*" hidden></label><p class="fout" id="uplfout"></p><div class="fotos" id="fotos"></div><div class="acties" style="margin-top:14px"><button class="btn licht" id="sluit" type="button">Sluiten</button></div></dialog>';
     koppel(); voortgang();
