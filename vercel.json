@@ -173,6 +173,10 @@
       "destination": "/reader"
     },
     {
+      "source": "/koude-oorlog/oefenen",
+      "destination": "/oefenen-koude-oorlog"
+    },
+    {
       "source": "/koude-oorlog/toetsvraag",
       "destination": "/toetsvraag"
     },
