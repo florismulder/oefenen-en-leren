@@ -5,7 +5,8 @@
     '/reader-gemeente': 'politiek', '/gemeente/reader': 'politiek',
     '/oefenen-gemeente': 'politiek', '/gemeente/oefenen': 'politiek',
     '/speurtocht-gemeente': 'politiek', '/gemeente/speurtocht': 'politiek', '/speurtocht-docent': 'politiek', '/gemeente/resultaten': 'politiek',
-    '/flash': 'politiek'
+    '/flash': 'politiek',
+    '/simulator-gemeente': 'politiek', '/gemeente/simulator': 'politiek'
   };
   var vak = VAKKEN[p];
   var NAAM = { politiek: 'Politiek', geschiedenis: 'Geschiedenis' };

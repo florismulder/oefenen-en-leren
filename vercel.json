@@ -191,6 +191,10 @@
     {
       "source": "/gemeente/resultaten",
       "destination": "/speurtocht-docent"
+    },
+    {
+      "source": "/gemeente/simulator",
+      "destination": "/simulator-gemeente"
     }
   ]
 }
