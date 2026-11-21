@@ -26,7 +26,7 @@
     { id: 'l2-krant', t: 'Krant: Amerika legt blokkade rond Cuba' }
   ];
   var S = laad();
-  function laad() { try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.gekozen) return s; } catch (e) {} return { fase: 'start', n1: '', n2: '', titel: '', gekozen: [], slots: {}, vergelijk: false }; }
+  function laad() { try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.gekozen) return s; } catch (e) {} return { fase: 'start', n1: '', n2: '', titel: '', gekozen: [], slots: {}, vergelijk: false, jaren: {}, gecheckt: false }; }
   function bewaar() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function mom(id) { return MOM.filter(function (m) { return m.id === id; })[0]; }
@@ -48,11 +48,41 @@
   function start() {
     app.innerHTML = '<section class="hero"><span class="tag">Koude Oorlog · Les 2 · 1950 tot 1962</span><h1>Bouw de tijdlijn van de spanning</h1>' +
       '<p>Jullie kiezen zes momenten uit les 2. Bij elk moment kies je een foto, schrijf je één zin en geef je een cijfer voor de spanning. Je ziet je spanningslijn meteen groeien. Daarna download je alles als pdf.</p>' +
+      '<div class="waarschuw"><b>Gebruik een computer of laptop.</b> Op een telefoon werkt dit niet goed. Pak je laptop erbij voordat je begint.</div>' +
       '<div class="card"><h2>Wie zijn jullie?</h2><div class="namen"><div class="fld"><label for="n1">Naam 1</label><input id="n1" autocomplete="off" value="' + esc(S.n1) + '"></div><div class="fld"><label for="n2">Naam 2</label><input id="n2" autocomplete="off" value="' + esc(S.n2) + '"></div></div></div>' +
-      '<button class="btn" id="go" type="button">Beginnen met bouwen</button></section>';
+      '<button class="btn" id="go" type="button">Beginnen</button></section>';
+    if (window.innerWidth < 900) app.insertAdjacentHTML('afterbegin', '<div class="waarschuw groot">Je zit op een klein scherm. Open deze pagina op een computer of laptop.</div>');
     document.getElementById('n1').oninput = function (e) { S.n1 = e.target.value; bewaar(); };
     document.getElementById('n2').oninput = function (e) { S.n2 = e.target.value; bewaar(); };
-    document.getElementById('go').onclick = function () { S.fase = 'bouw'; bewaar(); bouw(); window.scrollTo(0, 0); };
+    document.getElementById('go').onclick = function () { if (!S.n1.trim() || !S.n2.trim()) { document.getElementById('n1').focus(); return; } S.fase = 'jaar'; bewaar(); jaar(); window.scrollTo(0, 0); };
+  }
+
+  var JAAR = [
+    { k: 'korea', foto: 'l2-korea', t: 'Noord-Korea valt Zuid-Korea aan. De Verenigde Naties sturen soldaten.', j: 1950 },
+    { k: 'hongarije', foto: 'l2-tanks', t: 'Studenten eisen vrijheid. Sovjettanks rijden Boedapest binnen.', j: 1956 },
+    { k: 'muur', foto: 'l2-draad', t: 'Oost-Duitsland sluit de grens in Berlijn. Eerst met prikkeldraad.', j: 1961 },
+    { k: 'cuba', foto: 'l2-cuba', t: 'Sovjetraketten op Cuba. Amerika sluit het eiland af met schepen.', j: 1962 }
+  ];
+  function jaar() {
+    S.fase = 'jaar'; S.jaren = S.jaren || {};
+    var kaarten = JAAR.map(function (e) {
+      var v = S.jaren[e.k] || 1955, uit = '';
+      if (S.gecheckt) { var d = Math.abs(v - e.j); uit = '<div class="uitslag ' + (d === 0 ? 'goed' : d <= 2 ? 'bijna' : 'ver') + '"><b>Het was ' + e.j + '.</b> ' + (d === 0 ? 'Precies goed.' : 'Jullie zaten ' + d + ' jaar ernaast.') + '</div>'; }
+      return '<div class="jaarkaart"><img src="/reader-img/' + e.foto + '.jpg" alt=""><div class="jk-tekst"><span class="tag">' + EV[e.k] + '</span><p>' + esc(e.t) + '</p><div class="jk-jaar" id="jj-' + e.k + '">' + v + '</div>' +
+        '<input type="range" min="1945" max="1965" step="1" value="' + v + '" data-k="' + e.k + '" aria-label="Jaar van ' + EV[e.k] + '"' + (S.gecheckt ? ' disabled' : '') + '><div class="jk-as"><span>1945</span><span>1955</span><span>1965</span></div>' + uit + '</div></div>';
+    }).join('');
+    var goed = S.gecheckt ? JAAR.filter(function (e) { return S.jaren[e.k] === e.j; }).length : 0;
+    app.innerHTML = '<span class="tag">Stap 0 · Wanneer was het?</span><h1 class="jaar-kop">Zet de gebeurtenissen in de tijd</h1>' +
+      '<p class="tip" style="font-size:19px;color:var(--cream);margin:10px 0 18px">Weten jullie in welk jaar het gebeurde? Schuif de balk naar jullie gok. Dan klik je op Controleer. Je krijgt geen cijfer. Het is een start.</p>' +
+      '<div class="jaargrid">' + kaarten + '</div>' +
+      (S.gecheckt ? '<div class="meld"><b>' + goed + ' van de 4 precies goed.</b> Neem de jaartallen mee. Je hebt ze nodig voor je tijdlijn.</div>' : '') +
+      '<div class="acties">' + (S.gecheckt ? '<button class="btn" id="verder" type="button">Verder naar de tijdlijn</button>' : '<button class="btn" id="check" type="button">Controleer</button>') + '<button class="btn licht" id="terug" type="button">Terug</button></div>';
+    app.querySelectorAll('input[type=range]').forEach(function (r) {
+      r.oninput = function () { S.jaren[r.dataset.k] = +r.value; document.getElementById('jj-' + r.dataset.k).textContent = r.value; bewaar(); };
+    });
+    var c = document.getElementById('check'); if (c) c.onclick = function () { JAAR.forEach(function (e) { if (!S.jaren[e.k]) S.jaren[e.k] = 1955; }); S.gecheckt = true; bewaar(); jaar(); window.scrollTo(0, 0); };
+    var v = document.getElementById('verder'); if (v) v.onclick = function () { S.fase = 'bouw'; bewaar(); bouw(); window.scrollTo(0, 0); };
+    document.getElementById('terug').onclick = function () { S.fase = 'start'; bewaar(); start(); };
   }
   function chartHtml() {
     var W = 1000, H = 270, top = 44, bot = 30, ids = gesorteerd();
@@ -160,7 +190,7 @@
     document.getElementById('reset').onclick = function () {
       if (!confirm('Alles wissen en opnieuw beginnen?')) return;
       try { localStorage.removeItem(KEY); } catch (e) {}
-      S = { fase: 'start', n1: '', n2: '', titel: '', gekozen: [], slots: {}, vergelijk: false }; start();
+      S = { fase: 'start', n1: '', n2: '', titel: '', gekozen: [], slots: {}, vergelijk: false, jaren: {}, gecheckt: false }; start();
     };
   }
   function kiesFoto(id) {
@@ -170,5 +200,5 @@
     document.getElementById('sluit').onclick = function () { d.close(); };
     d.showModal();
   }
-  if (S.fase === 'bouw') bouw(); else start();
+  if (S.fase === 'bouw') bouw(); else if (S.fase === 'jaar') jaar(); else start();
 })();
