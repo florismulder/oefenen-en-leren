@@ -458,4 +458,5 @@ async function drawLeaderboard(quiet) {
   }
   const vk = new URLSearchParams(location.search).get('vak');
   viewMenu(VAKKEN[vk] ? vk : undefined);
+  if (location.search) { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 })();
