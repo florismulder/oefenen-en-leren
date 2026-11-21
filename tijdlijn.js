@@ -32,7 +32,8 @@
   function bewaar() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function mom(id) { return MOM.filter(function (m) { return m.id === id; })[0]; }
-  function foto(id) { return FOTOS.filter(function (f) { return f.id === id; })[0]; }
+  function foto(id) { return FOTOS.concat(S.eigen || []).filter(function (f) { return f.id === id; })[0]; }
+  function bron(f) { return f.src || '/reader-img/' + f.id + '.jpg'; }
   function heat(n) { var a = [61, 90, 128], b = [255, 0, 231], f = (n - 1) / 9; return 'rgb(' + a.map(function (v, i) { return Math.round(v + (b[i] - v) * f); }).join(',') + ')'; }
   function gesorteerd() { return S.gekozen.slice().sort(function (a, b) { return mom(a).d < mom(b).d ? -1 : mom(a).d > mom(b).d ? 1 : mom(a).id < mom(b).id ? -1 : 1; }); }
   function fmt(n) { return String(Math.round(n * 10) / 10).replace('.', ','); }
@@ -121,7 +122,7 @@
     if (!id) return '<div class="slot leeg">Moment ' + (i + 1) + '<br>kies hierboven een moment</div>';
     var m = mom(id), s = S.slots[id] || {}, f = s.foto ? foto(s.foto) : null, c = s.cijfer;
     return '<div class="slot"><div class="s-kop"><span>' + esc(m.dt) + '</span><em>' + esc(EV[m.ev]) + '</em></div>' +
-      '<button type="button" class="s-foto" data-foto="' + id + '" aria-label="Kies een foto">' + (f ? '<img src="/reader-img/' + f.id + '.jpg" alt="' + esc(f.t) + '"><span class="wissel">andere foto</span>' : '<span class="kies">Klik hier en kies een foto</span>') + '</button>' +
+      '<button type="button" class="s-foto" data-foto="' + id + '" aria-label="Kies een foto">' + (f ? '<img src="' + bron(f) + '" alt="' + esc(f.t) + '"><span class="wissel">andere foto</span>' : '<span class="kies">Klik hier en kies een foto</span>') + '</button>' +
       '<textarea class="s-zin" data-zin="' + id + '" maxlength="140" placeholder="Wat gebeurde er? Eén zin in je eigen woorden." aria-label="Jouw zin">' + esc(s.zin || '') + '</textarea>' +
       '<div class="s-teller" data-tel="' + id + '">' + (s.zin || '').length + '/140</div><p class="s-zin-print">' + esc(s.zin || '') + '</p>' +
       (c ? '<div class="s-cijfer-print" style="background:' + heat(c) + '">Spanning ' + fmt(c) + '</div>' : '') +
@@ -153,7 +154,7 @@
       '<div id="voortgang" class="voortgang"></div><div id="meld"></div>' +
       '<div class="acties"><button class="btn licht" id="vergelijk" type="button">' + (S.vergelijk ? 'Verberg de reader-lijn' : 'Vergelijk met de reader') + '</button><button class="btn" id="dl" type="button">Download als pdf</button><button class="btn licht" id="reset" type="button">Alles wissen</button></div>' +
       '<p class="tip">Kies bij het printen "Opslaan als pdf". Mail de pdf naar je docent. Het mailadres staat op het bord.</p>' +
-      '<dialog id="dlg"><h2>Kies een foto</h2><div class="fotos" id="fotos"></div><div class="acties" style="margin-top:14px"><button class="btn licht" id="sluit" type="button">Sluiten</button></div></dialog>';
+      '<dialog id="dlg"><h2>Kies een foto</h2><p class="tip" style="margin:6px 0">Kies uit de set of upload je eigen foto. Gebruik een foto die bij het moment past.</p><label class="btn licht upl">Eigen foto uploaden<input type="file" id="upl" accept="image/*" hidden></label><p class="fout" id="uplfout"></p><div class="fotos" id="fotos"></div><div class="acties" style="margin-top:14px"><button class="btn licht" id="sluit" type="button">Sluiten</button></div></dialog>';
     koppel(); voortgang();
   }
   function ververs() {
@@ -223,9 +224,31 @@
   }
   function kiesFoto(id) {
     var d = document.getElementById('dlg'), cur = (S.slots[id] || {}).foto;
-    document.getElementById('fotos').innerHTML = FOTOS.map(function (f) { return '<button type="button" data-f="' + f.id + '" class="' + (cur === f.id ? 'aan' : '') + '"><img src="/reader-img/' + f.id + '.jpg" alt="' + esc(f.t) + '"><span>' + esc(f.t) + '</span></button>'; }).join('');
+    document.getElementById('fotos').innerHTML = FOTOS.concat(S.eigen || []).map(function (f) { return '<button type="button" data-f="' + f.id + '" class="' + (cur === f.id ? 'aan' : '') + '"><img src="' + bron(f) + '" alt="' + esc(f.t) + '"><span>' + esc(f.t) + '</span></button>'; }).join('');
     document.querySelectorAll('#fotos button').forEach(function (b) { b.onclick = function () { S.slots[id] = S.slots[id] || {}; S.slots[id].foto = b.dataset.f; bewaar(); d.close(); var y = window.scrollY; bouw(); window.scrollTo(0, y); }; });
     document.getElementById('sluit').onclick = function () { d.close(); };
+    var u = document.getElementById('upl');
+    u.value = '';
+    u.onchange = function () {
+      var file = u.files && u.files[0]; if (!file) return;
+      if (!/^image\//.test(file.type)) { document.getElementById('uplfout').textContent = 'Kies een afbeelding.'; return; }
+      var rd = new FileReader();
+      rd.onload = function () {
+        var im = new Image();
+        im.onload = function () {
+          var mx = 900, sc = Math.min(1, mx / Math.max(im.width, im.height)), cv = document.createElement('canvas');
+          cv.width = Math.round(im.width * sc); cv.height = Math.round(im.height * sc);
+          cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+          S.eigen = S.eigen || [];
+          var f = { id: 'eigen-' + Date.now(), t: 'Eigen foto', src: cv.toDataURL('image/jpeg', 0.8) };
+          S.eigen.push(f); S.slots[id] = S.slots[id] || {}; S.slots[id].foto = f.id; bewaar();
+          d.close(); var y = window.scrollY; bouw(); window.scrollTo(0, y);
+        };
+        im.onerror = function () { document.getElementById('uplfout').textContent = 'Deze foto lukt niet. Kies een jpg of png.'; };
+        im.src = rd.result;
+      };
+      rd.readAsDataURL(file);
+    };
     d.showModal();
   }
   if (S.fase === 'bouw') bouw(); else if (S.fase === 'jaar') jaar(); else start();
