@@ -53,7 +53,9 @@
         ext: v.ext, dagen: v.dagen, opt: opt, kosten: D.kosten(v),
         klaar: !!S.stemKlaar, aangenomen: u ? u.aangenomen : null, voor: u ? u.voor : null, tegen: u ? u.tegen : null,
         pogingen: S.pogingen || 0, pdf: !!S.pdf,
-        schorsing: S.twist && S.twist.p ? S.twist.p + ':' + (S.twist.keuze || '-') : null
+        schorsing: S.twist && S.twist.p ? { p: S.twist.p, keuze: S.twist.keuze === 'vast' ? 'geen' : S.twist.keuze ? 'toegezegd' : 'open',
+          tekst: S.twist.keuze && S.twist.keuze !== 'vast' ? ((D.TOEZEGGINGEN[S.twist.p] || []).find(x => x.id === S.twist.keuze) || { tekst: '' }).tekst : '' } : null,
+        coalTegen: u ? u.rij.filter(r => r.p.rol === 'Coalitie' && !r.voor).map(r => r.p.id).join('') : ''
       } });
     }, 400);
   }

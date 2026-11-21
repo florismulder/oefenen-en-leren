@@ -74,18 +74,26 @@ function toon(runs) {
   const sk = simRuns.filter(x => x.state.klaar);
   const sAan = sk.filter(x => x.state.aangenomen).length;
   const sPdf = simRuns.filter(x => x.state.pdf).length;
+  const sSch = simRuns.filter(x => x.state.schorsing && typeof x.state.schorsing === 'object');
+  const sToe = sSch.filter(x => x.state.schorsing.keuze === 'toegezegd');
+  const sCo = sk.filter(x => x.state.coalTegen);
   const optTel = Object.keys(OPTN).map(k => `<tr><td>${esc(OPTN[k])}</td><td>${sk.filter(x => (x.state.opt || []).indexOf(k) >= 0).length} van ${sk.length}</td></tr>`).join('');
   const simRijen = simRuns.slice().reverse().map(x => {
     const t = x.state;
     const uit = t.klaar ? (t.aangenomen ? 'Aangenomen ' : 'Verworpen ') + t.voor + '-' + t.tegen : 'Nog bezig';
     const voorstel = t.ext ? (t.ext + '.00 uur, ' + (t.dagen === 'vrza' ? 'vr en za' : 'za') + ((t.opt || []).length ? ', ' + t.opt.map(k => OPTN[k] || k).join(', ') : '')) : '-';
-    return `<tr><td>Wethouder ${x.nr}</td><td>${esc(STAPN[t.scherm] || t.scherm || '-')}</td><td>${esc(voorstel)}</td><td>${esc(uit)}</td><td>${t.pdf ? 'Ja' : 'Nee'}</td><td>${esc(fmtDate(x.laatst))}</td></tr>`;
+    const sc = t.schorsing && typeof t.schorsing === 'object'
+      ? 'Partij ' + t.schorsing.p + ': ' + (t.schorsing.keuze === 'toegezegd' ? 'zei toe: ' + (t.schorsing.tekst || '').replace(/^Ik /, '').toLowerCase() : t.schorsing.keuze === 'geen' ? 'geen toezegging' : 'nog in overleg')
+      : '-';
+    const co = t.klaar ? (t.coalTegen ? 'Ja, Partij ' + t.coalTegen.split('').join(' en ') : 'Nee') : '-';
+    return `<tr><td>Wethouder ${x.nr}</td><td>${esc(STAPN[t.scherm] || t.scherm || '-')}</td><td>${esc(voorstel)}</td><td>${esc(sc)}</td><td>${esc(co)}</td><td>${esc(uit)}</td><td>${t.pdf ? 'Ja' : 'Nee'}</td><td>${esc(fmtDate(x.laatst))}</td></tr>`;
   }).join('');
   const simHtml = `<section class="card"><h2>Simulator Gemeenteraad</h2>
       <p>${simRuns.length} wethouders gestart. ${sk.length} stemden over hun voorstel (${sAan} aangenomen, ${sk.length - sAan} verworpen). ${sPdf} downloadden de pdf met het nieuwsbericht.</p>
+      <p>${sSch.length} kregen een schorsing (een partij trok haar steun in). ${sToe.length} zegden iets toe. ${sCo.length} zagen een coalitiepartij tegenstemmen: spanning in het college.</p>
       <p class="small-note">Anoniem. De pdf zelf krijg je per mail. Hier zie je alleen de keuzes en de uitkomst.</p>
       <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Voorwaarde</th><th>Gekozen door</th></tr></thead><tbody>${optTel}</tbody></table></div>
-      <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Wie</th><th>Bij stap</th><th>Voorstel</th><th>Uitkomst</th><th>Pdf</th><th>Laatst actief</th></tr></thead><tbody>${simRijen || '<tr><td colspan="6">Nog geen wethouders.</td></tr>'}</tbody></table></div>
+      <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Wie</th><th>Bij stap</th><th>Voorstel</th><th>Schorsing</th><th>Coalitie tegen</th><th>Uitkomst</th><th>Pdf</th><th>Laatst actief</th></tr></thead><tbody>${simRijen || '<tr><td colspan="8">Nog geen wethouders.</td></tr>'}</tbody></table></div>
       <div class="st-acties"><button class="btn ghost small" id="wissim" type="button">Wis simulatorresultaten</button></div></section>`;
 
   render(`<main>
