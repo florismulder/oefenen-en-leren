@@ -90,7 +90,7 @@
   function maakTwist() {
     const u = uitslag();
     if (!u.aangenomen) return { geen: true };
-    const kand = u.rij.filter(r => r.voor && (u.voor - r.p.zetels) < 11).sort((a, b) => a.st - b.st);
+    const kand = u.rij.filter(r => r.voor && (u.voor - r.p.zetels) < 11).sort((a, b) => ((b.p.rol === 'Coalitie') - (a.p.rol === 'Coalitie')) || (a.st - b.st));
     if (!kand.length) return { geen: true, breed: true };
     return { p: kand[0].p.id, straf: Math.max(kand[0].st - (D.DREMPEL - 10), 5), herstel: null, keuze: null, v0: null };
   }
@@ -327,7 +327,7 @@
       <p class="sim-label">Dinsdag 14:00 · Fractieoverleg</p>
       <h1>Zoek steun in de raad</h1>
       ${scene('s3')}
-      <p>Praat met de partijen. Spreek er minstens <b>drie</b>. Een partij die je niet spreekt, houdt haar wensen geheim. Je ziet pas bij de stemming wat zij doet.</p>
+      <p>Praat met de partijen. Spreek er minstens <b>drie</b>. Een partij die je niet spreekt, houdt haar wensen geheim. Je ziet pas bij de stemming wat zij doet.</p><p class="sim-uitleg"><b>Let op:</b> Partij A en B zitten in de coalitie. Zij steunen het college. Stemt een coalitiepartij tegen jouw voorstel, dan krijg je spanning in het college van B&amp;W.</p>
       <p>Je hebt <b>11 van de 21 zetels</b> nodig. Pas je voorstel aan zodat genoeg partijen voorstemmen. Kies zelf bij welke partijen je water bij de wijn doet.</p>
       <p class="teller" aria-live="polite">Overleggen gevoerd: <b>${n} van 4</b> (minimaal 3)</p>
       ${n > 0 ? meter() : ''}
@@ -354,7 +354,7 @@
       return `<div class="sim-schorsing" role="alert"><p class="sim-label">Schorsing van de vergadering</p>
         <h2>Partij ${p.id} trekt haar steun in</h2>
         <blockquote>“Voorzitter, wij hebben twijfels over dit voorstel${mis.length ? ': ' + mis.join(' en ') : ''}. Wij vragen een schorsing.”</blockquote>
-        <p>Zonder Partij ${p.id} heb je geen meerderheid. De vergadering is geschorst. Je overlegt op de gang met ${p.naam}. Wat zeg je toe?</p>
+        <p>Zonder Partij ${p.id} heb je geen meerderheid. De vergadering is geschorst. Je overlegt op de gang met ${p.naam}. Wat zeg je toe?</p>${p.rol === 'Coalitie' ? `<p class="reactie slecht"><b>Spanning in het college.</b> Partij ${p.id} zit in de coalitie. Als een coalitiepartij tegen een wethouder stemt, vertrouwt de coalitie hem of haar niet meer. De burgemeester en de andere wethouders merken dat meteen.</p>` : ''}
         <p class="sim-uitleg">Een toezegging verandert je voorstel. Dat gebeurt in het echt ook: de raad past het voorstel aan met een amendement.</p>
         <div class="sim-antwoorden">${opties}<button type="button" class="sim-antwoord" data-act="toezeg" data-val="vast"><b>Ik zeg niets toe</b><small>Je houdt je voorstel zoals het is. Partij ${p.id} blijft tegen.</small></button></div></div>`;
     }
@@ -422,7 +422,7 @@
     let uitleg = '';
     if (klaar) {
       uitleg = `<div class="sim-uitslag ${u.aangenomen ? 'goed' : 'slecht'}" role="status"><b>${u.aangenomen ? 'AANGENOMEN' : 'VERWORPEN'}</b> met ${u.voor} voor en ${u.tegen} tegen.${u.aangenomen ? '' : ' Er waren 11 zetels nodig.'}</div>
-        <h2>Waarom stemde elke partij zo?</h2><div class="sim-fracties">${u.rij.map(r => `<div class="sim-fractie klaar" style="--pk:${r.p.kleur}"><div class="fractie-kop"><span class="fletter">${r.p.id}</span><div><b>Partij ${r.p.id}: ${r.p.naam}</b><small>${r.p.rol} · ${r.p.zetels} zetels · stemde ${r.voor ? 'voor' : 'tegen'}</small></div></div>
+        ${coalitieBox(u)}<h2>Waarom stemde elke partij zo?</h2><div class="sim-fracties">${u.rij.map(r => `<div class="sim-fractie klaar" style="--pk:${r.p.kleur}"><div class="fractie-kop"><span class="fletter">${r.p.id}</span><div><b>Partij ${r.p.id}: ${r.p.naam}</b><small>${r.p.rol} · ${r.p.zetels} zetels · stemde ${r.voor ? 'voor' : 'tegen'}</small></div></div>
           ${wensenLijst(r.p)}<p class="sim-uitleg">Voorstel: <b>${r.basis}</b> punten${r.d ? `. Debat: <b>${r.d > 0 ? '+' : ''}${r.d}</b>` : ''}${r.tw ? `. Steun ingetrokken in de schorsing: <b>${Math.round(r.tw)}</b>` : ''}. Totaal: <b>${r.st}</b> van 100.${gesproken(r.p) ? '' : ' Jij hebt deze partij niet gesproken.'}</p></div>`).join('')}</div>
         <div class="sim-blok les"><h3>Wat deed je als bestuurder?</h3><ul>
           <li><b>Kaders stellen.</b> De raad besliste over de regels en over ${eur(D.kosten(S.voorstel))} van het budget.</li>
@@ -449,6 +449,14 @@
     const toe = (D.TOEZEGGINGEN[t.p] || []).find(x => x.id === t.keuze);
     return toe ? ` Tijdens de schorsing zegde de wethouder aan Partij ${t.p} toe: ${toe.tekst.charAt(0).toLowerCase() + toe.tekst.slice(1)}.` : '';
   }
+  function coalitieBox(u) {
+    const tegen = u.rij.filter(r => r.p.rol === 'Coalitie' && !r.voor);
+    if (!tegen.length) return '<div class="sim-blok coalitie goed"><h3>Je coalitie staat achter je</h3><p>Beide coalitiepartijen stemden voor. Zo hoort het: het college rekent op de steun van de partijen die het hebben gekozen.</p></div>';
+    const namen = tegen.map(r => 'Partij ' + r.p.id + ' (' + r.p.zetels + ' zetels)').join(' en ');
+    return `<div class="sim-blok coalitie slecht"><h3>Spanning in het college van B&amp;W</h3>
+      <p><b>${namen}</b> zit in de coalitie en stemde tegen jouw voorstel.</p>
+      <p>${u.aangenomen ? 'Je voorstel is aangenomen met steun van de oppositie. Maar je eigen coalitie liet je vallen. Dat is zwak.' : 'Je voorstel is verworpen, en je eigen coalitie hielp je niet.'} Een coalitie werkt alleen als de partijen elkaar steunen. Nu vragen de andere wethouders en de burgemeester zich af of jij nog het vertrouwen hebt. In het echt kan dit leiden tot een coalitiecrisis.</p></div>`;
+  }
   function besluit() {
     const u = uitslag(), v = S.voorstel;
     const tijd = v.ext === 4 ? '04.00' : '03.00';
@@ -466,9 +474,11 @@
         : 'Bewoners: er komen geen extra regels tegen overlast.');
       gevolgen.push(v.opt.bus ? 'Jongeren: een extra nachtbus brengt hen na sluitingstijd naar huis.' : 'Jongeren: er is geen extra nachtbus. Zij moeten zelf naar huis.');
       gevolgen.push(`Gemeente: het kost ${eur(D.kosten(v))} van het budget van ${eur(D.BUDGET)}.`);
+      u.rij.filter(r => r.p.rol === 'Coalitie' && !r.voor).forEach(r => gevolgen.push(`College: Partij ${r.p.id} zit in de coalitie en stemde tegen. Dat geeft spanning in het college van B&W.`));
     } else {
       besloten = 'Het voorstel is verworpen. Cafés in het centrum sluiten nog steeds om 02.00 uur.';
       gevolgen = ['Ondernemers: er verandert niets. Cafés sluiten om 02.00 uur.', 'Bewoners: er verandert niets.', 'Jongeren: er verandert niets.', 'Gemeente: er wordt geen geld uitgegeven. De wethouder mag later een nieuw voorstel doen.'];
+      u.rij.filter(r => r.p.rol === 'Coalitie' && !r.voor).forEach(r => gevolgen.push(`College: Partij ${r.p.id} zit in de coalitie en stemde tegen. Dat geeft spanning in het college van B&W.`));
     }
     return { u, voorNamen, tegenNamen, besloten, gevolgen };
   }
@@ -516,13 +526,14 @@
           <label for="bn">4. Bronvermelding</label>
           <input id="bn" data-veld="bron" type="text" maxlength="160" value="${esc(n.bron)}" autocomplete="off">
         </div>
-        <aside class="lijst" aria-live="polite">${browserWaarschuwing()}<h3>Checklist</h3><ul id="checklijst"></ul><button type="button" class="btn" id="pdfknop" data-act="pdf" disabled>Download als pdf</button><p class="sim-uitleg" id="pdfhint"></p></aside>
+        <aside class="lijst" aria-live="polite">${browserWaarschuwing()}<h3>Checklist</h3><ul id="checklijst"></ul><button type="button" class="btn" id="pdfknop" data-act="pdf" disabled>Download als pdf</button><p class="sim-uitleg" id="pdfhint"></p><p class="sim-uitleg" id="pdfextra" aria-live="polite"></p></aside>
       </div>
-      <div class="sim-acties onder">
-        ${b.u.aangenomen ? '' : '<button type="button" class="btn ghost" data-act="nieuwvoorstel">Doe een nieuw voorstel</button>'}
-        ${wisVraag ? '<span class="wis">Alles wissen en opnieuw beginnen? <button type="button" class="btn small danger" data-act="wisja">Ja, wis alles</button> <button type="button" class="btn small ghost" data-act="wisnee">Nee</button></span>' : '<button type="button" class="btn ghost" data-act="wis">Opnieuw spelen</button>'}
-      </div>
+      ${b.u.aangenomen ? '' : '<div class="sim-acties onder"><button type="button" class="btn ghost" data-act="nieuwvoorstel">Doe een nieuw voorstel</button></div>'}
       <p class="sim-uitleg">Mail de pdf naar je docent. Het mailadres staat op het bord.</p>
+      <div class="sim-reset">
+        <span class="sim-reset-tekst">Wil je helemaal opnieuw beginnen? Dat wist je voorstel en je nieuwsbericht.</span>
+        ${wisVraag ? '<span class="wis">Alles wissen? <button type="button" class="btn small danger" data-act="wisja">Ja, wis alles</button> <button type="button" class="btn small ghost" data-act="wisnee">Nee</button></span>' : '<button type="button" class="btn small reset" data-act="wis">↺ Opnieuw spelen</button>'}
+      </div>
     </div>`;
   }
 
@@ -563,7 +574,15 @@
     ];
     const slug = n.naam.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
     S.pdf = true; bewaar(); meld();
-    window.SimplePdf.downloadPdf(blokken, 'nieuwsbericht-noordstad' + (slug ? '-' + slug : '') + '.pdf', 'Oefenzaak Noordstad  |  Politiek  |  Mediacollege Amsterdam');
+    let url = null;
+    try { url = window.SimplePdf.downloadPdf(blokken, 'nieuwsbericht-noordstad' + (slug ? '-' + slug : '') + '.pdf', 'Oefenzaak Noordstad  |  Politiek  |  Mediacollege Amsterdam'); }
+    catch (e) { /* hieronder krijgt de leerling een melding */ }
+    const extra = document.getElementById('pdfextra');
+    if (extra) {
+      extra.innerHTML = url
+        ? 'Geen download gezien? <a href="' + url + '" target="_blank" rel="noopener" download="nieuwsbericht-noordstad.pdf">Open de pdf hier</a> en bewaar hem vanuit het nieuwe tabblad. Lukt het nog niet? Gebruik Chrome of Edge op een computer.'
+        : 'De pdf lukt niet in deze browser. Gebruik Chrome of Edge op een computer.';
+    }
   }
 
   /* ---------- Kolommen links en rechts ---------- */

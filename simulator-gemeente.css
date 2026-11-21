@@ -198,3 +198,12 @@ blockquote { margin: 8px 0; padding: 8px 12px; border-left: 4px solid #1f4a96; b
 .sim-schorsing.rustig { border-color: var(--line-strong); background: var(--soft); }
 .sim-schorsing h2 { margin: 4px 0 8px; }
 .sim-schorsing blockquote { margin: 8px 0; }
+
+.sim-blok.coalitie { border-left: 6px solid #1f4a96; }
+.sim-blok.coalitie.slecht { background: var(--bad-bg); border-left-color: #b3263c; }
+.sim-blok.coalitie.goed { background: var(--good-bg); border-left-color: #1a7f4b; }
+
+.sim-reset { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 56px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
+.sim-reset-tekst { font-size: .85rem; color: #6b7390; text-align: right; }
+.btn.reset { background: transparent; color: #8a2335; border: 1px solid #c9a0a8; font-weight: 500; }
+.btn.reset:hover { background: #fbeef0; }

@@ -144,8 +144,9 @@
     a.href = url;
     a.download = bestandsnaam;
     document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1500);
+    try { a.click(); } catch (e) { /* de koppeling hieronder blijft werken */ }
+    setTimeout(() => { if (a.parentNode) a.parentNode.removeChild(a); }, 1500);
+    return url; // blijft bewaard zodat de leerling de pdf ook via een koppeling kan openen
   }
   window.SimplePdf = { maakPdf, downloadPdf };
 })();
