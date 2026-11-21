@@ -1,6 +1,6 @@
 (function () {
   var KEY = 'toetsvraag-koude-oorlog';
-  var ONDERWERPEN = ['Jalta', 'Truman', 'Marshall', 'Blokkade', 'NAVO', '1949'];
+  var LESSEN = ['Les 1', 'Les 2', 'Les 3', 'Les 4'];
   var app = document.getElementById('app');
   var L = ['A', 'B', 'C', 'D'];
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -10,11 +10,12 @@
   app.innerHTML = '<main class="card tv">' +
     '<div class="waarschuw"><b>Gebruik een computer of laptop.</b> Op een telefoon werkt het downloaden en mailen niet goed. Pak je laptop erbij voordat je begint.</div>' +
     '<h1>Jouw toetsvraag</h1>' +
-    '<p class="lead">Bedenk een meerkeuzevraag over les 1. Vul alles in. Download je formulier als pdf en mail het naar je docent.</p>' +
+    '<p class="lead">Bedenk een meerkeuzevraag over de stof van een les. Vul alles in. Download je formulier als pdf en mail het naar je docent.</p>' +
     '<fieldset><label class="kop" for="naam">Je naam</label><input type="text" id="naam" autocomplete="name" value="' + esc(d.naam || '') + '"></fieldset>' +
-    '<fieldset><legend>Waar gaat je vraag over? Kies één</legend><div class="onderwerp">' +
-    ONDERWERPEN.map(function (o) { return '<label><input type="radio" name="onderwerp" value="' + o + '"' + (d.onderwerp === o ? ' checked' : '') + '><span>' + o + '</span></label>'; }).join('') +
+    '<fieldset><legend>Over welke les gaat je vraag? Kies één</legend><div class="onderwerp">' +
+    LESSEN.map(function (o) { return '<label><input type="radio" name="les" value="' + o + '"' + (d.les === o ? ' checked' : '') + '><span>' + o + '</span></label>'; }).join('') +
     '</div></fieldset>' +
+    '<fieldset><label class="kop" for="onderwerp">Over welk onderwerp gaat je vraag?</label><input type="text" id="onderwerp" placeholder="Bijvoorbeeld: Berlijnse Muur" value="' + esc(d.onderwerp || '') + '"></fieldset>' +
     '<fieldset><label class="kop" for="vraag">Jouw vraag</label><textarea id="vraag">' + esc(d.vraag || '') + '</textarea></fieldset>' +
     '<fieldset><legend>Vier antwoorden. Kies het juiste antwoord</legend>' +
     L.map(function (l, i) { return '<div class="ant"><span class="letter">' + l + '</span><input type="text" id="a' + i + '" aria-label="Antwoord ' + l + '" value="' + esc((d.antw || [])[i] || '') + '"><label class="juist"><input type="radio" name="juist" value="' + l + '"' + (d.juist === l ? ' checked' : '') + '>juist</label></div>'; }).join('') +
@@ -27,14 +28,15 @@
     '</main>';
   function $(s) { return app.querySelector(s); }
   function lees() {
-    var o = app.querySelector('input[name=onderwerp]:checked'), j = app.querySelector('input[name=juist]:checked');
-    return { naam: $('#naam').value.trim(), onderwerp: o ? o.value : '', vraag: $('#vraag').value.trim(), antw: L.map(function (l, i) { return $('#a' + i).value.trim(); }), juist: j ? j.value : '', uitleg: $('#uitleg').value.trim(), plek: $('#plek').value.trim() };
+    var o = app.querySelector('input[name=les]:checked'), j = app.querySelector('input[name=juist]:checked');
+    return { naam: $('#naam').value.trim(), les: o ? o.value : '', onderwerp: $('#onderwerp').value.trim(), vraag: $('#vraag').value.trim(), antw: L.map(function (l, i) { return $('#a' + i).value.trim(); }), juist: j ? j.value : '', uitleg: $('#uitleg').value.trim(), plek: $('#plek').value.trim() };
   }
   app.addEventListener('input', function () { bewaar(lees()); });
   app.addEventListener('change', function () { bewaar(lees()); });
   $('#dl').onclick = function () {
     var x = lees(), mis = [];
     if (!x.naam) mis.push('je naam');
+    if (!x.les) mis.push('de les');
     if (!x.onderwerp) mis.push('het onderwerp');
     if (!x.vraag) mis.push('je vraag');
     if (x.antw.some(function (a) { return !a; })) mis.push('alle vier de antwoorden');

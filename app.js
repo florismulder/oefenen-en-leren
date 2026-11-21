@@ -20,7 +20,7 @@ const GAMES = [
   { id: 'reader', href: 'koude-oorlog/reader', icon: 'LEZEN', titel: 'Reader Koude Oorlog', vak: 'Geschiedenis', tekst: 'Lees de stof van les 1 tot en met 4, met foto\'s en de spanningslijn.' },
   { id: 'oefenen-ko', href: 'koude-oorlog/oefenen', icon: 'OEFENEN', titel: 'Oefenvragen Koude Oorlog', vak: 'Geschiedenis', tekst: '122 vragen met uitleg. Kies een les en oefen. Open voor iedereen.' },
   { id: 'tijdlijn', soort: 'les', href: 'koude-oorlog/tijdlijn', icon: 'BOUWEN', titel: 'Tijdlijn bouwen', vak: 'Geschiedenis', tekst: 'Les 2. Kies zeven momenten, voeg foto en zin toe en teken de spanningslijn. Download als pdf.' },
-  { id: 'toetsvraag', soort: 'les', href: 'koude-oorlog/toetsvraag', icon: 'SCHRIJVEN', titel: 'Toetsvraag Koude Oorlog', vak: 'Geschiedenis', tekst: 'Les 1. Bedenk een meerkeuzevraag, vul het formulier in en download het als pdf.' },
+  { id: 'toetsvraag', soort: 'les', href: 'koude-oorlog/toetsvraag', icon: 'SCHRIJVEN', titel: 'Toetsvraag Koude Oorlog', vak: 'Geschiedenis', tekst: 'Voor elke les. Bedenk een meerkeuzevraag, vul het formulier in en download het als pdf.' },
   { id: 'flash', href: 'flash', icon: 'FLASHCARDS', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.', archief: true },
   { id: 'woii', icon: 'OEFENEN', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
   { id: 'politiek', icon: 'OEFENEN', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
