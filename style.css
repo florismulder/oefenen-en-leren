@@ -391,3 +391,12 @@ header.top.menu .tag { order: 1; font-size: 12px; }
 .groep-kop { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 0 0 12px; text-transform: none; font-size: 15px; }
 .groep-kop small { font-size: 15px; color: var(--muted); font-weight: 400; }
 .groep-kop .tag { background: #17181A; color: #EDE8DC; }
+
+/* Politiek houdt een blauwe sfeer */
+.menu.pol .tag, .menu.pol .game .gi, .menu.pol header.top .tag { background: #1F4A96; color: #fff; }
+.menu.pol .groep-kop .tag { background: #14305F; }
+.menu.pol .game:hover { background: #14305F; }
+.menu.pol .game:hover::after, .menu.pol .game .gv, .menu.pol .game:hover .gv { color: #8FB0F0; }
+.vak-tegel[data-v="politiek"] .vi { background: #1F4A96; }
+.vak-tegel[data-v="politiek"]:hover { background: #14305F; }
+.vak-tegel[data-v="politiek"]:hover::after { color: #8FB0F0; }

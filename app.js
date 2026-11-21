@@ -42,7 +42,7 @@ function clearTimers() {
 }
 function render(html) {
   clearTimers();
-  app.className = inMenu ? 'wrap menu' : 'wrap';
+  app.className = inMenu ? 'wrap menu' + (menuVak === 'politiek' ? ' pol' : '') : 'wrap';
   app.innerHTML = html;
   window.scrollTo(0, 0);
 }
