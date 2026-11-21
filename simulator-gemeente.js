@@ -233,7 +233,7 @@
       <ol class="sim-stappen">
         <li><b>Marktplein.</b> Praat met twee mensen en bouw je dossier.</li>
         <li><b>Collegekamer.</b> Maak je voorstel. Let op je budget.</li>
-        <li><b>Fractieoverleg.</b> Overleg met twee partijen. Zij vertellen wat ze willen.</li>
+        <li><b>Fractieoverleg.</b> Overleg met minstens drie van de vier partijen. Pas je voorstel aan tot je een meerderheid hebt.</li>
         <li><b>Raadszaal.</b> Je krijgt drie kritische vragen. Je antwoordt met je dossier.</li>
         <li><b>Stemming.</b> De raad stemt. Soms verlies je.</li>
         <li><b>Nieuws.</b> Je schrijft het nieuwsbericht over het besluit en downloadt een pdf. Die mail je naar je docent.</li>
@@ -278,26 +278,36 @@
     </div>`;
   }
 
+  function meter() {
+    const bekend = D.PARTIJEN.filter(gesproken);
+    const voor = bekend.reduce((a, p) => a + (steunVan(p) >= 50 ? p.zetels : 0), 0);
+    const onbekend = D.PARTIJEN.filter(p => !gesproken(p)).reduce((a, p) => a + p.zetels, 0);
+    const ok = voor >= 11;
+    return `<div class="sim-uitslag ${ok ? 'goed' : 'slecht'}" role="status"><b>Nu: ${voor} zetels voor</b> van de ${21 - onbekend} zetels die je kent. Nodig: 11.${onbekend ? ' Nog onbekend: ' + onbekend + ' zetels.' : ''}${ok ? ' Je hebt een meerderheid.' : ' Nog geen meerderheid.'}</div>`;
+  }
+
   function middenS3() {
     const n = S.fracties.length;
     const kaarten = D.PARTIJEN.map(p => {
       const klaar = gesproken(p);
-      const dicht = !klaar && n >= 2;
+      const dicht = false;
       return `<div class="sim-fractie${klaar ? ' klaar' : ''}${dicht ? ' dicht' : ''}" style="--pk:${p.kleur}">
         <div class="fractie-kop"><span class="fletter" aria-hidden="true">${p.id}</span><div><b>Partij ${p.id}: ${p.naam}</b><small>${p.rol} · ${p.zetels} zetels</small></div></div>
         ${klaar ? `<blockquote>“${p.zegt}”</blockquote><p class="sim-uitleg">Een fractie stemt voor als je voorstel <b>50 punten of meer</b> haalt.</p>${wensenLijst(p)}${steunBalk(p)}` :
-          `<p class="sim-uitleg">Wil: ${p.wil}</p><button type="button" class="btn small" data-act="fractie" data-val="${p.id}"${dicht ? ' disabled' : ''}>${dicht ? 'Geen tijd meer' : 'Overleg voeren'}</button>`}
+          `<p class="sim-uitleg">Wil: ${p.wil}</p><button type="button" class="btn small" data-act="fractie" data-val="${p.id}"${dicht ? ' disabled' : ''}>Overleg voeren</button>`}
       </div>`;
     }).join('');
     return `<div class="sim-kaart">
       <p class="sim-label">Dinsdag 14:00 · Fractieoverleg</p>
       <h1>Zoek steun in de raad</h1>
       ${scene('s3')}
-      <p>Je hebt tijd voor <b>twee overleggen</b>. Een partij die je niet spreekt, houdt haar wensen geheim. Je ziet pas bij de stemming wat zij doet.</p>
-      <p class="teller" aria-live="polite">Overleggen gevoerd: <b>${n} van 2</b></p>
+      <p>Praat met de partijen. Spreek er minstens <b>drie</b>. Een partij die je niet spreekt, houdt haar wensen geheim. Je ziet pas bij de stemming wat zij doet.</p>
+      <p>Je hebt <b>11 van de 21 zetels</b> nodig. Pas je voorstel aan zodat genoeg partijen voorstemmen. Kies zelf bij welke partijen je water bij de wijn doet.</p>
+      <p class="teller" aria-live="polite">Overleggen gevoerd: <b>${n} van 4</b> (minimaal 3)</p>
+      ${n > 0 ? meter() : ''}
       <div class="sim-fracties">${kaarten}</div>
       ${n > 0 ? `<h2>Pas je voorstel aan</h2><p class="sim-uitleg">Verander iets. De balken hierboven bewegen mee.</p>${bouwer()}<h3>Je voorstel nu</h3>${voorstelTekst()}` : ''}
-      <div class="sim-acties"><button type="button" class="btn" data-act="volgende"${n < 2 ? ' disabled' : ''}>Naar de raadsvergadering →</button></div>
+      <div class="sim-acties"><button type="button" class="btn" data-act="volgende"${n < 3 ? ' disabled' : ''}>Naar de raadsvergadering →</button></div>
     </div>`;
   }
 
@@ -571,7 +581,7 @@
     else if (act === 'begrippen') { toonBegrippen = true; render(); }
     else if (act === 'sluit') { toonBegrippen = false; render(); }
     else if (act === 'gesprek') { if (S.gesprekken.length < 2 && S.gesprekken.indexOf(val) < 0) { S.gesprekken.push(val); bewaar(); render(); } }
-    else if (act === 'fractie') { if (S.fracties.length < 2 && S.fracties.indexOf(val) < 0) { S.fracties.push(val); bewaar(); render(); } }
+    else if (act === 'fractie') { if (S.fracties.indexOf(val) < 0) { S.fracties.push(val); bewaar(); render(); } }
     else if (act === 'ext') { v.ext = Number(val); bewaar(); render(); }
     else if (act === 'dagen') { v.dagen = val; bewaar(); render(); }
     else if (act === 'opt') {
