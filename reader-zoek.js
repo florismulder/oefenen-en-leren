@@ -1,20 +1,37 @@
 /* Zoeken in de reader Koude Oorlog. Gebruikt door de reader en de toetsvraag-pagina. */
 (function () {
-  var R = window.READER;
-  if (!R) return;
-  function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+  var R = window.READER, G = window.GEMEENTE;
+  if (!R && !G) return;
+  function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function plat(h) { var t = document.createElement('textarea'); t.innerHTML = String(h || '').replace(/<[^>]+>/g, ' '); return t.value.replace(/\s+/g, ' ').trim(); }
   var KAARTEN = [];
-  R.lessen.forEach(function (l) {
-    var kn = 0;
-    l.hoofdstukken.forEach(function (h) {
-      h.kaarten.forEach(function (k) {
-        kn++;
-        var velden = [k.noot, k.wat, k.waarom, k.gevolg, k.persoon, k.onderschrift].concat(k.vragen || []).concat((k.beelden || []).map(function (b) { return b[1]; })).filter(Boolean);
-        KAARTEN.push({ les: l.id, nr: kn, hoofdstuk: h.titel, titel: k.titel, velden: velden, tn: norm(k.titel), alles: norm([k.titel, h.titel].concat(velden).join(' ')) });
+  function voeg(e) { e.tn = norm(e.titel); e.alles = norm([e.titel, e.hoofdstuk].concat(e.velden).join(' ')); KAARTEN.push(e); }
+  if (R) {
+    R.lessen.forEach(function (l) {
+      var kn = 0;
+      l.hoofdstukken.forEach(function (h) {
+        h.kaarten.forEach(function (k) {
+          kn++;
+          var velden = [k.noot, k.wat, k.waarom, k.gevolg, k.persoon, k.onderschrift].concat(k.vragen || []).concat((k.beelden || []).map(function (b) { return b[1]; })).filter(Boolean);
+          voeg({ les: l.id, nr: kn, hoofdstuk: h.titel, titel: k.titel, velden: velden, meta: 'Les ' + l.id + ' \u00b7 ' + h.titel, href: '/koude-oorlog/reader#les' + l.id + '-k' + kn });
+        });
       });
     });
-  });
+  } else {
+    G.hoofdstukken.forEach(function (h) {
+      h.kaarten.forEach(function (k) {
+        var velden = [];
+        (k.blokken || []).forEach(function (b) {
+          if (b.t === 'p') velden.push(plat(b.h));
+          else if (b.t === 'ul') b.items.forEach(function (i) { velden.push(plat(i)); });
+          else if (b.t === 'tab') b.rows.forEach(function (r) { velden.push(r.join(' ')); });
+        });
+        (k.vragen || []).forEach(function (q) { velden.push(q.v); });
+        voeg({ nr: k.nr, hoofdstuk: h.titel, titel: k.titel, velden: velden, meta: 'Hoofdstuk ' + h.nr + ' \u00b7 ' + h.titel, href: '/gemeente/reader#kaart' + k.nr });
+      });
+    });
+  }
   function zoek(q) {
     var termen = norm(q).split(/\s+/).filter(function (t) { return t.length >= 2; });
     if (!termen.length) return [];
@@ -44,7 +61,6 @@
     var van = Math.max(0, idx - 50), tot = Math.min(best.length, van + 140);
     return (van > 0 ? '… ' : '') + markeer(best.slice(van, tot), r.termen) + (tot < best.length ? ' …' : '');
   }
-  function href(k) { return '/koude-oorlog/reader#les' + k.les + '-k' + k.nr; }
   /* Zoekvak in een element zetten. opties: onKies(k), linkTekst (laat een link naar de reader zien) */
   function mount(el, opt) {
     opt = opt || {};
@@ -59,13 +75,13 @@
       var r = zoek(q);
       if (!r.length) { ul.innerHTML = '<li class="leeg">Niets gevonden. Probeer een ander woord.</li>'; return; }
       ul.innerHTML = r.slice(0, 8).map(function (x, i) {
-        return '<li><button type="button" class="zoek-kies" data-i="' + i + '"><span class="zoek-meta">Les ' + x.k.les + ' · ' + esc(x.k.hoofdstuk) + '</span><b>' + esc(x.k.titel) + '</b><span class="zoek-sn">' + snippet(x) + '</span></button>' +
-          (opt.linkTekst ? '<a class="zoek-link" target="_blank" rel="noopener" href="' + href(x.k) + '">' + esc(opt.linkTekst) + '</a>' : '') + '</li>';
+        return '<li><button type="button" class="zoek-kies" data-i="' + i + '"><span class="zoek-meta">' + esc(x.k.meta) + '</span><b>' + esc(x.k.titel) + '</b><span class="zoek-sn">' + snippet(x) + '</span></button>' +
+          (opt.linkTekst ? '<a class="zoek-link" target="_blank" rel="noopener" href="' + x.k.href + '">' + esc(opt.linkTekst) + '</a>' : '') + '</li>';
       }).join('') + (r.length > 8 ? '<li class="leeg">En nog ' + (r.length - 8) + ' kaarten. Maak je zoekwoord specifieker.</li>' : '');
       ul.querySelectorAll('.zoek-kies').forEach(function (b) { b.onclick = function () { opt.onKies && opt.onKies(r[+b.dataset.i].k); }; });
     }
     inp.addEventListener('input', toon);
     return { leeg: function () { inp.value = ''; ul.innerHTML = ''; } };
   }
-  window.ZOEK = { zoek: zoek, mount: mount, href: href, kaarten: KAARTEN };
+  window.ZOEK = { zoek: zoek, mount: mount, kaarten: KAARTEN };
 })();

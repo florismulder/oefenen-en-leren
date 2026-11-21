@@ -90,7 +90,16 @@ function printAntwoorden() {
     <table class="gtab"><thead><tr><th>Vraag</th><th>Juist</th><th>Uitleg</th></tr></thead><tbody>${rows.join('')}</tbody></table></section>`;
 }
 
+function springNaar(nr) {
+  const d = document.getElementById('kaart' + nr);
+  if (!d) return;
+  d.open = true;
+  d.classList.add('gevonden');
+  setTimeout(() => { d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
+  setTimeout(() => d.classList.remove('gevonden'), 3500);
+}
 function view() {
+  const zoekWaarde = document.getElementById('zoek-in') ? document.getElementById('zoek-in').value : '';
   const open = new Set([...app.querySelectorAll('details.rcard[open]')].map(d => d.id));
   app.innerHTML = head() + `<main class="reader">
     <div class="tools top">
@@ -101,12 +110,17 @@ function view() {
     </div>
     <div class="les-kop"><p class="datum">Politiek · MR25</p><h1>${esc(G.titel)}</h1></div>
     <section class="intro"><p>${G.intro.join(' ')}</p></section>
+    <div id="zoekvak" class="zoekvak"></div>
     ${intro()}
     ${hoofdstukken()}
     ${begrippen()}
     ${printAntwoorden()}
     <p class="small-note terug"><a href="/?vak=politiek">← Terug naar Politiek</a></p>
   </main>`;
+  if (window.ZOEK) {
+    ZOEK.mount(document.getElementById('zoekvak'), { label: 'Zoek in de reader', placeholder: 'Zoek een woord, bijvoorbeeld: begroting of wethouder', onKies: k => springNaar(k.nr) });
+    if (zoekWaarde) { const zi = document.getElementById('zoek-in'); zi.value = zoekWaarde; zi.dispatchEvent(new Event('input')); }
+  }
   open.forEach(id => { const d = document.getElementById(id); if (d) d.open = true; });
   const all = () => app.querySelectorAll('details.rcard');
   document.getElementById('open').onclick = () => all().forEach(d => d.open = true);
@@ -119,6 +133,7 @@ function view() {
     bewaar();
     const y = window.scrollY;
     view();
+{ const m = /kaart(\d+)/.exec(location.hash || ''); if (m) springNaar(parseInt(m[1], 10)); }
     window.scrollTo(0, y);
   });
   app.querySelectorAll('button.reset').forEach(b => b.onclick = () => {
@@ -127,9 +142,11 @@ function view() {
     bewaar();
     const y = window.scrollY;
     view();
+{ const m = /kaart(\d+)/.exec(location.hash || ''); if (m) springNaar(parseInt(m[1], 10)); }
     window.scrollTo(0, y);
   });
 }
 
 window.addEventListener('beforeprint', () => app.querySelectorAll('details.rcard').forEach(d => d.open = true));
 view();
+{ const m = /kaart(\d+)/.exec(location.hash || ''); if (m) springNaar(parseInt(m[1], 10)); }
