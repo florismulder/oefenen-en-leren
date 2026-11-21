@@ -430,3 +430,19 @@ body[data-vak="politiek"] .zoek-res mark { background: #1F4A96; color: #fff; }
 .game[data-g="politiek"]:hover::after { color: #8FB0F0; }
 body[data-vak="politiek"] .zoek-kies:hover .zoek-meta { color: #1F4A96; }
 body[data-vak="politiek"] .rcard.gevonden { outline-color: #1F4A96; }
+
+/* Politiek: blauwe sfeer op alle pagina's van het vak (kleuren en kop) */
+body[data-vak="politiek"] {
+  --bg: #E9EDF5; --card: #F6F8FC; --soft: #D8E0EF; --ink: #0F1B33; --muted: #4F5B73;
+  --line: #CBD3E4; --line-strong: #A9B5CF;
+  --accent: #1F4A96; --accent-ink: #1F4A96; --accent-soft: #D6E2F8;
+  --primary: #1F4A96; --primary-ink: #FFFFFF; --primary-hover: #14305F;
+  --bar-fill: #1F4A96; --bar: #CBD3E4;
+  --head-bg: transparent; --head-ink: #0F1B33; --head-sub: #4F5B73;
+}
+body[data-vak="politiek"] .zoek-kies:hover { background: #14305F; }
+body[data-vak="politiek"] .zoek-kies:hover .zoek-meta { color: #8FB0F0; }
+body[data-vak="politiek"] .tools .btn.terug-start { border-color: #1F4A96; }
+body[data-vak="politiek"] .btn.ghost:hover { background: #14305F; }
+body[data-vak="politiek"].docent .btn:not(.ghost):not(.danger) { background: #1F4A96; color: #fff; }
+body[data-vak="politiek"].docent .btn:not(.ghost):not(.danger):hover { background: #14305F; }
