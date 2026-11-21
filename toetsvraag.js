@@ -8,6 +8,7 @@
   function bewaar(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
   var d = laad();
   app.innerHTML = '<main class="card tv">' +
+    '<div class="waarschuw"><b>Gebruik een computer of laptop.</b> Op een telefoon werkt het downloaden en mailen niet goed. Pak je laptop erbij voordat je begint.</div>' +
     '<h1>Jouw toetsvraag</h1>' +
     '<p class="lead">Bedenk een meerkeuzevraag over les 1. Vul alles in. Download je formulier als pdf en mail het naar je docent.</p>' +
     '<fieldset><label class="kop" for="naam">Je naam</label><input type="text" id="naam" autocomplete="name" value="' + esc(d.naam || '') + '"></fieldset>' +
