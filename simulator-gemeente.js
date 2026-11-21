@@ -210,7 +210,7 @@
         <li><b>Fractieoverleg.</b> Overleg met twee partijen. Zij vertellen wat ze willen.</li>
         <li><b>Raadszaal.</b> Je krijgt drie kritische vragen. Je antwoordt met je dossier.</li>
         <li><b>Stemming.</b> De raad stemt. Soms verlies je.</li>
-        <li><b>Nieuws.</b> Je schrijft het nieuwsbericht over het besluit en downloadt een pdf.</li>
+        <li><b>Nieuws.</b> Je schrijft het nieuwsbericht over het besluit en downloadt een pdf. Die mail je naar je docent.</li>
       </ol>
       <p class="sim-oefen">Noordstad bestaat niet. De partijen, de bedragen en de uitspraken zijn verzonnen voor deze oefening.</p>
       <div class="sim-acties"><button type="button" class="btn" data-act="start">Start de simulator</button><button type="button" class="btn ghost" data-act="begrippen">Begrippen</button></div>
@@ -417,7 +417,7 @@
         ${b.u.aangenomen ? '' : '<button type="button" class="btn ghost" data-act="nieuwvoorstel">Doe een nieuw voorstel</button>'}
         ${wisVraag ? '<span class="wis">Alles wissen en opnieuw beginnen? <button type="button" class="btn small danger" data-act="wisja">Ja, wis alles</button> <button type="button" class="btn small ghost" data-act="wisnee">Nee</button></span>' : '<button type="button" class="btn ghost" data-act="wis">Opnieuw spelen</button>'}
       </div>
-      <p class="sim-uitleg">Lever het pdf-bestand in zoals je docent het zegt.</p>
+      <p class="sim-uitleg">Mail de pdf naar je docent. Het mailadres staat op het bord.</p>
     </div>`;
   }
 
@@ -433,7 +433,7 @@
     const alles = c.naam && c.kop && c.intro && c.kern && c.bron;
     const knop = document.getElementById('pdfknop'), hint = document.getElementById('pdfhint');
     if (knop) knop.disabled = !alles;
-    if (hint) hint.textContent = alles ? 'Alles klopt. Je kunt downloaden.' : 'Maak eerst alle vinkjes groen.';
+    if (hint) hint.textContent = alles ? 'Alles klopt. Download de pdf en mail hem naar je docent.' : 'Maak eerst alle vinkjes groen.';
   }
 
   function maakPdf() {
