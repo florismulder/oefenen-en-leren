@@ -21,12 +21,13 @@
     L.map(function (l, i) { return '<div class="ant"><span class="letter">' + l + '</span><input type="text" id="a' + i + '" aria-label="Antwoord ' + l + '" value="' + esc((d.antw || [])[i] || '') + '"><label class="juist"><input type="radio" name="juist" value="' + l + '"' + (d.juist === l ? ' checked' : '') + '>juist</label></div>'; }).join('') +
     '</fieldset>' +
     '<fieldset><label class="kop" for="uitleg">Waarom is dit antwoord juist?</label><textarea id="uitleg">' + esc(d.uitleg || '') + '</textarea></fieldset>' +
-    '<fieldset><label class="kop" for="plek">Waar staat het in de reader? (kaart of hoofdstuk)</label><input type="text" id="plek" value="' + esc(d.plek || '') + '"></fieldset>' +
+    '<fieldset><label class="kop" for="plek">Waar staat het in de reader? (kaart of hoofdstuk)</label><input type="text" id="plek" value="' + esc(d.plek || '') + '"><div id="zoekvak" class="zoekvak"></div></fieldset>' +
     '<p class="fout" id="fout" role="alert"></p>' +
     '<div class="acties"><button class="btn" id="dl" type="button">Download als pdf</button><button class="btn ghost" id="leeg" type="button">Begin opnieuw</button></div>' +
     '<p class="tip">Kies bij het printen "Opslaan als pdf". Mail de pdf naar je docent. Het mailadres staat op het bord.</p>' +
     '</main>';
   function $(s) { return app.querySelector(s); }
+  if (window.ZOEK) ZOEK.mount($('#zoekvak'), { label: 'Zoek de plek in de reader', placeholder: 'Zoek een woord, klik op de kaart en de plek wordt ingevuld', linkTekst: 'Lees kaart ↗', onKies: function (k) { $('#plek').value = 'Les ' + k.les + ', kaart "' + k.titel + '"'; $('#plek').dispatchEvent(new Event('input', { bubbles: true })); $('#plek').scrollIntoView({ block: 'center', behavior: 'smooth' }); } });
   function lees() {
     var o = app.querySelector('input[name=les]:checked'), j = app.querySelector('input[name=juist]:checked');
     return { naam: $('#naam').value.trim(), les: o ? o.value : '', onderwerp: $('#onderwerp').value.trim(), vraag: $('#vraag').value.trim(), antw: L.map(function (l, i) { return $('#a' + i).value.trim(); }), juist: j ? j.value : '', uitleg: $('#uitleg').value.trim(), plek: $('#plek').value.trim() };

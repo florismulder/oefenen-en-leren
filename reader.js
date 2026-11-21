@@ -61,14 +61,14 @@ function lijnLijst(upTo) {
 }
 
 /* ---------- Kaarten ---------- */
-function kaartHtml(k, hn, kn) {
+function kaartHtml(k, hn, kn, n) {
   const pijl = k.geenLijn
     ? '<span class="pill neutraal">geen nieuw punt op de lijn</span>'
     : `<span class="pill">${esc(k.pijl)} · van ${fmt(k.van)} naar ${fmt(k.naar)}</span>`;
   const beelden = (k.beelden || []).map(b => `<figure><img src="/reader-img/${esc(b[0])}.jpg" alt="${esc(b[1])}" loading="lazy"><figcaption>${esc(b[1])}</figcaption></figure>`).join('');
   const inv = k.invullen ? `<div class="invullen">[${esc(k.invullen)}]</div>` : '';
   const sec = (kop, tekst) => `<div class="sec"><h4>${kop}</h4><p>${esc(tekst)}</p></div>`;
-  return `<details class="rcard">
+  return `<details class="rcard" id="k-${n}-${kn}">
     <summary><span class="nr">${kn}</span><span class="tt">${esc(k.titel)}</span>${pijl}</summary>
     <div class="rbody">
       ${k.noot ? `<p class="noot">${esc(k.noot)}</p>` : ''}
@@ -91,7 +91,7 @@ function lesBody(n) {
     <section class="chap">
       <h2><span class="cn">Hoofdstuk ${hOffset + hi + 1}</span>${esc(h.titel)}</h2>
       <p class="chap-intro">${esc(h.intro)}</p>
-      ${h.kaarten.map(k => { kaartNr++; return kaartHtml(k, hi, kaartNr); }).join('')}
+      ${h.kaarten.map(k => { kaartNr++; return kaartHtml(k, hi, kaartNr, n); }).join('')}
     </section>`).join('');
   const toetsTip = n === 4 ? '<li>Leer voor de toets met de reader en de oefentoets in de app.</li>' : '';
   return `<div class="les-kop"><p class="datum">${esc(l.datum)} · ${esc(l.jaren)}</p><h1>${esc(l.titel)}</h1></div>
@@ -152,6 +152,7 @@ function view(n) {
       <button class="btn ghost small" id="print" type="button">Print deze les</button>
       <button class="btn small" id="printall" type="button">Print hele reader</button>
     </div>
+    <div id="zoekvak" class="zoekvak"></div>
     <nav class="lestabs" aria-label="Kies een les">${tabs}</nav>
     <div id="lesbody">${lesBody(n)}</div>
     <div class="les-nav">
@@ -161,6 +162,9 @@ function view(n) {
     <p class="small-note terug"><a href="/?vak=geschiedenis">← Terug naar Geschiedenis</a></p>
   </main>`;
   window.scrollTo(0, 0);
+  const zk = /-k(\d+)/.exec(location.hash || '');
+  if (zk) springNaar(n, parseInt(zk[1], 10));
+  if (window.ZOEK) ZOEK.mount(document.getElementById('zoekvak'), { label: 'Zoek in de reader', placeholder: 'Zoek een woord, bijvoorbeeld: blokkade of Kennedy', onKies: k => { if (k.les === lesNr) springNaar(k.les, k.nr); else location.hash = '#les' + k.les + '-k' + k.nr; } });
   const all = () => app.querySelectorAll('details.rcard');
   document.getElementById('open').onclick = () => all().forEach(d => d.open = true);
   document.getElementById('dicht').onclick = () => all().forEach(d => d.open = false);
@@ -169,6 +173,14 @@ function view(n) {
   document.title = l.titel + ' | Reader Koude Oorlog';
 }
 
+function springNaar(les, nr) {
+  const d = document.getElementById('k-' + les + '-' + nr);
+  if (!d) return;
+  d.open = true;
+  d.classList.add('gevonden');
+  setTimeout(() => { d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
+  setTimeout(() => d.classList.remove('gevonden'), 3500);
+}
 window.addEventListener('hashchange', () => view(lesFromHash()));
 window.addEventListener('beforeprint', () => { app.querySelectorAll('details.rcard').forEach(d => d.open = true); app.querySelectorAll('img').forEach(i => { i.loading = 'eager'; }); });
 view(lesFromHash());

@@ -400,3 +400,22 @@ header.top.menu .tag { order: 1; font-size: 12px; }
 .vak-tegel[data-v="politiek"] .vi { background: #1F4A96; }
 .vak-tegel[data-v="politiek"]:hover { background: #14305F; }
 .vak-tegel[data-v="politiek"]:hover::after { color: #8FB0F0; }
+
+/* Zoeken in de reader */
+.zoekvak { margin: 10px 0 16px; }
+.zoek-label { font-family: var(--mono); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 6px; }
+.zoek-in { width: 100%; font: inherit; padding: 12px 14px; border: 2px solid var(--ink); border-radius: 2px; background: #fff; }
+.zoek-res { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.zoek-res li { display: flex; gap: 8px; align-items: stretch; }
+.zoek-res li.leeg { color: var(--muted); font-size: 14px; padding: 4px 0; display: block; }
+.zoek-kies { flex: 1; text-align: left; font: inherit; color: var(--ink); background: var(--soft); border: 0; padding: 10px 14px; cursor: pointer; display: grid; gap: 2px; }
+.zoek-kies:hover { background: var(--ink); color: #EDE8DC; }
+.zoek-meta { font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent-ink); }
+.zoek-kies:hover .zoek-meta { color: #FF00E7; }
+.zoek-kies b { font-size: 17px; }
+.zoek-sn { font-size: 14px; color: var(--muted); }
+.zoek-kies:hover .zoek-sn { color: #B9B2A2; }
+.zoek-res mark { background: #FF00E7; color: #fff; padding: 0 2px; }
+.zoek-link { align-self: center; font-weight: 700; font-size: 14px; white-space: nowrap; color: var(--ink); }
+.rcard.gevonden { outline: 3px solid #FF00E7; outline-offset: 2px; }
+@media print { .zoekvak { display: none !important; } }
