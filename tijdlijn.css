@@ -132,7 +132,9 @@ dialog::backdrop{background:rgba(0,0,0,.7)}
 @media(max-width:600px){.p-slots{grid-template-columns:1fr}}
 @media print{
  .p-chartwrap{grid-template-columns:76px 1fr}
- .p-slots{grid-template-columns:repeat(6,1fr);gap:10px;margin-left:98px;padding:6px 22px 0 0}
+ .p-slots{grid-template-columns:repeat(7,1fr);gap:8px;margin-left:98px;padding:6px 22px 0 0}
+ .s-zin-print{font-size:11px!important}
+ .s-cijfer-print{font-size:17px!important}
  .voortgang{display:none!important}
  .p-titel.leeg{display:none}
  .s-foto .kies{display:none}

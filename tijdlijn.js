@@ -1,7 +1,7 @@
 (function () {
   var KEY = 'tijdlijn-les2-v1';
   var app = document.getElementById('app');
-  var MAX = 6;
+  var MAX = 7;
   var EV = { korea: 'Koreaoorlog', hongarije: 'Hongarije', muur: 'Berlijnse Muur', cuba: 'Cubacrisis' };
   var REEEL = { korea: 9, hongarije: 7, muur: 8, cuba: 9.8 };
   var MOM = [
@@ -25,6 +25,8 @@
     { id: 'l2-cuba', t: 'Spionagefoto van een Sovjet-raketbasis op Cuba' },
     { id: 'l2-krant', t: 'Krant: Amerika legt blokkade rond Cuba' }
   ];
+  var EXTRA = window.TIJDLIJN_EXTRA || [];
+  EXTRA.forEach(function (f) { FOTOS.push(f); });
   var S = laad();
   function laad() { try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && s.gekozen) return s; } catch (e) {} return { fase: 'start', n1: '', n2: '', titel: '', gekozen: [], slots: {}, vergelijk: false, jaren: {}, gecheckt: false }; }
   function bewaar() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
@@ -56,7 +58,7 @@
   }
   function start() {
     app.innerHTML = '<section class="hero"><span class="tag">Koude Oorlog · Les 2 · 1950 tot 1962</span><h1>Bouw de tijdlijn van de spanning</h1>' +
-      '<p>Jullie kiezen zes momenten uit les 2. Bij elk moment kies je een foto, schrijf je één zin en geef je een cijfer voor de spanning. Je ziet je spanningslijn meteen groeien. Daarna download je alles als pdf.</p>' +
+      '<p>Jullie kiezen zeven momenten uit les 2. Bij elk moment kies je een foto, schrijf je één zin en geef je een cijfer voor de spanning. Je ziet je spanningslijn meteen groeien. Daarna download je alles als pdf.</p>' +
       '<div class="waarschuw"><b>Gebruik een computer of laptop.</b> Op een telefoon werkt dit niet goed. Pak je laptop erbij voordat je begint.</div>' +
       '<div class="card"><h2>Wie zijn jullie?</h2><div class="namen"><div class="fld"><label for="n1">Naam 1</label><input id="n1" autocomplete="off" value="' + esc(S.n1) + '"></div><div class="fld"><label for="n2">Naam 2</label><input id="n2" autocomplete="off" value="' + esc(S.n2) + '"></div></div></div>' +
       '<button class="btn" id="go" type="button">Beginnen</button></section>';
@@ -141,7 +143,7 @@
     }).join('');
     var slots = ''; for (var i = 0; i < MAX; i++) slots += slotHtml(i);
     app.innerHTML =
-      '<div class="keuze"><span class="tag">Stap 1 · Kies zes momenten</span><div class="card" style="margin-top:12px"><div class="stappen"><span class="teller" id="teller">' + S.gekozen.length + ' van ' + MAX + ' gekozen</span><span id="vinks" class="stappen" style="margin:0">' + vinkjes() + '</span></div>' +
+      '<div class="keuze"><span class="tag">Stap 1 · Kies zeven momenten</span><div class="card" style="margin-top:12px"><div class="stappen"><span class="teller" id="teller">' + S.gekozen.length + ' van ' + MAX + ' gekozen</span><span id="vinks" class="stappen" style="margin:0">' + vinkjes() + '</span></div>' +
       '<p class="tip" style="margin:0 0 12px">Kies bij elke gebeurtenis minstens één moment. Klik nog een keer om een moment weg te halen.</p>' + groepen + '</div>' +
       '<div class="card"><h2>Stap 2 · Naam en titel</h2><div class="namen"><div class="fld"><label for="n1">Naam 1</label><input id="n1" value="' + esc(S.n1) + '"></div><div class="fld"><label for="n2">Naam 2</label><input id="n2" value="' + esc(S.n2) + '"></div></div><div class="fld" style="margin-top:12px"><label for="titel">Titel van jullie tijdlijn</label><input id="titel" maxlength="60" placeholder="Bijvoorbeeld: Van schieten naar bijna schieten" value="' + esc(S.titel) + '"></div></div>' +
       '<span class="tag">Stap 3 · Maak je tijdlijn af</span><p class="tip">Kies per moment een foto, schrijf één zin en klik een cijfer. 1 is vrede. 10 is kernoorlog. Jullie lijn begint in 1949 bij een 9.</p></div>' +
