@@ -176,7 +176,7 @@ function onTick() {
 function kop() {
   const g = st.game;
   const nr = g.status === 'lobby' ? 'Wachtkamer' : g.status === 'klaar' ? 'Einduitslag' : 'Vraag ' + (g.idx + 1) + ' van ' + g.totaal;
-  return `<div class="kqh-top"><span class="kqh-set">${esc(g.set_naam)}</span><span>${esc(nr)}</span><span class="kqh-pin" title="Pincode">${esc(pinMooi(g.pin))}</span><button class="btn ghost small" id="snd" type="button" aria-pressed="${KQAudio.isAan()}">${KQAudio.isAan() ? 'Geluid aan' : 'Geluid uit'}</button></div>`;
+  return `<div class="kqh-top"><img class="kq-logo" src="/logo-ma.jpg" alt="Mediacollege Amsterdam"><span class="kqh-set">${esc(g.set_naam)}</span><span>${esc(nr)}</span><span class="kqh-pin" title="Pincode">${esc(pinMooi(g.pin))}</span><button class="btn ghost small" id="snd" type="button" aria-pressed="${KQAudio.isAan()}">${KQAudio.isAan() ? 'Geluid aan' : 'Geluid uit'}</button>${g.status === 'klaar' ? '' : '<button class="btn danger small kqh-stop" id="stop" type="button">Spel afbreken</button>'}</div>`;
 }
 function koppel() {
   const s = document.getElementById('snd');
@@ -191,8 +191,30 @@ function koppel() {
   if (gb) gb.onclick = () => actie(gb.dataset.a);
   const tb = document.getElementById('toon');
   if (tb) tb.onclick = () => actie('toon');
+  const sb = document.getElementById('stop');
+  if (sb) sb.onclick = vraagAfbreken;
   const eb = document.getElementById('einde');
   if (eb) eb.onclick = () => { if (confirm('Het spel nu stoppen en de einduitslag tonen?')) actie('einde'); };
+}
+function vraagAfbreken() {
+  if (document.getElementById('afbr')) return;
+  const m = document.createElement('div');
+  m.className = 'kqh-modal'; m.id = 'afbr';
+  m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'afbt');
+  m.innerHTML = `<div class="card"><h2 id="afbt">Het spel afbreken?</h2><p>Het spel stopt voor iedereen. De scores zijn daarna niet meer te zien.</p>
+    <div class="kqh-acties"><button class="btn danger" id="afbja" type="button">Ja, afbreken</button><button class="btn" id="afbnee" type="button">Nee, verder spelen</button></div><p class="msg" id="afbmsg" role="alert"></p></div>`;
+  document.body.appendChild(m);
+  document.getElementById('afbnee').onclick = () => m.remove();
+  document.getElementById('afbnee').focus();
+  document.getElementById('afbja').onclick = async () => {
+    const b = document.getElementById('afbja');
+    b.disabled = true;
+    const r = await rpc('kq_game_delete', { p_password: pw, p_game: spelId });
+    if (r.error && r.error !== 'spel_niet_gevonden') { b.disabled = false; document.getElementById('afbmsg').textContent = kerr(r.error); return; }
+    stopLussen();
+    m.remove();
+    render('<div class="kqh-start-overlay"><div class="card"><h1>Spel afgebroken</h1><p>Je kunt een nieuw spel starten op de beheerpagina.</p><a class="btn" href="/quiz-docent">Naar de beheerpagina</a></div></div>');
+  };
 }
 function teken() {
   const g = st.game;
@@ -228,7 +250,7 @@ function optiesHtml(opts, mode) {
 function tekenVraag() {
   const q = st.vraag;
   render(`<div class="kqh">${kop()}<div class="kqh-main">
-    ${q.dubbel ? '<div><span class="kq-badge" style="font-size:clamp(14px,1.6vw,24px)">Dubbele punten</span></div>' : ''}
+    ${q.dubbel ? '<div><span class="kq-badge" style="font-size:clamp(13px,1.3vw,20px)">Dubbele punten</span></div>' : ''}
     <div class="kqh-vraag">${esc(q.tekst)}</div>
     <div class="kqh-tijdrij"><div class="kq-bar" aria-hidden="true"><i id="hbar"></i></div><div class="kqh-sec" id="hsec">${Math.max(0, Math.ceil(restNu() / 1000))}</div><div class="kqh-teller" id="hteller"></div></div>
     ${optiesHtml(q.opties, 'vraag')}
@@ -249,10 +271,10 @@ function tekenUitslag() {
   const laatste = g.idx + 1 >= g.totaal;
   const top = st.spelers.slice(0, 5);
   render(`<div class="kqh">${kop()}<div class="kqh-main">
-    <div class="kqh-vraag" style="font-size:clamp(22px,3vw,48px)">${esc(q.tekst)}</div>
-    <div class="kqh-uitslag"><div>${optiesHtml(q.opties, 'uitslag')}<p class="kqh-teller" style="margin-top:12px"><b>${goed}</b> van ${st.spelers.length} hadden het goed${q.dubbel ? ' (dubbele punten)' : ''}</p></div>
-    <div class="kqh-top5"><h2>Tussenstand</h2>${top.map(s => `<div class="kqh-rij"><span>${s.plek}</span><span><span aria-hidden="true">${AVATARS[s.avatar] || '🐾'}</span> ${esc(s.bijnaam)}${s.juist ? `<span class="plus">+${s.punten}</span>` : ''}</span><span class="sc">${s.score}</span></div>`).join('')}</div></div>
-    <div class="kqh-acties"><button class="btn" id="go" data-a="volgende" type="button">${laatste ? 'Toon de einduitslag' : 'Volgende vraag'}</button></div>
+    <div class="kqh-vraag" style="font-size:clamp(20px,2.4vw,38px)">${esc(q.tekst)}</div>
+    <div class="kqh-uitslag">${optiesHtml(q.opties, 'uitslag')}
+    <div class="kqh-feitrij"><p class="kqh-teller"><b>${goed}</b> van ${st.spelers.length} hadden het goed${q.dubbel ? ' (dubbele punten)' : ''}</p><div class="kqh-acties"><button class="btn" id="go" data-a="volgende" type="button">${laatste ? 'Toon de einduitslag' : 'Volgende vraag'}</button></div></div>
+    <div class="kqh-top5"><h2>Tussenstand</h2><div class="rijen">${top.map(s => `<div class="kqh-rij"><span>${s.plek}</span><span><span aria-hidden="true">${AVATARS[s.avatar] || '🐾'}</span> ${esc(s.bijnaam)}${s.juist ? `<span class="plus">+${s.punten}</span>` : ''}</span><span class="sc">${s.score}</span></div>`).join('')}</div></div></div>
   </div></div>`);
   koppel();
 }
@@ -262,7 +284,7 @@ function tekenKlaar() {
   const pod = [1, 2, 3].map(p => s[p - 1] ? `<div class="kqh-pod p${p}" id="pod${p}"><div class="av" aria-hidden="true">${AVATARS[s[p - 1].avatar] || '🐾'}</div><div class="nm">${esc(s[p - 1].bijnaam)}</div><div class="pt">${s[p - 1].score} punten</div><div class="blok">${p}</div></div>` : `<div class="kqh-pod p${p}"></div>`);
   const rest = s.slice(3, 10);
   render(`<div class="kqh">${kop()}<div class="kqh-main">
-    <h1 style="text-align:center;font-size:clamp(28px,4vw,64px);margin:0">${s.length ? 'De winnaar is...' : 'Het spel is afgelopen'}</h1>
+    <h1 style="text-align:center;font-size:clamp(24px,3.2vw,52px);margin:0">${s.length ? 'De winnaar is...' : 'Het spel is afgelopen'}</h1>
     <div class="kqh-podium">${pod[1]}${pod[0]}${pod[2]}</div>
     ${rest.length ? `<div class="kqh-rest" id="rest">${rest.map(x => `<div class="kqh-rij"><span>${x.plek}</span><span><span aria-hidden="true">${AVATARS[x.avatar] || '🐾'}</span> ${esc(x.bijnaam)}</span><span class="sc">${x.score}</span></div>`).join('')}</div>` : ''}
     <div class="kqh-acties" style="justify-content:center"><a class="btn ghost" href="/quiz-docent">Naar de beheerpagina</a></div>
@@ -276,6 +298,7 @@ function tekenKlaar() {
 
 /* ---------- Toetsen ---------- */
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { const a = document.getElementById('afbr'); if (a) { a.remove(); return; } }
   if (!gestart || !st) return;
   if (e.key === 'm' || e.key === 'M') { const s = document.getElementById('snd'); if (s) s.click(); return; }
   if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowRight') {

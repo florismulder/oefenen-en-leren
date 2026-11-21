@@ -28,7 +28,7 @@ function draw(html, behoudScroll) {
   if (behoudScroll) window.scrollTo(0, y); else window.scrollTo(0, 0);
 }
 function header() {
-  return `<header class="top"><div class="brand">Live quiz</div><div class="sub">Beheer van vragen en starten van een spel</div></header>`;
+  return `<header class="kq-hd"><img class="kq-logo" src="/logo-ma.jpg" alt="Mediacollege Amsterdam"><div><div class="kq-hd-t">Live quiz</div><div class="kq-hd-s">Beheer van vragen en starten van een spel</div></div></header>`;
 }
 function logout() {
   pw = null;

@@ -39,7 +39,7 @@ function stopLussen() {
   if (tick) { clearInterval(tick); tick = null; }
 }
 function header() {
-  return '<header class="top"><div class="brand">Live quiz</div><div class="sub">Doe mee met je klas</div></header>';
+  return '<header class="kq-hd"><img class="kq-logo" src="/logo-ma.jpg" alt="Mediacollege Amsterdam"><div><div class="kq-hd-t">Live quiz</div><div class="kq-hd-s">Doe mee met je klas</div></div></header>';
 }
 
 /* ---------- Meedoen ---------- */

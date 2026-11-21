@@ -1,52 +1,70 @@
 /* Live quiz: thema's, spelerscherm, digibord en beheer. Bouwt voort op style.css. */
 
-/* ---------- Thema's ---------- */
+/* ---------- Thema's (vers en modern) ---------- */
 body.kq {
-  --kq-timer: #ff00e6;
-  --a0: #a8008f; --a1: #1f4a96; --a2: #1a7f4b; --a3: #8a5a00;
-  --kq-deco: none;
+  --a0: #d92d4b; --a1: #2563eb; --a2: #0b7a52; --a3: #7c3aed;
+  --kq-timer: #6366f1; --kq-deco: none; --radius: 16px;
+  --chip-bg: #4338ca; --chip-ink: #ffffff;
+  --shadow: 0 1px 2px rgba(20,30,60,.06), 0 8px 24px rgba(20,30,60,.08);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+body.kq[data-kq="neutraal"] {
+  --bg: #f3f5fb; --ink: #131a2e; --card: #ffffff; --line: #e1e6f2; --line-strong: #c9d1e6; --muted: #5a6585; --soft: #eceffa;
+  --accent: #6366f1; --accent-ink: #4338ca; --primary: #4f46e5; --primary-ink: #ffffff; --primary-hover: #4338ca;
+  --head-bg: #ffffff; --head-ink: #131a2e; --head-sub: #5a6585;
+  --bar: #dfe4f3; --bar-fill: #6366f1; --kq-timer: #6366f1;
+  --chip-bg: #4338ca; --chip-ink: #ffffff;
+  --kq-deco: radial-gradient(900px 500px at 85% -10%, rgba(99,102,241,.14), transparent 60%), radial-gradient(700px 400px at -10% 110%, rgba(14,165,233,.10), transparent 60%);
 }
 body.kq[data-kq="koude_oorlog"] {
-  --bg: #0f1720; --ink: #eaf1f6; --card: #1a2530; --line: #2c3b49; --line-strong: #3d5063; --muted: #9db0c0; --soft: #223140;
-  --accent: #e5484d; --accent-ink: #ff8a8e; --primary: #c92a30; --primary-ink: #ffffff; --primary-hover: #a82227;
-  --head-bg: #0a1118; --head-ink: #ffffff; --head-sub: #9db0c0;
-  --good: #6fdc9a; --good-bg: #12301f; --good-line: #2f7a52; --bad: #ff8a8e; --bad-bg: #3a1519; --bad-line: #7a2a31;
-  --bar: #2c3b49; --bar-fill: #e5484d;
-  --a0: #b3263c; --a1: #1f5f99; --a2: #55657a; --a3: #8f6410;
-  --kq-timer: #e5484d;
-  --kq-deco: repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 2px, transparent 2px 24px);
+  --bg: #0a1220; --ink: #eaf2fb; --card: #131d31; --line: #24334d; --line-strong: #36496b; --muted: #9db2cc; --soft: #1a2740;
+  --accent: #38bdf8; --accent-ink: #7dd3fc; --primary: #0ea5e9; --primary-ink: #04121d; --primary-hover: #38bdf8;
+  --head-bg: #0a1220; --head-ink: #ffffff; --head-sub: #9db2cc;
+  --good: #6ee7a8; --good-bg: #0f2a20; --good-line: #2f7a52; --bad: #ff9aa6; --bad-bg: #3a1620; --bad-line: #7a2a3a;
+  --bar: #24334d; --bar-fill: #38bdf8; --kq-timer: #38bdf8;
+  --chip-bg: #38bdf8; --chip-ink: #04121d;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  --kq-deco: radial-gradient(900px 520px at 80% -10%, rgba(56,189,248,.16), transparent 60%), radial-gradient(700px 420px at -10% 110%, rgba(244,63,94,.12), transparent 60%);
 }
 body.kq[data-kq="woii"] {
-  --bg: #1c1e16; --ink: #f1edde; --card: #2a2d21; --line: #3c402f; --line-strong: #535a40; --muted: #b5b394; --soft: #33372a;
-  --accent: #d9a441; --accent-ink: #e8bd68; --primary: #d9a441; --primary-ink: #1c1e16; --primary-hover: #c4912f;
-  --head-bg: #141610; --head-ink: #ffffff; --head-sub: #b5b394;
-  --good: #8fe0a8; --good-bg: #1d3323; --good-line: #3d7a52; --bad: #ff9a8a; --bad-bg: #3a1d17; --bad-line: #7a3a30;
-  --bar: #3c402f; --bar-fill: #d9a441;
-  --a0: #5a742a; --a1: #a24a2a; --a2: #7b6a25; --a3: #3f5f73;
-  --kq-timer: #d9a441;
-  --kq-deco: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 18px);
+  --bg: #0c1812; --ink: #f1f6ee; --card: #14251c; --line: #234234; --line-strong: #345a47; --muted: #a9c2b2; --soft: #1a3026;
+  --accent: #fbbf24; --accent-ink: #fcd34d; --primary: #fbbf24; --primary-ink: #1a1405; --primary-hover: #fcd34d;
+  --head-bg: #0c1812; --head-ink: #ffffff; --head-sub: #a9c2b2;
+  --good: #7ee8a8; --good-bg: #123a26; --good-line: #3d8a5c; --bad: #ffa593; --bad-bg: #3a1d17; --bad-line: #7a3a30;
+  --bar: #234234; --bar-fill: #fbbf24; --kq-timer: #fbbf24;
+  --chip-bg: #fbbf24; --chip-ink: #1a1405;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  --kq-deco: radial-gradient(900px 520px at 80% -10%, rgba(251,191,36,.14), transparent 60%), radial-gradient(700px 420px at -10% 110%, rgba(16,185,129,.14), transparent 60%);
 }
 body.kq[data-kq="politiek"] {
-  --bg: #eef2fa; --ink: #14223f; --card: #ffffff; --line: #d6deee; --line-strong: #bccae6; --muted: #52617f; --soft: #e9eef9;
-  --accent: #e87722; --accent-ink: #b85a10; --primary: #1f4a96; --primary-ink: #ffffff; --primary-hover: #173a78;
-  --head-bg: #14305f; --head-ink: #ffffff; --head-sub: #cbd8f3;
-  --bar: #dbe3f3; --bar-fill: #e87722;
-  --a0: #1f4a96; --a1: #b85a10; --a2: #1a7f4b; --a3: #6b3fa0;
-  --kq-timer: #e87722;
+  --bg: #eef4ff; --ink: #11213f; --card: #ffffff; --line: #d9e4fa; --line-strong: #b9cbef; --muted: #50628a; --soft: #e6eefc;
+  --accent: #f97316; --accent-ink: #c2410c; --primary: #1d4ed8; --primary-ink: #ffffff; --primary-hover: #1e40af;
+  --head-bg: #ffffff; --head-ink: #11213f; --head-sub: #50628a;
+  --bar: #d9e4fa; --bar-fill: #f97316; --kq-timer: #f97316;
+  --chip-bg: #c2410c; --chip-ink: #ffffff;
+  --kq-deco: radial-gradient(900px 500px at 85% -10%, rgba(249,115,22,.14), transparent 60%), radial-gradient(700px 400px at -10% 110%, rgba(29,78,216,.12), transparent 60%);
 }
-body.kq { background-image: var(--kq-deco); }
+body.kq { background-color: var(--bg); background-image: var(--kq-deco); background-attachment: fixed; color: var(--ink); }
+body.kq h1, body.kq h2 { text-transform: none; letter-spacing: -.01em; }
+body.kq .card { border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--line); background: var(--card); }
 body.kq input, body.kq select, body.kq textarea {
-  background: var(--card); color: var(--ink); border-color: var(--line-strong);
+  background: var(--card); color: var(--ink); border-color: var(--line-strong); border-radius: 12px;
 }
-body.kq .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
-body.kq .btn.ghost:hover { background: var(--soft); }
-body.kq .btn.danger { background: transparent; }
+body.kq .btn { border-radius: 14px; font-weight: 700; letter-spacing: 0; }
+body.kq.docent .btn:not(.ghost):not(.danger), body.kq .btn:not(.ghost):not(.danger) { background: var(--primary); color: var(--primary-ink); }
+body.kq.docent .btn:not(.ghost):not(.danger):hover, body.kq .btn:not(.ghost):not(.danger):hover { background: var(--primary-hover); }
+body.kq .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line-strong); }
+body.kq .btn.ghost:hover { background: var(--soft); color: var(--ink); }
+body.kq .btn.danger { background: transparent; color: var(--bad); border: 1px solid var(--bad-line); }
+body.kq .btn.danger:hover { background: var(--bad-bg); }
 body.kq .pill { background: var(--soft); color: var(--ink); border: 1px solid var(--line); }
+body.kq table { background: var(--card); color: var(--ink); }
+body.kq th, body.kq td { border-color: var(--line); color: var(--ink); }
 
 /* ---------- Gedeelde onderdelen ---------- */
 .kq-opt {
   display: flex; align-items: center; gap: 14px; text-align: left; font: inherit; font-weight: 700; color: #ffffff;
-  background: var(--c, var(--a0)); border: 3px solid transparent; border-radius: 12px; padding: 14px 16px; cursor: pointer;
+  background: var(--c, var(--a0)); border: 3px solid transparent; border-radius: 18px; box-shadow: 0 4px 0 rgba(0,0,0,.18); padding: 14px 16px; cursor: pointer;
   min-height: 72px; width: 100%;
 }
 .kq-opt .kq-l {
@@ -65,8 +83,7 @@ body.kq .pill { background: var(--soft); color: var(--ink); border: 1px solid va
   display: inline-block; font-weight: 700; font-size: 13px; letter-spacing: .5px; text-transform: uppercase;
   padding: 4px 10px; border-radius: 6px; background: var(--accent); color: var(--primary-ink, #fff);
 }
-body.kq[data-kq="koude_oorlog"] .kq-badge { color: #fff; background: #c92a30; }
-body.kq[data-kq="neutraal"] .kq-badge, body.kq[data-kq="politiek"] .kq-badge { background: var(--accent-ink); color: #fff; }
+body.kq .kq-badge { background: var(--chip-bg); color: var(--chip-ink); border-radius: 999px; padding: 5px 14px; }
 
 /* ---------- Spelerscherm (telefoon) ---------- */
 body.kq-s .wrap { max-width: 520px; }
@@ -153,9 +170,8 @@ body.kq-h { margin: 0; overflow-x: hidden; }
 .kqh-pod .av { font-size: clamp(48px, 7vw, 110px); line-height: 1; }
 .kqh-pod .nm { font-weight: 700; font-size: clamp(20px, 2.6vw, 40px); overflow-wrap: anywhere; }
 .kqh-pod .pt { color: var(--muted); font-size: clamp(16px, 1.8vw, 28px); font-variant-numeric: tabular-nums; margin-bottom: 8px; }
-.kqh-pod .blok { background: var(--accent); color: var(--primary-ink, #fff); border-radius: 12px 12px 0 0; font-weight: 700; font-size: clamp(32px, 5vw, 80px); padding: 10px 0; }
-body.kq[data-kq="neutraal"] .kqh-pod .blok, body.kq[data-kq="politiek"] .kqh-pod .blok { background: var(--accent-ink); color: #fff; }
-body.kq[data-kq="koude_oorlog"] .kqh-pod .blok { color: #fff; background: #c92a30; }
+.kqh-pod .blok {  border-radius: 12px 12px 0 0; font-weight: 700; font-size: clamp(32px, 5vw, 80px); padding: 10px 0; }
+body.kq .kqh-pod .blok { background: var(--chip-bg); color: var(--chip-ink); }
 .kqh-pod.p1 .blok { height: clamp(150px, 24vh, 280px); }
 .kqh-pod.p2 .blok { height: clamp(110px, 17vh, 200px); opacity: .85; }
 .kqh-pod.p3 .blok { height: clamp(80px, 12vh, 150px); opacity: .7; }
@@ -195,3 +211,70 @@ body.kq[data-kq="koude_oorlog"] .kqh-pod .blok { color: #fff; background: #c92a3
 /* Telefoon: alleen de letter, het antwoord staat op het digibord */
 body.kq-s .kq-opts .kq-opt { justify-content: center; }
 body.kq-s .kq-opts .kq-opt .kq-l { width: 96px; height: 96px; font-size: 56px; border-radius: 22px; }
+
+/* ---------- Compacter digibord, past op één scherm ---------- */
+.kqh { height: 100vh; min-height: 0; padding: 12px clamp(16px, 2.5vw, 40px) 16px; gap: 10px; overflow: hidden; }
+.kqh-top { padding-bottom: 10px; border-bottom: 0; font-size: clamp(14px, 1.3vw, 20px); position: relative; }
+.kqh-top::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; border-radius: 4px; background: var(--accent); opacity: .85; }
+.kqh-top .kqh-pin { border-radius: 999px; padding: 4px 16px; letter-spacing: 3px; }
+.kqh-top .btn { border-radius: 999px; padding: 6px 16px; min-height: 34px; font-size: 14px; }
+.kqh-main { gap: clamp(8px, 1.6vh, 16px); min-height: 0; }
+.kqh-vraag { font-size: clamp(22px, 2.9vw, 46px); line-height: 1.18; letter-spacing: -.01em; }
+.kqh-sec { font-size: clamp(28px, 3vw, 48px); }
+.kqh-teller { font-size: clamp(14px, 1.4vw, 22px); }
+.kqh-tijdrij .kq-bar { height: clamp(12px, 1.3vw, 20px); border-radius: 12px; }
+.kqh-opts { gap: clamp(8px, 1.1vw, 16px); }
+.kqh-opt { gap: 14px; padding: clamp(10px, 1.3vh, 18px) clamp(14px, 1.5vw, 24px); min-height: clamp(60px, 11vh, 118px); font-size: clamp(16px, 1.9vw, 30px); border-radius: 18px; box-shadow: 0 5px 0 rgba(0,0,0,.2); }
+.kqh-opt .kq-l { width: 1.5em; height: 1.5em; border-radius: 12px; font-size: .95em; }
+.kqh-opt .kq-t { line-height: 1.2; }
+.kqh-opt .kqh-n { font-size: 1em; background: rgba(0,0,0,.28); border-radius: 999px; padding: 2px 14px; white-space: nowrap; }
+.kqh-opt.juist { box-shadow: 0 0 0 5px var(--good, #1a7f4b), 0 5px 0 rgba(0,0,0,.2); }
+.kqh-opt .kqh-tel { height: 6px; }
+.kqh-uitslag { grid-template-columns: 1fr; gap: clamp(8px, 1.6vh, 16px); }
+.kqh-top5 { border-radius: 18px; box-shadow: var(--shadow); padding: clamp(10px, 1.4vh, 18px) clamp(14px, 1.8vw, 28px); }
+.kqh-top5 h2 { font-size: clamp(16px, 1.5vw, 24px); margin: 0 0 4px; }
+.kqh-top5 .rijen { display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(20px, 3vw, 48px); }
+.kqh-rij { padding: 5px 0; font-size: clamp(15px, 1.5vw, 24px); }
+.kqh-rij:nth-of-type(2) { border-top: 0; }
+.kqh-feitrij { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.kqh-feitrij .kqh-teller { margin: 0; }
+.kqh-acties .btn { font-size: clamp(15px, 1.4vw, 22px); padding: 10px 26px; min-height: 48px; border-radius: 14px; }
+.kqh-join, .kqh-wie { border-radius: 22px; box-shadow: var(--shadow); }
+.kqh-join h1 { font-size: clamp(22px, 2.2vw, 36px); }
+.kqh-join .kqh-bigpin { font-size: clamp(48px, 7vw, 112px); }
+.kqh-chip { border-radius: 999px; font-size: clamp(15px, 1.4vw, 22px); }
+.kqh-wie { min-height: 0; }
+.kqh-podium { min-height: 0; margin-top: auto; }
+.kqh-pod .av { font-size: clamp(40px, 5vw, 84px); }
+.kqh-pod .nm { font-size: clamp(18px, 2.2vw, 34px); }
+.kqh-pod .pt { font-size: clamp(14px, 1.5vw, 24px); margin-bottom: 6px; }
+.kqh-pod .blok { font-size: clamp(28px, 4vw, 64px); padding: 6px 0; border-radius: 16px 16px 0 0; }
+.kqh-pod.p1 .blok { height: clamp(110px, 19vh, 220px); }
+.kqh-pod.p2 .blok { height: clamp(80px, 13vh, 160px); }
+.kqh-pod.p3 .blok { height: clamp(60px, 9vh, 120px); }
+.kqh-rest { border-radius: 18px; box-shadow: var(--shadow); display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(20px, 3vw, 48px); padding: 4px clamp(14px, 1.8vw, 28px); }
+.kqh-rest .kqh-rij:nth-of-type(2) { border-top: 0; }
+.kqh-stop { margin-left: 4px; }
+.kqh-modal { position: fixed; inset: 0; z-index: 30; background: rgba(5,10,20,.65); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.kqh-modal .card { max-width: 480px; text-align: center; margin: 0; }
+.kqh-modal .kqh-acties { justify-content: center; margin-top: 8px; }
+.kqh-start-overlay .card { border-radius: 24px; }
+
+/* ---------- Spelerscherm: frisser ---------- */
+body.kq-s .wrap { padding-top: 10px; }
+.kq-avatars { gap: 8px; }
+.kq-avatars button { border-radius: 14px; padding: 8px 0; }
+.kq-pin { border-radius: 14px; }
+.kq-res, .kq-juistant, .kq-stat > div { border-radius: 18px; box-shadow: var(--shadow); }
+.kq-bar { height: 12px; border-radius: 12px; }
+.kq-vraagtekst { font-size: 21px; margin: 12px 0; }
+.kq-opts { min-height: 56vh; gap: 12px; }
+
+/* ---------- Logo Mediacollege Amsterdam ---------- */
+.kq-hd { display: flex; align-items: center; gap: 14px; padding: 8px 0 16px; }
+.kq-hd-t { font-size: 22px; font-weight: 800; letter-spacing: -.01em; line-height: 1.1; }
+.kq-hd-s { color: var(--muted); font-size: 14px; margin-top: 2px; }
+.kq-logo { display: block; height: 42px; width: auto; background: #ffffff; border-radius: 12px; padding: 5px 10px; box-shadow: var(--shadow); flex: none; }
+.kqh-top .kq-logo { height: clamp(34px, 3.4vw, 48px); }
+.kqh-top .kqh-set { margin-left: 4px; }
+.kqh-podium + .kqh-rest, .kqh-main > .kq-logo { margin-top: 0; }
