@@ -7,10 +7,12 @@ const VELD = {
   1: 'Gemeente en aantal inwoners', 2: 'Herindeling van mijn gemeente', 3: 'Drie taken van mijn gemeente',
   4: 'Begroting: een uitgave', 5: 'Burgemeester en verrassend feit', b1: 'Bonus 1: buurgemeente', b2: 'Bonus 2: gemeenteraad', b3: 'Bonus 3: nieuws'
 };
-let pw = null, timer = null;
+let pw = null, timer = null, simRuns = [];
+const OPTN = { portiers: 'Portiers', geluid: 'Geluidsbegrenzer', proef: 'Proefjaar', boa: 'Extra boa', bus: 'Nachtbus', meld: 'Meldpunt' };
+const STAPN = { intro: 'Uitleg', s1: 'Plein', s2: 'Partijen', s3: 'Voorstel', s4: 'Debat', s5: 'Stemming', s6: 'Nieuws' };
 try { pw = sessionStorage.getItem('speurtocht_docent'); } catch (e) { /* geen opslag */ }
 
-function head() { return '<header class="top"><div class="brand">Resultaten Speurtocht Gemeente</div><div class="sub">Anoniem · alleen voor de docent</div></header>'; }
+function head() { return '<header class="top"><div class="brand">Resultaten Gemeente</div><div class="sub">Anoniem · alleen voor de docent</div></header>'; }
 function render(h) { app.innerHTML = head() + h; }
 function fmtMin(s) { if (s == null) return '-'; const m = Math.floor(s / 60); return m + ' min ' + String(s % 60).padStart(2, '0') + ' s'; }
 function gem(a) { return a.length ? Math.round(a.reduce((x, y) => x + y, 0) / a.length) : null; }
@@ -35,6 +37,8 @@ async function laad(eerste) {
     return;
   }
   try { sessionStorage.setItem('speurtocht_docent', pw); } catch (e) { /* */ }
+  const sr = await rpc('simulator_overview', { p_password: pw });
+  simRuns = sr && sr.runs ? sr.runs : [];
   toon(r.runs || []);
   if (!timer) timer = setInterval(() => laad(false), 20000);
 }
@@ -66,6 +70,24 @@ function toon(runs) {
       <td><details data-nr="${r.nr}" ${open.has(String(r.nr)) ? 'open' : ''}><summary>Bekijk</summary>${velden}</details></td></tr>`;
   }).join('');
 
+
+  const sk = simRuns.filter(x => x.state.klaar);
+  const sAan = sk.filter(x => x.state.aangenomen).length;
+  const sPdf = simRuns.filter(x => x.state.pdf).length;
+  const optTel = Object.keys(OPTN).map(k => `<tr><td>${esc(OPTN[k])}</td><td>${sk.filter(x => (x.state.opt || []).indexOf(k) >= 0).length} van ${sk.length}</td></tr>`).join('');
+  const simRijen = simRuns.slice().reverse().map(x => {
+    const t = x.state;
+    const uit = t.klaar ? (t.aangenomen ? 'Aangenomen ' : 'Verworpen ') + t.voor + '-' + t.tegen : 'Nog bezig';
+    const voorstel = t.ext ? (t.ext + '.00 uur, ' + (t.dagen === 'vrza' ? 'vr en za' : 'za') + ((t.opt || []).length ? ', ' + t.opt.map(k => OPTN[k] || k).join(', ') : '')) : '-';
+    return `<tr><td>Wethouder ${x.nr}</td><td>${esc(STAPN[t.scherm] || t.scherm || '-')}</td><td>${esc(voorstel)}</td><td>${esc(uit)}</td><td>${t.pdf ? 'Ja' : 'Nee'}</td><td>${esc(fmtDate(x.laatst))}</td></tr>`;
+  }).join('');
+  const simHtml = `<section class="card"><h2>Simulator Gemeenteraad</h2>
+      <p>${simRuns.length} wethouders gestart. ${sk.length} stemden over hun voorstel (${sAan} aangenomen, ${sk.length - sAan} verworpen). ${sPdf} downloadden de pdf met het nieuwsbericht.</p>
+      <p class="small-note">Anoniem. De pdf zelf krijg je per mail. Hier zie je alleen de keuzes en de uitkomst.</p>
+      <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Voorwaarde</th><th>Gekozen door</th></tr></thead><tbody>${optTel}</tbody></table></div>
+      <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Wie</th><th>Bij stap</th><th>Voorstel</th><th>Uitkomst</th><th>Pdf</th><th>Laatst actief</th></tr></thead><tbody>${simRijen || '<tr><td colspan="6">Nog geen wethouders.</td></tr>'}</tbody></table></div>
+      <div class="st-acties"><button class="btn ghost small" id="wissim" type="button">Wis simulatorresultaten</button></div></section>`;
+
   render(`<main>
     <section class="card"><h1>Overzicht</h1>
       <p>${runs.length} speurders gestart. ${code} hebben de code gekraakt. ${bonus} deden minstens één bonusmissie.</p>
@@ -78,12 +100,19 @@ function toon(runs) {
       <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Nr</th><th>Station</th><th>Goed</th><th>Foute pogingen</th><th>Notitie gemaakt</th><th>Gemiddeld goed na (sinds start)</th></tr></thead><tbody>${perStation}</tbody></table></div>
       <h2>Bonusronde</h2>
       <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Nr</th><th>Missie</th><th>Gedaan</th></tr></thead><tbody>${perBonus}</tbody></table></div></section>
+    ${simHtml}
     <section class="card"><h2>Per speurder</h2>
       <div style="overflow-x:auto"><table class="gtab"><thead><tr><th>Wie</th><th>Sleutels</th><th>Bonus</th><th>Foute pogingen</th><th>Laatst actief</th><th>Notities</th></tr></thead><tbody>${rijen || '<tr><td colspan="6">Nog geen speurders.</td></tr>'}</tbody></table></div></section>
   </main>`);
   window.scrollTo(0, y);
   document.getElementById('ververs').onclick = () => laad(false);
   document.getElementById('uit').onclick = () => { pw = null; try { sessionStorage.removeItem('speurtocht_docent'); } catch (e) { /* */ } login(); };
+  document.getElementById('wissim').onclick = async () => {
+    if (!confirm('Alle simulatorresultaten wissen? Dit kan niet ongedaan worden.')) return;
+    const r = await rpc('simulator_wis', { p_password: pw });
+    if (r.error) { alert(errText(r.error)); return; }
+    laad(false);
+  };
   document.getElementById('wis').onclick = async () => {
     if (!confirm('Alle resultaten van de speurtocht wissen? Dit kan niet ongedaan worden.')) return;
     const r = await rpc('speurtocht_wis', { p_password: pw });

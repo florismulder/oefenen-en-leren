@@ -15,6 +15,9 @@
       fracties: [],
       debat: {},
       stemKlaar: false,
+      run: '',
+      pogingen: 0,
+      pdf: false,
       nieuws: { naam: '', kop: '', intro: '', kern: '', bron: BRON }
     };
   }
@@ -29,6 +32,29 @@
     }
   } catch (e) { /* leeg beginnen */ }
   function bewaar() { try { store.set(KEY, JSON.stringify(S)); } catch (e) { /* niets */ } }
+
+  /* Anoniem resultaat voor de docent: geen naam, geen tekst, alleen keuzes en uitkomst. */
+  function nieuwId() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) { /* */ }
+    const h = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).slice(1);
+    return h() + h() + '-' + h() + '-4' + h().slice(1) + '-a' + h().slice(1) + '-' + h() + h() + h();
+  }
+  let meldTimer = null;
+  function meld() {
+    clearTimeout(meldTimer);
+    meldTimer = setTimeout(() => {
+      if (!S.run) { S.run = nieuwId(); bewaar(); }
+      const u = S.stemKlaar ? uitslag() : null;
+      const v = S.voorstel;
+      const opt = Object.keys(v.opt).filter(k => v.opt[k]);
+      rpc('simulator_save', { p_run: S.run, p_state: {
+        scherm: S.scherm, gesprekken: S.gesprekken.length, fracties: S.fracties.length,
+        ext: v.ext, dagen: v.dagen, opt: opt, kosten: D.kosten(v),
+        klaar: !!S.stemKlaar, aangenomen: u ? u.aangenomen : null, voor: u ? u.voor : null, tegen: u ? u.tegen : null,
+        pogingen: S.pogingen || 0, pdf: !!S.pdf
+      } });
+    }, 400);
+  }
 
   let reveal = 0;          // tijdens de stemming: hoeveel fracties hun stem hebben laten zien
   let animeert = false;
@@ -457,6 +483,7 @@
       { tekst: 'Besloten: ' + b.besloten, size: 10.5, voor: 6 }
     ];
     const slug = n.naam.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
+    S.pdf = true; bewaar(); meld();
     window.SimplePdf.downloadPdf(blokken, 'nieuwsbericht-noordstad' + (slug ? '-' + slug : '') + '.pdf', 'Oefenzaak Noordstad  |  Politiek  |  Mediacollege Amsterdam');
   }
 
@@ -516,6 +543,7 @@
   function ga(scherm) {
     S.scherm = scherm;
     bewaar();
+    meld();
     render();
     window.scrollTo(0, 0);
   }
@@ -527,7 +555,7 @@
     render();
     const stap = () => {
       reveal++;
-      if (reveal >= 4) { animeert = false; S.stemKlaar = true; bewaar(); render(); return; }
+      if (reveal >= 4) { animeert = false; S.stemKlaar = true; S.pogingen = (S.pogingen || 0) + 1; bewaar(); meld(); render(); return; }
       render();
       setTimeout(stap, 1100);
     };
@@ -560,7 +588,7 @@
       ga(volgorde[i + 1]);
     }
     else if (act === 'pdf') { const c = checks(); if (c.naam && c.kop && c.intro && c.kern && c.bron) maakPdf(); }
-    else if (act === 'nieuwvoorstel') { S.debat = {}; S.stemKlaar = false; reveal = 0; S.scherm = 's3'; bewaar(); render(); window.scrollTo(0, 0); }
+    else if (act === 'nieuwvoorstel') { S.debat = {}; S.stemKlaar = false; reveal = 0; S.scherm = 's3'; bewaar(); meld(); render(); window.scrollTo(0, 0); }
     else if (act === 'wis') { wisVraag = true; render(); }
     else if (act === 'wisnee') { wisVraag = false; render(); }
     else if (act === 'wisja') { wisVraag = false; reveal = 0; animeert = false; S = leeg(); bewaar(); render(); window.scrollTo(0, 0); }
