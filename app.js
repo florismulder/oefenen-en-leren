@@ -13,14 +13,14 @@ const RONDES = [
   { t: 'Finale: alle stof door elkaar', s: 'Met formatie en coalitie. 20 seconden per vraag en dubbele punten.' }
 ];
 const GAMES = [
-  { id: 'gemeente-simulator', href: 'gemeente/simulator', icon: 'SIMULATOR', titel: 'Simulator Gemeenteraad', vak: 'Politiek', tekst: 'Je bent wethouder. Zoek steun in de raad, praat met fracties en schrijf het nieuws. Alleen op een computer.' },
+  { id: 'gemeente-simulator', soort: 'les', href: 'gemeente/simulator', icon: 'SIMULATOR', titel: 'Simulator Gemeenteraad', vak: 'Politiek', tekst: 'Je bent wethouder. Zoek steun in de raad, praat met fracties en schrijf het nieuws. Alleen op een computer.' },
   { id: 'gemeente-speurtocht', href: 'gemeente/speurtocht', icon: 'SPEURTOCHT', titel: 'Speurtocht Gemeente', vak: 'Politiek', tekst: 'Vind vijf sleutels, leer wat een gemeente doet en bouw je opdracht. Open voor iedereen.', archief: true },
   { id: 'gemeente-oefenen', href: 'gemeente/oefenen', icon: 'OEFENEN', titel: 'Oefenvragen Gemeentepolitiek', vak: 'Politiek', tekst: '152 vragen met uitleg. Kies een hoofdstuk en oefen. Open voor iedereen.' },
   { id: 'gemeente', href: 'gemeente/reader', icon: 'LEZEN', titel: 'Reader Gemeentepolitiek', vak: 'Politiek', tekst: 'Lees de kaarten over de gemeente en maak de oefenvragen. Open voor iedereen.' },
   { id: 'reader', href: 'koude-oorlog/reader', icon: 'LEZEN', titel: 'Reader Koude Oorlog', vak: 'Geschiedenis', tekst: 'Lees de stof van les 1 tot en met 4, met foto\'s en de spanningslijn.' },
   { id: 'oefenen-ko', href: 'koude-oorlog/oefenen', icon: 'OEFENEN', titel: 'Oefenvragen Koude Oorlog', vak: 'Geschiedenis', tekst: '122 vragen met uitleg. Kies een les en oefen. Open voor iedereen.' },
-  { id: 'tijdlijn', href: 'koude-oorlog/tijdlijn', icon: 'BOUWEN', titel: 'Tijdlijn bouwen', vak: 'Geschiedenis', tekst: 'Les 2. Kies zeven momenten, voeg foto en zin toe en teken de spanningslijn. Download als pdf.' },
-  { id: 'toetsvraag', href: 'koude-oorlog/toetsvraag', icon: 'SCHRIJVEN', titel: 'Toetsvraag Koude Oorlog', vak: 'Geschiedenis', tekst: 'Bedenk een meerkeuzevraag, vul het formulier in en download het als pdf.' },
+  { id: 'tijdlijn', soort: 'les', href: 'koude-oorlog/tijdlijn', icon: 'BOUWEN', titel: 'Tijdlijn bouwen', vak: 'Geschiedenis', tekst: 'Les 2. Kies zeven momenten, voeg foto en zin toe en teken de spanningslijn. Download als pdf.' },
+  { id: 'toetsvraag', soort: 'les', href: 'koude-oorlog/toetsvraag', icon: 'SCHRIJVEN', titel: 'Toetsvraag Koude Oorlog', vak: 'Geschiedenis', tekst: 'Les 1. Bedenk een meerkeuzevraag, vul het formulier in en download het als pdf.' },
   { id: 'flash', href: 'flash', icon: 'FLASHCARDS', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.', archief: true },
   { id: 'woii', icon: 'OEFENEN', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
   { id: 'politiek', icon: 'OEFENEN', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
@@ -67,6 +67,7 @@ const VAKKEN = {
   politiek: { naam: 'Politiek', icon: '02', tekst: 'Gemeente, Kamer en Kabinet', soon: [] }
 };
 let menuVak = null;
+const groep = (t, u, html) => html ? `<section class="groep"><h2 class="groep-kop"><span class="tag">${t}</span><small>${u}</small></h2><div class="games">${html}</div></section>` : '';
 function viewMenu(kies) {
   inMenu = true;
   setVak('woii', false);
@@ -83,7 +84,8 @@ function viewMenu(kies) {
   render(header() + `<main><p class="small-note"><button class="btn ghost small" id="ander" type="button">← Ander vak</button></p>
     <h1>${esc(v.naam)}</h1>
     <p>Kies waarmee je wilt leren of oefenen.</p>
-    <div class="games">${actief}${soon}</div>
+    ${groep('Voor een les', 'Hoort bij één les. Je doet dit in de les.', eigen.filter(g => !g.archief && g.soort === 'les').map(tile).join(''))}
+    ${groep('Voor het onderwerp', 'Hoort bij de hele stof. Gebruik dit om te lezen en te leren.', eigen.filter(g => !g.archief && g.soort !== 'les').map(tile).join('') + soon)}
     ${arch ? `<details class="archief-box"><summary class="archief-kop">Archief</summary><p class="small-note">Deze spellen zijn afgerond. Je kunt ze nog openen. Spellen met een code open je met je eigen code.</p><div class="games archief">${arch}</div></details>` : ''}</main>`);
   $('#ander').onclick = () => viewMenu(null);
   app.querySelectorAll('.game[data-g]').forEach(b => b.onclick = () => {
