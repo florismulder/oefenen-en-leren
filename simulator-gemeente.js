@@ -220,9 +220,13 @@
   }
 
   /* ---------- Schermen in het midden ---------- */
+  const ANDERE_BROWSER = !/Chrome|Chromium|CriOS|Edg\//.test(navigator.userAgent || '');
+  function browserWaarschuwing() {
+    return ANDERE_BROWSER ? '<div class="sim-uitslag slecht" role="alert"><b>Let op:</b> deze simulator is getest in Chrome en Edge. Je gebruikt een andere browser. Werkt iets niet, zoals het downloaden van de pdf? Open dan deze link in Chrome of Edge.</div>' : '';
+  }
   function middenIntro() {
     return `<div class="sim-kaart">
-      <p class="sim-label">Oefenzaak · Politiek · Gemeente</p>
+      <p class="sim-label">Oefenzaak · Politiek · Gemeente</p>${browserWaarschuwing()}
       <h1>De gemeenteraad beslist over sluitingstijden</h1>
       <p class="sim-lead">Noordstad heeft een druk centrum. Cafés sluiten nu om 02.00 uur. De horeca wil langer open. Bewoners willen rust. Jij maakt een plan. De raad stemt.</p>
       <div class="sim-blokken">
@@ -447,7 +451,7 @@
           <label for="bn">4. Bronvermelding</label>
           <input id="bn" data-veld="bron" type="text" maxlength="160" value="${esc(n.bron)}" autocomplete="off">
         </div>
-        <aside class="lijst" aria-live="polite"><h3>Checklist</h3><ul id="checklijst"></ul><button type="button" class="btn" id="pdfknop" data-act="pdf" disabled>Download als pdf</button><p class="sim-uitleg" id="pdfhint"></p></aside>
+        <aside class="lijst" aria-live="polite">${browserWaarschuwing()}<h3>Checklist</h3><ul id="checklijst"></ul><button type="button" class="btn" id="pdfknop" data-act="pdf" disabled>Download als pdf</button><p class="sim-uitleg" id="pdfhint"></p></aside>
       </div>
       <div class="sim-acties onder">
         ${b.u.aangenomen ? '' : '<button type="button" class="btn ghost" data-act="nieuwvoorstel">Doe een nieuw voorstel</button>'}
