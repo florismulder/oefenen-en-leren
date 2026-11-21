@@ -9,7 +9,7 @@
   var d = laad();
   app.innerHTML = '<main class="card tv">' +
     '<h1>Jouw toetsvraag</h1>' +
-    '<p class="lead">Bedenk een meerkeuzevraag over les 1. Vul alles in. Download je formulier als pdf en lever het in.</p>' +
+    '<p class="lead">Bedenk een meerkeuzevraag over les 1. Vul alles in. Download je formulier als pdf en mail het naar je docent.</p>' +
     '<fieldset><label class="kop" for="naam">Je naam</label><input type="text" id="naam" autocomplete="name" value="' + esc(d.naam || '') + '"></fieldset>' +
     '<fieldset><legend>Waar gaat je vraag over? Kies één</legend><div class="onderwerp">' +
     ONDERWERPEN.map(function (o) { return '<label><input type="radio" name="onderwerp" value="' + o + '"' + (d.onderwerp === o ? ' checked' : '') + '><span>' + o + '</span></label>'; }).join('') +
@@ -22,7 +22,7 @@
     '<fieldset><label class="kop" for="plek">Waar staat het in de reader? (kaart of hoofdstuk)</label><input type="text" id="plek" value="' + esc(d.plek || '') + '"></fieldset>' +
     '<p class="fout" id="fout" role="alert"></p>' +
     '<div class="acties"><button class="btn" id="dl" type="button">Download als pdf</button><button class="btn ghost" id="leeg" type="button">Begin opnieuw</button></div>' +
-    '<p class="tip">Kies bij het printen "Opslaan als pdf". Lever de pdf in bij [INVULLEN: inleverplek in Teams].</p>' +
+    '<p class="tip">Kies bij het printen "Opslaan als pdf". Mail de pdf naar je docent. Het mailadres staat op het bord.</p>' +
     '</main>';
   function $(s) { return app.querySelector(s); }
   function lees() {
