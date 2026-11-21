@@ -156,5 +156,5 @@
     ['Evaluatie', 'Na een tijd kijken of een plan werkt.']
   ];
 
-  window.SIM = { BUDGET, KOSTEN, VOORWAARDEN, PARTIJEN, GESPREKKEN, DEBAT, STAPPEN, BEGRIPPEN, kosten };
+  window.SIM = { BUDGET, DREMPEL: 65, KOSTEN, VOORWAARDEN, PARTIJEN, GESPREKKEN, DEBAT, STAPPEN, BEGRIPPEN, kosten };
 })();

@@ -80,7 +80,7 @@
   }
   function steunVan(p) { return clamp(basisSteun(p) + debatVan(p), 0, 100); }
   function uitslag() {
-    const rij = D.PARTIJEN.map(p => { const st = steunVan(p); return { p, basis: basisSteun(p), d: debatVan(p), st, voor: st >= 50 }; });
+    const rij = D.PARTIJEN.map(p => { const st = steunVan(p); return { p, basis: basisSteun(p), d: debatVan(p), st, voor: st >= D.DREMPEL }; });
     const voor = rij.reduce((a, r) => a + (r.voor ? r.p.zetels : 0), 0);
     return { rij, voor, tegen: 21 - voor, aangenomen: voor >= 11 };
   }
@@ -119,11 +119,11 @@
   function modusRechts(p) {
     if (S.scherm === 's5' && (reveal > 0 || S.stemKlaar)) {
       const i = D.PARTIJEN.indexOf(p);
-      if (S.stemKlaar || i < reveal) return steunVan(p) >= 50 ? 'voor' : 'tegen';
+      if (S.stemKlaar || i < reveal) return steunVan(p) >= D.DREMPEL ? 'voor' : 'tegen';
       return 'onbekend';
     }
-    if (S.scherm === 's6') return steunVan(p) >= 50 ? 'voor' : 'tegen';
-    if (zichtbaar(p) && S.scherm !== 's5') return steunVan(p) >= 50 ? 'voor' : 'tegen';
+    if (S.scherm === 's6') return steunVan(p) >= D.DREMPEL ? 'voor' : 'tegen';
+    if (zichtbaar(p) && S.scherm !== 's5') return steunVan(p) >= D.DREMPEL ? 'voor' : 'tegen';
     return 'onbekend';
   }
 
@@ -207,8 +207,8 @@
 
   function steunBalk(p) {
     const st = steunVan(p);
-    const voor = st >= 50;
-    return `<div class="steun"><div class="steun-balk" role="img" aria-label="Steun van partij ${p.id}: ${st} van de 100 punten. Je hebt 50 nodig."><i class="${voor ? 'goed' : 'slecht'}" style="width:${st}%"></i><span class="streep"></span></div>
+    const voor = st >= D.DREMPEL;
+    return `<div class="steun"><div class="steun-balk" role="img" aria-label="Steun van partij ${p.id}: ${st} van de 100 punten. Je hebt ${D.DREMPEL} nodig."><i class="${voor ? 'goed' : 'slecht'}" style="width:${st}%"></i><span class="streep" style="left:${D.DREMPEL}%"></span></div>
       <div class="steun-tekst"><b>${st}</b> van 100 punten. ${voor ? 'Stemt waarschijnlijk <b class="groen">voor</b>.' : 'Stemt waarschijnlijk <b class="rood">tegen</b>.'}</div></div>`;
   }
   function wensenLijst(p) {
@@ -280,7 +280,7 @@
 
   function meter() {
     const bekend = D.PARTIJEN.filter(gesproken);
-    const voor = bekend.reduce((a, p) => a + (steunVan(p) >= 50 ? p.zetels : 0), 0);
+    const voor = bekend.reduce((a, p) => a + (steunVan(p) >= D.DREMPEL ? p.zetels : 0), 0);
     const onbekend = D.PARTIJEN.filter(p => !gesproken(p)).reduce((a, p) => a + p.zetels, 0);
     const ok = voor >= 11;
     return `<div class="sim-uitslag ${ok ? 'goed' : 'slecht'}" role="status"><b>Nu: ${voor} zetels voor</b> van de ${21 - onbekend} zetels die je kent. Nodig: 11.${onbekend ? ' Nog onbekend: ' + onbekend + ' zetels.' : ''}${ok ? ' Je hebt een meerderheid.' : ' Nog geen meerderheid.'}</div>`;
@@ -293,7 +293,7 @@
       const dicht = false;
       return `<div class="sim-fractie${klaar ? ' klaar' : ''}${dicht ? ' dicht' : ''}" style="--pk:${p.kleur}">
         <div class="fractie-kop"><span class="fletter" aria-hidden="true">${p.id}</span><div><b>Partij ${p.id}: ${p.naam}</b><small>${p.rol} · ${p.zetels} zetels</small></div></div>
-        ${klaar ? `<blockquote>“${p.zegt}”</blockquote><p class="sim-uitleg">Een fractie stemt voor als je voorstel <b>50 punten of meer</b> haalt.</p>${wensenLijst(p)}${steunBalk(p)}` :
+        ${klaar ? `<blockquote>“${p.zegt}”</blockquote><p class="sim-uitleg">Een fractie stemt voor als je voorstel <b>${D.DREMPEL} punten of meer</b> haalt.</p>${wensenLijst(p)}${steunBalk(p)}` :
           `<p class="sim-uitleg">Wil: ${p.wil}</p><button type="button" class="btn small" data-act="fractie" data-val="${p.id}"${dicht ? ' disabled' : ''}>Overleg voeren</button>`}
       </div>`;
     }).join('');
@@ -516,13 +516,13 @@
     const dossier = S.gesprekken.map(id => { const g = D.GESPREKKEN.find(x => x.id === id); return `<li><b>${g.argTitel}</b><small>${g.argTekst}</small></li>`; }).join('');
     const partijen = nu >= 2 ? D.PARTIJEN.map(p => {
       const zicht = zichtbaar(p) || S.scherm === 's6' || (S.scherm === 's5' && (S.stemKlaar));
-      return `<li style="--pk:${p.kleur}"><span class="fletter">${p.id}</span><span><b>${p.naam}</b><small>${p.rol} · ${p.zetels} zetels</small></span><span class="mini ${zicht ? (steunVan(p) >= 50 ? 'voor' : 'tegen') : ''}">${zicht ? steunVan(p) : '?'}</span></li>`;
+      return `<li style="--pk:${p.kleur}"><span class="fletter">${p.id}</span><span><b>${p.naam}</b><small>${p.rol} · ${p.zetels} zetels</small></span><span class="mini ${zicht ? (steunVan(p) >= D.DREMPEL ? 'voor' : 'tegen') : ''}">${zicht ? steunVan(p) : '?'}</span></li>`;
     }).join('') : '';
     return `<aside class="sim-dash">
       <section><h2>De raad (21 zetels)</h2>${zetelsSvg(300, 168, modusRechts)}
         <p class="telling kl"><span class="voor">Voor: <b>${zeker}</b></span><span class="tegen">Tegen: <b>${tegen}</b></span><span>Onbekend: <b>${onbekend}</b></span></p>
         <p class="sim-uitleg">Je hebt <b>11</b> zetels nodig.</p></section>
-      ${partijen ? `<section><h2>Partijen</h2><ul class="sim-partijen">${partijen}</ul><p class="sim-uitleg">Het cijfer is de steun van 0 tot 100. Vanaf 50 stemt een partij voor.</p></section>` : ''}
+      ${partijen ? `<section><h2>Partijen</h2><ul class="sim-partijen">${partijen}</ul><p class="sim-uitleg">Het cijfer is de steun van 0 tot 100. Vanaf ${D.DREMPEL} stemt een partij voor.</p></section>` : ''}
       <section><h2>Jouw dossier</h2>${dossier ? `<ul class="sim-dossier">${dossier}</ul>` : '<p class="sim-uitleg">Nog leeg. Praat met mensen op het Marktplein.</p>'}</section>
     </aside>`;
   }
