@@ -528,12 +528,17 @@
   }
 
   /* ---------- Hoofdweergave ---------- */
+  function wisKnop() {
+    return wisVraag
+      ? '<span class="wis-top">Alles wissen? <button type="button" class="btn small danger" data-act="wisja">Ja, begin opnieuw</button> <button type="button" class="btn small ghost" data-act="wisnee">Nee</button></span>'
+      : '<button type="button" class="wis-knop" data-act="wis">Opnieuw beginnen</button>';
+  }
   function boven() {
     const st = D.STAPPEN[stapNr()];
     const k = D.kosten(S.voorstel);
     return `<header class="sim-top"><div class="titel"><span class="gn" aria-hidden="true">GN</span><div><b>Gemeente Noordstad</b><small>Jij bent: wethouder Horeca en Economie</small></div></div>
       <div class="klok" aria-label="Moment in het spel"><b>${st ? st.tijd : '--:--'}</b><small>${st ? st.dag : 'Nog niet gestart'}</small></div>
-      <div class="geld"><small>Budget Veilige nacht</small><b>${eur(D.BUDGET - k)}</b><small>over van ${eur(D.BUDGET)}</small></div></header>`;
+      <div class="geld"><small>Budget Veilige nacht</small><b>${eur(D.BUDGET - k)}</b><small>over van ${eur(D.BUDGET)}</small>${S.scherm !== 'intro' ? wisKnop() : ''}</div></header>`;
   }
   function begrippenModal() {
     if (!toonBegrippen) return '';
@@ -601,7 +606,7 @@
     else if (act === 'nieuwvoorstel') { S.debat = {}; S.stemKlaar = false; reveal = 0; S.scherm = 's3'; bewaar(); meld(); render(); window.scrollTo(0, 0); }
     else if (act === 'wis') { wisVraag = true; render(); }
     else if (act === 'wisnee') { wisVraag = false; render(); }
-    else if (act === 'wisja') { wisVraag = false; reveal = 0; animeert = false; S = leeg(); bewaar(); render(); window.scrollTo(0, 0); }
+    else if (act === 'wisja') { const run = S.run; wisVraag = false; reveal = 0; animeert = false; S = leeg(); S.run = run; bewaar(); meld(); render(); window.scrollTo(0, 0); }
   });
 
   app.addEventListener('input', e => {

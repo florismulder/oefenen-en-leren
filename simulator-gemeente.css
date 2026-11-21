@@ -183,3 +183,8 @@ blockquote { margin: 8px 0; padding: 8px 12px; border-left: 4px solid #ff00e7; b
 }
 @media (prefers-reduced-motion: reduce) { .steun-balk i { transition: none; } }
 @media print { .sim-dash, .sim-agenda, .sim-top { display: none; } .sim-body { display: block; } }
+
+.sim-top .wis-knop { margin-top: 6px; background: transparent; color: #fff; border: 1px solid #cbd8f3; border-radius: 8px; padding: 4px 12px; font-size: 13px; cursor: pointer; }
+.sim-top .wis-knop:hover { background: #ff00e7; border-color: #ff00e7; }
+.sim-top .wis-top { display: block; margin-top: 6px; font-size: 13px; }
+.sim-top .wis-top .btn { color: #fff; }
