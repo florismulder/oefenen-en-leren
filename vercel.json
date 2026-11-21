@@ -173,6 +173,10 @@
       "destination": "/reader"
     },
     {
+      "source": "/koude-oorlog/toetsvraag",
+      "destination": "/toetsvraag"
+    },
+    {
       "source": "/gemeente/reader",
       "destination": "/reader-gemeente"
     },

@@ -1,7 +1,7 @@
 (function () {
   var p = location.pathname.replace(/\.html$/, '');
   var VAKKEN = {
-    '/reader': 'geschiedenis', '/koude-oorlog/reader': 'geschiedenis',
+    '/reader': 'geschiedenis', '/toetsvraag': 'geschiedenis', '/koude-oorlog/toetsvraag': 'geschiedenis', '/koude-oorlog/reader': 'geschiedenis',
     '/reader-gemeente': 'politiek', '/gemeente/reader': 'politiek',
     '/oefenen-gemeente': 'politiek', '/gemeente/oefenen': 'politiek',
     '/speurtocht-gemeente': 'politiek', '/gemeente/speurtocht': 'politiek', '/speurtocht-docent': 'politiek', '/gemeente/resultaten': 'politiek',

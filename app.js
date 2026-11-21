@@ -17,6 +17,7 @@ const GAMES = [
   { id: 'gemeente-oefenen', href: 'gemeente/oefenen', icon: '✅', titel: 'Oefenvragen Gemeentepolitiek', vak: 'Politiek', tekst: '152 vragen met uitleg. Kies een hoofdstuk en oefen. Open voor iedereen.' },
   { id: 'gemeente', href: 'gemeente/reader', icon: '🏘️', titel: 'Reader Gemeentepolitiek', vak: 'Politiek', tekst: 'Lees de kaarten over de gemeente en maak de oefenvragen. Open voor iedereen.' },
   { id: 'reader', href: 'koude-oorlog/reader', icon: '📖', titel: 'Reader Koude Oorlog', vak: 'Geschiedenis', tekst: 'Lees de stof van les 1 tot en met 4, met foto\'s en de spanningslijn.' },
+  { id: 'toetsvraag', href: 'koude-oorlog/toetsvraag', icon: '✍️', titel: 'Toetsvraag Koude Oorlog', vak: 'Geschiedenis', tekst: 'Bedenk een meerkeuzevraag, vul het formulier in en download het als pdf.' },
   { id: 'flash', href: 'flash', icon: '🃏', titel: 'Flashcards Kamer en Kabinet', vak: 'Politiek', tekst: 'Leer de stof en oefen voor de toets. Open voor iedereen.', archief: true },
   { id: 'woii', icon: '🕰️', titel: 'Tweede Wereldoorlog', vak: 'Geschiedenis', tekst: 'Oefen de stof van de reader per hoofdstuk, met een finale.', archief: true },
   { id: 'politiek', icon: '🏛️', titel: 'Kamer en Kabinet', vak: 'Politiek', tekst: 'Wekelijkse oefenrondes en een finale vlak voor de toets.', archief: true }
