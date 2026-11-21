@@ -15,7 +15,7 @@
   var bar = document.createElement('nav');
   bar.setAttribute('aria-label', 'Terug');
   bar.className = 'terugbalk';
-  bar.style.cssText = 'position:sticky;top:0;z-index:50;background:#FF00E7;padding:10px 16px;font:700 14px \'Courier New\',Courier,monospace;letter-spacing:1.5px;text-transform:uppercase;';
+  bar.style.cssText = 'position:sticky;top:0;z-index:50;background:' + (vak === 'politiek' ? '#14305F' : '#FF00E7') + ';padding:10px 16px;font:700 14px \'Courier New\',Courier,monospace;letter-spacing:1.5px;text-transform:uppercase;';
   var a = document.createElement('a');
   a.href = href;
   a.textContent = '← ' + tekst;

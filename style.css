@@ -419,3 +419,14 @@ header.top.menu .tag { order: 1; font-size: 12px; }
 .zoek-link { align-self: center; font-weight: 700; font-size: 14px; white-space: nowrap; color: var(--ink); }
 .rcard.gevonden { outline: 3px solid #FF00E7; outline-offset: 2px; }
 @media print { .zoekvak { display: none !important; } }
+
+/* Politiek: blauwe uitstraling (donker #14305F, accent #1F4A96) */
+body[data-vak="politiek"] .tag,
+body[data-vak="politiek"] .zoek-res mark { background: #1F4A96; color: #fff; }
+.game[data-g="politiek"] .gi { background: #1F4A96; }
+.game[data-g="politiek"] .gv { color: #1F4A96; }
+.game[data-g="politiek"]:hover { background: #14305F; color: #fff; }
+.game[data-g="politiek"]:hover .gv { color: #8FB0F0; }
+.game[data-g="politiek"]:hover::after { color: #8FB0F0; }
+body[data-vak="politiek"] .zoek-kies:hover .zoek-meta { color: #1F4A96; }
+body[data-vak="politiek"] .rcard.gevonden { outline-color: #1F4A96; }
