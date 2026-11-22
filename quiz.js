@@ -17,6 +17,7 @@ const KERR = {
 function kerr(code) { return KERR[code] || errText(code); }
 
 let token = store.get('kq_tok');
+let verbonden = false;
 let st = null;
 let rcvAt = 0;
 let poll = null;
@@ -103,9 +104,10 @@ async function refresh() {
   setOffline(false);
   if (r.error) {
     token = null; store.del('kq_tok');
-    viewJoin(kerr(r.error));
+    viewJoin(verbonden ? kerr(r.error) : undefined);
     return;
   }
+  verbonden = true;
   st = r;
   rcvAt = performance.now();
   setThema(st.thema);
