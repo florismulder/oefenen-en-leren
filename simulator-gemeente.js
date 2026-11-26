@@ -19,7 +19,7 @@
       run: '',
       pogingen: 0,
       pdf: false,
-      nieuws: { naam: '', kop: '', intro: '', kern: '', bron: BRON }
+      nieuws: { naam: '', klas: '', kop: '', intro: '', kern: '', bron: BRON }
     };
   }
   let S = leeg();
@@ -491,6 +491,7 @@
     return {
       iw, kw,
       naam: n.naam.trim().length >= 2,
+      klas: (n.klas || '').trim().length >= 2,
       kop: n.kop.trim().length >= 5,
       intro: iw > 0 && iw <= 25,
       kern: kw >= 80 && kw <= 120,
@@ -519,6 +520,8 @@
         <div class="velden">
           <label for="nm">Naam of namen (komt alleen op je pdf. De naam blijft op jouw computer)</label>
           <input id="nm" data-veld="naam" type="text" maxlength="60" value="${esc(n.naam)}" autocomplete="off">
+          <label for="kl">Klas (komt alleen op je pdf)</label>
+          <input id="kl" data-veld="klas" type="text" maxlength="20" value="${esc(n.klas)}" autocomplete="off">
           <label for="kp">1. Kop</label>
           <input id="kp" data-veld="kop" type="text" maxlength="120" value="${esc(n.kop)}" autocomplete="off">
           <label for="in">2. Intro (maximaal 25 woorden) <span class="teller-w" id="t-intro"></span></label>
@@ -544,36 +547,87 @@
     const lijst = document.getElementById('checklijst');
     if (!lijst) return;
     const item = (ok, t) => `<li class="${ok ? 'ja' : 'nee'}"><span aria-hidden="true">${ok ? '✓' : '○'}</span> ${t}</li>`;
-    lijst.innerHTML = item(c.naam, 'Naam ingevuld') + item(c.kop, 'Een kop') + item(c.intro, 'Intro van maximaal 25 woorden') + item(c.kern, 'Kern van 80 tot 120 woorden') + item(c.bron, 'Bron genoemd');
+    lijst.innerHTML = item(c.naam, 'Naam ingevuld') + item(c.klas, 'Klas ingevuld') + item(c.kop, 'Een kop') + item(c.intro, 'Intro van maximaal 25 woorden') + item(c.kern, 'Kern van 80 tot 120 woorden') + item(c.bron, 'Bron genoemd');
     const ti = document.getElementById('t-intro'), tk = document.getElementById('t-kern');
     if (ti) { ti.textContent = c.iw + ' woorden'; ti.className = 'teller-w ' + (c.intro ? 'ok' : c.iw ? 'fout' : ''); }
     if (tk) { tk.textContent = c.kw + ' woorden'; tk.className = 'teller-w ' + (c.kern ? 'ok' : c.kw ? 'fout' : ''); }
-    const alles = c.naam && c.kop && c.intro && c.kern && c.bron;
+    const alles = c.naam && c.klas && c.kop && c.intro && c.kern && c.bron;
     const knop = document.getElementById('pdfknop'), hint = document.getElementById('pdfhint');
     if (knop) knop.disabled = !alles;
     if (hint) hint.textContent = alles ? 'Alles klopt. Download de pdf en mail hem naar je docent.' : 'Maak eerst alle vinkjes groen.';
   }
 
-  function maakPdf() {
-    const b = besluit(), n = S.nieuws;
+  function pdfKop() {
+    const b = besluit(), u = b.u, v = S.voorstel, n = S.nieuws;
     const datum = new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
     const grijs = [0.35, 0.35, 0.4];
-    const blokken = [
-      { tekst: 'Nieuwsbericht', size: 24, vet: true },
+    const tijd = v.ext === 4 ? '04.00' : '03.00';
+    const dagen = v.dagen === 'vrza' ? 'vrijdag en zaterdag' : 'zaterdag';
+    const afspraken = D.VOORWAARDEN.filter(o => v.opt[o.id]).map(o => o.titel);
+    const bl = [
+      { tekst: 'Raadsbesluit en nieuwsbericht', size: 20, vet: true },
       { lijn: true, voor: 6 },
-      { tekst: 'Geschreven door: ' + n.naam.trim(), size: 11, voor: 12 },
+      { tekst: 'Naam: ' + n.naam.trim(), size: 11, voor: 12 },
+      { tekst: 'Klas: ' + n.klas.trim(), size: 11 },
+      { tekst: 'Gemeente: Noordstad (oefenzaak, bestaat niet echt)', size: 11 },
       { tekst: 'Datum: ' + datum, size: 11 },
-      { tekst: n.kop.trim(), size: 19, vet: true, voor: 22 },
+      { tekst: 'Aantal keer gestemd: ' + (S.pogingen || 1), size: 11 },
+      { tekst: 'Jouw voorstel als wethouder', size: 13, vet: true, voor: 18 },
+      { tekst: 'Cafés in het centrum mogen op ' + dagen + ' open tot ' + tijd + ' uur.', size: 10.5, voor: 6 },
+      { tekst: afspraken.length ? 'Afspraken: ' + afspraken.join('; ') + '.' : 'Er kwamen geen extra afspraken bij.', size: 10.5 },
+      { tekst: 'Kosten voor de gemeente: ' + eur(D.kosten(v)) + ' van het budget van ' + eur(D.BUDGET) + '.', size: 10.5 }
+    ];
+    const gesprekken = S.gesprekken.map(id => (D.GESPREKKEN.find(x => x.id === id) || {}).argTitel).filter(Boolean);
+    bl.push({ tekst: 'Op het Marktplein sprak je over: ' + (gesprekken.length ? gesprekken.join(' en ') : 'niets') + '.', size: 10.5 });
+    const sprak = D.PARTIJEN.filter(gesproken).map(p => 'Partij ' + p.id);
+    bl.push({ tekst: 'Je voerde overleg met: ' + (sprak.length ? sprak.join(', ') : 'geen enkele partij') + '.', size: 10.5 });
+
+    bl.push({ tekst: 'Uitslag van de stemming', size: 13, vet: true, voor: 18 });
+    bl.push({ tekst: (u.aangenomen ? 'AANGENOMEN' : 'VERWORPEN') + ': ' + u.voor + ' voor, ' + u.tegen + ' tegen. Er waren 11 zetels nodig.', size: 10.5, vet: true, voor: 6 });
+    bl.push({ tekst: 'Voor: ' + b.voorNamen, size: 10.5 });
+    bl.push({ tekst: 'Tegen: ' + b.tegenNamen, size: 10.5 });
+    bl.push({ tekst: 'Besloten: ' + b.besloten, size: 10.5, voor: 6 });
+
+    bl.push({ tekst: 'Waarom stemde elke partij zo?', size: 13, vet: true, voor: 18 });
+    bl.push({ tekst: 'Elke partij geeft punten aan je voorstel (0 tot 100). Vanaf ' + D.DREMPEL + ' punten stemt de partij voor.', size: 10, kleur: grijs, voor: 4 });
+    u.rij.forEach(r => {
+      const p = r.p;
+      const w = wensenVan(p).map(x => (x.f >= 1 ? 'gehaald' : x.f > 0 ? 'half gehaald' : 'niet gehaald') + ': ' + x.t + ' (' + x.w + ' punten)');
+      const delen = ['Voorstel: ' + r.basis + ' punten'];
+      if (r.d) delen.push('debat: ' + (r.d > 0 ? '+' : '') + r.d);
+      if (r.tw) delen.push('steun ingetrokken in de schorsing: ' + Math.round(r.tw));
+      bl.push({ tekst: 'Partij ' + p.id + ': ' + p.naam + ' (' + p.rol + ', ' + p.zetels + ' zetels) stemde ' + (r.voor ? 'VOOR' : 'TEGEN'), size: 10.5, vet: true, voor: 10 });
+      bl.push({ tekst: 'Totaal ' + r.st + ' van 100. ' + delen.join(', ') + '.' + (gesproken(p) ? '' : ' Je sprak deze partij niet, dus je kende haar wensen niet.'), size: 10, voor: 2 });
+      w.forEach(t => bl.push({ tekst: '- ' + t, size: 10 }));
+    });
+    const q = D.DEBAT.map(x => { const k = S.debat[x.id]; if (!k || !x.ant[k]) return null; const a = x.ant[k](S.voorstel); return 'Partij ' + x.partij + ': ' + a.t + ' (' + (a.d > 0 ? '+' : '') + a.d + ' punten)'; }).filter(Boolean);
+    if (q.length) {
+      bl.push({ tekst: 'Het debat', size: 11, vet: true, voor: 12 });
+      q.forEach(t => bl.push({ tekst: '- ' + t, size: 10 }));
+    }
+    const t = S.twist;
+    if (t && t.p) {
+      bl.push({ tekst: 'De schorsing', size: 11, vet: true, voor: 12 });
+      bl.push({ tekst: t.keuze === 'vast' ? 'Partij ' + t.p + ' trok haar steun in. Je hield vast aan je voorstel.' : t.keuze ? 'Partij ' + t.p + ' trok haar steun in.' + toezeggingTekst() : 'Partij ' + t.p + ' trok haar steun in.', size: 10 });
+    }
+    const ct = u.rij.filter(r => r.p.rol === 'Coalitie' && !r.voor);
+    bl.push({ tekst: 'De coalitie', size: 11, vet: true, voor: 12 });
+    bl.push({ tekst: ct.length ? ct.map(r => 'Partij ' + r.p.id).join(' en ') + ' zit in de coalitie en stemde tegen. Dat geeft spanning in het college van B&W.' : 'Beide coalitiepartijen stemden voor. Het college heeft de steun van de eigen partijen.', size: 10 });
+    bl.push({ lijn: true, voor: 22 });
+    return bl;
+  }
+
+  function maakPdf() {
+    const b = besluit(), n = S.nieuws;
+    const grijs = [0.35, 0.35, 0.4];
+    const blokken = pdfKop().concat([
+      { tekst: 'Nieuwsbericht', size: 24, vet: true, voor: 10 },
+      { tekst: 'Geschreven door: ' + n.naam.trim() + ' (' + n.klas.trim() + ')', size: 11, voor: 8 },
+      { tekst: n.kop.trim(), size: 19, vet: true, voor: 20 },
       { tekst: n.intro.trim(), size: 12, vet: true, voor: 12 },
       { tekst: n.kern.trim(), size: 11, voor: 12 },
-      { tekst: n.bron.trim(), size: 10, voor: 14, kleur: grijs },
-      { lijn: true, voor: 26 },
-      { tekst: 'Het raadsbesluit in het kort', size: 13, vet: true, voor: 14 },
-      { tekst: 'Uitslag: ' + (b.u.aangenomen ? 'aangenomen' : 'verworpen') + ' (' + b.u.voor + ' voor, ' + b.u.tegen + ' tegen)', size: 10.5, voor: 8 },
-      { tekst: 'Voor: ' + b.voorNamen, size: 10.5 },
-      { tekst: 'Tegen: ' + b.tegenNamen, size: 10.5 },
-      { tekst: 'Besloten: ' + b.besloten, size: 10.5, voor: 6 }
-    ];
+      { tekst: n.bron.trim(), size: 10, voor: 14, kleur: grijs }
+    ]);
     const slug = n.naam.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
     S.pdf = true; bewaar(); meld();
     let url = null;
@@ -705,7 +759,7 @@
       if (i === 1 && !voorstelKlaar()) return;
       ga(volgorde[i + 1]);
     }
-    else if (act === 'pdf') { const c = checks(); if (c.naam && c.kop && c.intro && c.kern && c.bron) maakPdf(); }
+    else if (act === 'pdf') { const c = checks(); if (c.naam && c.klas && c.kop && c.intro && c.kern && c.bron) maakPdf(); }
     else if (act === 'nieuwvoorstel') { S.debat = {}; S.twist = null; S.stemKlaar = false; reveal = 0; S.scherm = 's3'; bewaar(); meld(); render(); window.scrollTo(0, 0); }
     else if (act === 'wis') { wisVraag = true; render(); }
     else if (act === 'wisnee') { wisVraag = false; render(); }
