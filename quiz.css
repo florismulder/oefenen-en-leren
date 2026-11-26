@@ -287,3 +287,18 @@ body.kq-s .wrap { padding-top: 10px; }
 .kqh-top .kq-logo { height: clamp(34px, 3.4vw, 48px); }
 .kqh-top .kqh-set { margin-left: 4px; }
 .kqh-podium + .kqh-rest, .kqh-main > .kq-logo { margin-top: 0; }
+
+/* Einduitslag en tussenstand: top 9, plek 4-6 links en 7-9 rechts */
+.kqh-rest, .kqh-stand { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, auto); grid-auto-flow: column; }
+.kqh-rest .kqh-rij, .kqh-stand .kqh-rij { border-top: 1px solid var(--line); }
+.kqh-rest .kqh-rij:nth-of-type(3n+1), .kqh-stand .kqh-rij:nth-of-type(3n+1) { border-top: 0; }
+.kqh-stand { max-width: 1100px; margin: 0 auto; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); display: grid; column-gap: clamp(20px, 3vw, 48px); padding: 8px clamp(14px, 1.8vw, 28px); }
+.kqh-stand .kqh-rij { font-size: clamp(18px, 2vw, 32px); padding: clamp(8px, 1.4vh, 16px) 0; }
+@media (max-width: 700px) { .kqh-rest, .kqh-stand { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; } .kqh-rest .kqh-rij:nth-of-type(3n+1), .kqh-stand .kqh-rij:nth-of-type(3n+1) { border-top: 1px solid var(--line); } .kqh-rest .kqh-rij:first-of-type, .kqh-stand .kqh-rij:first-of-type { border-top: 0; } }
+
+/* Tussenstand: 9 rijen, 1 tot 5 links en 6 tot 9 rechts */
+.kqh-stand { grid-template-rows: repeat(5, auto); }
+.kqh-stand .kqh-rij:nth-of-type(3n+1) { border-top: 1px solid var(--line); }
+.kqh-stand .kqh-rij:nth-of-type(5n+1) { border-top: 0; }
+.kqh-stand .kqh-rij > span:nth-child(2) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 700px) { .kqh-stand { grid-template-rows: none; } .kqh-stand .kqh-rij:nth-of-type(5n+1) { border-top: 1px solid var(--line); } .kqh-stand .kqh-rij:first-of-type { border-top: 0; } }

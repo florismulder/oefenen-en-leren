@@ -188,7 +188,7 @@ function koppel() {
   };
   app.querySelectorAll('[data-kick]').forEach(b => b.onclick = () => verwijder(b.dataset.kick));
   const gb = document.getElementById('go');
-  if (gb) gb.onclick = () => actie(gb.dataset.a);
+  if (gb) gb.onclick = () => { if (gb.dataset.a === 'stand') { standIdx = st.game.idx; teken(); window.scrollTo(0, 0); } else actie(gb.dataset.a); };
   const tb = document.getElementById('toon');
   if (tb) tb.onclick = () => actie('toon');
   const sb = document.getElementById('stop');
@@ -216,11 +216,12 @@ function vraagAfbreken() {
     render('<div class="kqh-start-overlay"><div class="card"><h1>Spel afgebroken</h1><p>Je kunt een nieuw spel starten op de beheerpagina.</p><a class="btn" href="/quiz-docent">Naar de beheerpagina</a></div></div>');
   };
 }
+let standIdx = -1;
 function teken() {
   const g = st.game;
   if (g.status === 'lobby') return tekenLobby();
   if (g.status === 'vraag') return tekenVraag();
-  if (g.status === 'uitslag') return tekenUitslag();
+  if (g.status === 'uitslag') return standIdx === g.idx ? tekenStand() : tekenUitslag();
   tekenKlaar();
 }
 
@@ -268,13 +269,22 @@ function updateVraag() {
 function tekenUitslag() {
   const g = st.game, q = st.vraag;
   const goed = st.spelers.filter(s => s.juist).length;
-  const laatste = g.idx + 1 >= g.totaal;
-  const top = st.spelers.slice(0, 5);
   render(`<div class="kqh">${kop()}<div class="kqh-main">
     <div class="kqh-vraag" style="font-size:clamp(20px,2.4vw,38px)">${esc(q.tekst)}</div>
     <div class="kqh-uitslag">${optiesHtml(q.opties, 'uitslag')}
-    <div class="kqh-feitrij"><p class="kqh-teller"><b>${goed}</b> van ${st.spelers.length} hadden het goed${q.dubbel ? ' (dubbele punten)' : ''}</p><div class="kqh-acties"><button class="btn" id="go" data-a="volgende" type="button">${laatste ? 'Toon de einduitslag' : 'Volgende vraag'}</button></div></div>
-    <div class="kqh-top5"><h2>Tussenstand</h2><div class="rijen">${top.map(s => `<div class="kqh-rij"><span>${s.plek}</span><span><span aria-hidden="true">${AVATARS[s.avatar] || '🐾'}</span> ${esc(s.bijnaam)}${s.juist ? `<span class="plus">+${s.punten}</span>` : ''}</span><span class="sc">${s.score}</span></div>`).join('')}</div></div></div>
+    <div class="kqh-feitrij"><p class="kqh-teller"><b>${goed}</b> van ${st.spelers.length} hadden het goed${q.dubbel ? ' (dubbele punten)' : ''}</p><div class="kqh-acties"><button class="btn" id="go" data-a="stand" type="button">Toon de tussenstand</button></div></div></div>
+  </div></div>`);
+  koppel();
+}
+
+function tekenStand() {
+  const g = st.game;
+  const laatste = g.idx + 1 >= g.totaal;
+  const top = st.spelers.slice(0, 9);
+  render(`<div class="kqh">${kop()}<div class="kqh-main">
+    <h1 style="text-align:center;font-size:clamp(24px,3.2vw,52px);margin:0">Tussenstand na vraag ${g.idx + 1}</h1>
+    ${top.length ? `<div class="kqh-stand">${top.map(s => `<div class="kqh-rij"><span>${s.plek}</span><span><span aria-hidden="true">${AVATARS[s.avatar] || '🐾'}</span> ${esc(s.bijnaam)}${s.juist ? `<span class="plus">+${s.punten}</span>` : ''}</span><span class="sc">${s.score}</span></div>`).join('')}</div>` : '<p style="text-align:center">Er doen geen spelers mee.</p>'}
+    <div class="kqh-acties" style="justify-content:center"><button class="btn" id="go" data-a="volgende" type="button">${laatste ? 'Toon de einduitslag' : 'Volgende vraag'}</button></div>
   </div></div>`);
   koppel();
 }
@@ -282,7 +292,7 @@ function tekenUitslag() {
 function tekenKlaar() {
   const s = st.spelers;
   const pod = [1, 2, 3].map(p => s[p - 1] ? `<div class="kqh-pod p${p}" id="pod${p}"><div class="av" aria-hidden="true">${AVATARS[s[p - 1].avatar] || '🐾'}</div><div class="nm">${esc(s[p - 1].bijnaam)}</div><div class="pt">${s[p - 1].score} punten</div><div class="blok">${p}</div></div>` : `<div class="kqh-pod p${p}"></div>`);
-  const rest = s.slice(3, 10);
+  const rest = s.slice(3, 9);
   render(`<div class="kqh">${kop()}<div class="kqh-main">
     <h1 style="text-align:center;font-size:clamp(24px,3.2vw,52px);margin:0">${s.length ? 'De winnaar is...' : 'Het spel is afgelopen'}</h1>
     <div class="kqh-podium">${pod[1]}${pod[0]}${pod[2]}</div>
